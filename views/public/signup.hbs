@@ -1,0 +1,58 @@
+<div class="container signup">
+    <h4 class="display-4" style="font-size:40px;margin-bottom:30px;">
+        <i class="far fa-user-circle"></i>  Create an account</h4>
+        {{#if hasErrors}}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{# each messages}}
+                        {{this}}<br/>
+                {{/each}}
+            </div>
+        {{/if}}
+        <form action="/signup" method="post">
+             <div class="row mb-2">
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <label for="firstName">First name</label>
+                        <input type="text" class="form-control" name="firstname" id="firstName" placeholder="" value="" required>
+                        <div class="invalid-feedback">
+                            Valid first name is required.
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" name="email" id="email" placeholder="" value="" required>
+                        <div class="invalid-feedback">
+                            Valid first name is required.
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <label for="lastName">Last name</label>
+                        <input type="text" class="form-control" name="lastname" id="lastName" placeholder="" value="" required>
+                        <div class="invalid-feedback">
+                            Valid last name is required.
+                        </div>
+                    </div> 
+                    
+                    <div class="form-group">
+                        <label for="lastName">Password</label>
+                        <input type="password" class="form-control" name="password" id="password" placeholder="" value="" required>
+                        <div class="invalid-feedback">
+                            Valid last name is required.
+                        </div>
+                    </div>   
+                </div>
+            
+            </div>
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+            <button type="submit" class="btn signbtn">Get Started</button>      
+        </form>
+    {{!-- <span class="text-muted mb-4">Enter your credentials</span> --}}
+  
+</div>
