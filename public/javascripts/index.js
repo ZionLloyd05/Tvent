@@ -10,3 +10,19 @@ $(function(){
     //}
     
 })
+
+$(function () {
+    $('#datetimepicker1').datetimepicker({
+        icons: {
+            time: "far fa-clock"
+        }
+    });
+});
+
+$(function () {
+    $('#datetimepicker2').datetimepicker({
+        icons: {
+            time: "far fa-clock"
+        }
+    });
+});

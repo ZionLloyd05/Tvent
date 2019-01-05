@@ -1,20 +1,143 @@
-<div class="container cevent">
-  <div class="col-3">
-    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-      <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Home</a>
-      <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Profile</a>
-      <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">Messages</a>
-      <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</a>
+<div class="row cevent" style="width:100%;">
+    <div class="col-6" style="padding-left: 5%;">
+        <h3 class="display-4">New Event</h3>
     </div>
-  </div>
-  <div class="col-9">
-    <div class="tab-content" id="v-pills-tabContent">
-      <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
-          Cillum ad ut irure tempor velit nostrud occaecat ullamco aliqua anim Lorem sint. Veniam sint duis incididunt do esse magna mollit excepteur laborum qui. Id id reprehenderit sit est eu aliqua occaecat quis et velit excepteur laborum mollit dolore eiusmod. Ipsum dolor in occaecat commodo et voluptate minim reprehenderit mollit pariatur. Deserunt non laborum enim et cillum eu deserunt excepteur ea incididunt minim occaecat.
-      </div>
-      <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">...</div>
-      <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">...</div>
-      <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">...</div>
+    <div class="col-6" style="text-align:right;padding: 2% 6% 0% 0%;">
+        <button class="btn ceventBtn" style="margin-right:2%;"><i class="far fa-save"></i> Save</button>
+        <button class="btn ceventBtn"><i class="fas fa-upload"></i> Publish</button>
     </div>
-  </div>
+</div>
+<hr style="padding: 5px;">
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab"
+                    aria-controls="v-pills-home" aria-selected="true"><i class="far fa-calendar-plus"></i> Event
+                    Details</a>
+                <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab"
+                    aria-controls="v-pills-profile" aria-selected="false"><i class="far fa-id-card"></i> Allocation Strategy</a>
+                <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab"
+                    aria-controls="v-pills-messages" aria-selected="false"><i class="fas fa-cog"></i> Additional Setup</a>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="tab-content" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab"
+                    style="margin-bottom:15px;">
+                    <h5 class="display-4 tabtitle">Tell a bit about the event</h5>
+                    <hr>
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <select class="custom-select category-dropdown">
+                                <option value="null" selected>Select Event Category</option>
+                                <option value="convocation">Convocation</option>
+                                <option value="wedding">Wedding Ceremony</option>
+                                <option value="dinner">Dinner</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="category-conv-section" style="display:none">
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <label for="event">Event Title *</label>
+
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="event" placeholder="" value="" required="">
+                                    <div class="input-group-append">
+                                        <div class="input-group-text"><i class="fas fa-poll-h"></i></div>
+                                    </div>
+                                    <div class="invalid-feedback" style="width: 100%;">
+                                        Your username is required.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label for="event">Location *</label>
+
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="event" placeholder="" value="" required="">
+                                    <div class="input-group-append">
+                                        <div class="input-group-text"><i class="fas fa-map-marked-alt"></i></div>
+                                    </div>
+                                    <div class="invalid-feedback" style="width: 100%;">
+                                        Your username is required.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div class="row mt-1">
+                            <div class="col-6">
+                                <label for="event">Event Poster *</label>
+                                {{!-- <input type="Datetime" id="startdate" class="form-control" id="event" placeholder=""
+                                    value="" required=""> --}}
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                    </div>
+
+                                </div>
+                                <div class="invalid-feedback">
+                                    Valid first name is required.
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label for="event">Event Description *</label>
+                                <div>
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                    <h5 class="display-4 tabtitle">What's the allocation gonna look like ?</h5>
+                    <hr>
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <label for="event">Start Date *</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="startdate" placeholder="YYYY-MM-DD 00:00" value="" required="">
+                                <div class="input-group-append">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                                <div class="invalid-feedback" style="width: 100%;">
+                                    Your username is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="event">End Date *</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="enddate" placeholder="YYYY-MM-DD 00:00" value="" required="">
+                                <div class="input-group-append">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                                <div class="invalid-feedback" style="width: 100%;">
+                                    Your username is required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2 day-allocation-section" style="margin:5px auto">
+                        <div class="row day mt-3" style="width:100%;">
+                            <div class="col-3" style="padding-left: 5%;">
+                                <h3 class="lead">Day 1</h3>
+                            </div>
+                            <div class="col-9" style="text-align:left;padding-top:2px;">
+                                <a href="#" class="day-link"><i class="fas fa-plus"></i> Add Faculty</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+                    <h5 class="display-4 tabtitle">Almost done!</h5>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

@@ -2,153 +2,202 @@ html {
   position: relative;
   min-height: 100%;
 }
+
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
 }
-main{
+
+main {
   padding-top: 20px;
 }
+
 @media (min-width: 768px) {
   html {
     font-size: 16px;
   }
 }
-.btn{
+
+.btn {
   background: #783B5A;
-  color:#f5deb3;;
+  color: #f5deb3;
+  ;
   border: none;
 }
-.btn:hover{
+
+.btn:hover {
   background: #67324d;
-  color: #f5deb3;;
+  color: #f5deb3;
+  ;
 }
-.btn:active{
+
+.btn:active {
   border: 3px #452134;
   border-radius: 3px;
 }
-.header-text{
+
+.header-text {
   font-size: 14px;
   font-weight: 500;
   color: white !important;
 }
-.dropdown > .header-text{
+
+.dropdown>.header-text {
   font-size: 16px;
   font-weight: normal;
 }
-.header-text:hover{
+
+.header-text:hover {
   text-decoration: none;
   color: #e4c181 !important;
 }
-.jumbotron{
-  background:linear-gradient(0deg,rgba(255,0,150,0.3),rgba(255,0,150,0.3)),url('../images/bg2.jpg');
-  color:white;
+
+.jumbotron {
+  background: linear-gradient(0deg, rgba(255, 0, 150, 0.3), rgba(255, 0, 150, 0.3)), url('../images/bg2.jpg');
+  color: white;
   /* Set a specific height */
-  min-height: 300px; 
+  min-height: 300px;
   /* background: #f8f9fa; */
   margin-top: 40px;
   border-radius: none;
-  
+
   /* Create the parallax scrolling effect */
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
-.jumbtext{
+
+.jumbtext {
   font-size: 50px;
 }
-.searchRow{
+
+.searchRow {
   padding: 4%;
   background: #783a5b;
   color: #f5deb3;
   border-radius: 5px;
   opacity: 0.91;
 }
-.searchEventBtn{
-  background:  #f5deb3;
+
+.searchEventBtn {
+  background: #f5deb3;
   color: #783a5b;
 }
-.searchEventBtnDiv{
+
+.searchEventBtnDiv {
   padding-top: 3%;
 }
-.tagtxt{
+
+.tagtxt {
   font-size: 40px;
 }
-.badge{
+
+.badge {
   padding: 10px;
   margin: 10px;
   border-radius: 10px;
 }
-.badge:hover{
+
+.badge:hover {
   background: #783a5b !important;
   color: #f5deb3 !important;
 }
-.active{
+
+.selected {
   background: #783a5b !important;
   color: #f5deb3 !important;
 }
-.card{
+
+.nav>.nav-link {
+  color: black;
+  margin-bottom: 20px;
+}
+
+.nav>.active {
+  background: #783a5b !important;
+  color: #f5deb3 !important;
+}
+
+.card {
   box-shadow: 1px 1px 1px 1px #ccc;
 }
-.card-title{
+
+.card-title {
   font-size: 25px;
   font-weight: 400;
   color: black;
 }
-.card-title:hover{
+
+.card-title:hover {
   text-decoration: none;
   color: black;
 }
-.bridge1{
+
+.bridge1 {
   text-align: center;
   padding: 20px;
   background: #1b284b;
   color: white;
 }
-.bridge1 a{
+
+.bridge1 a {
   color: #f5deb3;
 }
-.bridge1 a:hover{
+
+.bridge1 a:hover {
   text-decoration: none;
 }
-.categoryContainer{
+
+.categoryContainer {
   margin-top: 30px;
 }
-.footer{
+
+.footer {
   background: #452134;
   padding: 20px;
   position: absolute;
   bottom: 0;
   width: 100%;
 }
-.dropdown:hover>.dropdown-menu {
-  display: block;
-}
+
 .signup {
   margin-top: 10%;
   width: 50%;
   text-align: center;
 }
+
 /* signup and signin button */
-.signbtn{
+.signbtn {
   width: 40%;
   margin: 0 auto;
 }
-.headerDiv{
+
+.headerDiv {
   background-color: #452134 !important;
   color: white;
 }
-.htxt{
+
+.htxt {
   color: #e4c181;
   font-weight: bolder !important;
   margin-left: 4%;
   font-size: 27px;
 }
-.htxt:hover{
+
+.htxt:hover {
   text-decoration: none;
   color: #e4c181;
 }
-.cevent{
-margin-top: 10%;
+
+.cevent {
+  margin-top: 6%;
+}
+
+.ceventBtn {
+  font-size: 17px;
+}
+
+.tabtitle {
+  font-size: 27px;
 }

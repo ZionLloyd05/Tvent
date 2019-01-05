@@ -7,12 +7,8 @@ var allocationSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
-    title: {
-        type: String,
-        required: true
-    },
-    amount: {
+    day: {
         type: Number,
-        required: true
+        
     }
 })
