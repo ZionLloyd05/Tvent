@@ -14,31 +14,69 @@ $(document).ready(function(){
         }
     })
 
+    //todo ===> validation -> making sure date are in correct format
 
-   
-    
-})
+    $('#enddate').blur( function() {
+        let startdate = $('#startdate').val()
+        let enddate = $('#enddate').val()
+        
+        let startDateComp = startdate.split(' ')
+        let endDateComp = enddate.split(' ')
+        
+        let stdate = startDateComp[0]
+        let eddate = endDateComp[0]
+        
+        //convert to real date
+        let stdateComp = stdate.split('-')
+        let eddateComp = eddate.split('-')
 
-$('#enddate').blur( function() {
-    let startdate = $('#startdate').val()
-    let enddate = $('#enddate').val()
-    
-    let startDateComp = startdate.split(' ')
-    let endDateComp = enddate.split(' ')
-    
-    let stdate = startDateComp[0]
-    let eddate = endDateComp[0]
-    
-    //convert to real date
-    let stdateComp = stdate.split('-')
-    let eddateComp = eddate.split('-')
+        let newstDate = new Date(stdateComp[0], stdateComp[1], stdateComp[2])
+        let newedDate = new Date(eddateComp[0], eddateComp[1], eddateComp[2])
 
-    let newstDate = new Date(stdateComp[0], stdateComp[1], stdateComp[2])
-    let newedDate = new Date(eddateComp[0], eddateComp[1], eddateComp[2])
+        let days_btween = days_between(newstDate, newedDate)
+        
+        //fill days div
+        $('.day-allocation-section').empty();
+        for (let index = 0; index < days_btween; index++) {
+            
+            let dayDiv = '<div class="row day mt-3" id="day-'+(index+1)+'" style="width: 100%;">'
+            dayDiv += '<div class="col-9" style="text-align:left;">'
+            dayDiv += '<p class="lead"><a class="day-link" day-data="day-'+(index+1)+'" style="color:#007BFF;cursor:pointer;font-size:17px;text-decoration: none;border-bottom: 1px solid #ccc;"><i class="fas fa-plus"></i> Add Faculty</a> for Day '+(index + 1)+'</p>'
+            dayDiv += '</div></div>';
 
-    let days_btween = days_between(newstDate, newedDate)
-    
-    
+            $('.day-allocation-section').append(dayDiv)
+        }
+    })
+
+
+    //add faculty handler
+    $(document).on('click', '.day-link', function() {
+        let link = $(this)
+        let linkId = '#'+link.attr('day-data')
+        
+        let facultyConatiner = '<div class="row ml-2 faculty-input">'
+        facultyConatiner += '<div class="col-5"><label for="event">Faculty Name *</label>'
+        facultyConatiner += '<div class="input-group"><input type="text" class="form-control" id="event" placeholder="" value="" required="">'
+        facultyConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-poll-h"></i></div></div>'
+        facultyConatiner += '<div class="invalid-feedback" style="width: 100%;">Your username is required.</div>'
+        facultyConatiner += '</div></div>'
+        facultyConatiner += '<div class="col-3"><label for="event">Total Student Capacity *</label>'
+        facultyConatiner += '<div class="input-group"><input type="text" class="form-control" id="event" placeholder="" value="" required="">'
+        facultyConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-user-graduate"></i></div></div>'
+        facultyConatiner += '<div class="invalid-feedback" style="width: 100%;">Your username is required.</div>'
+        facultyConatiner += '</div></div>'
+        facultyConatiner += '<div class="col-3"><label for="event">Total Visitor Capacity *</label>'
+        facultyConatiner += '<div class="input-group"><input type="text" class="form-control" id="event" placeholder="" value="" required="">'
+        facultyConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-users"></i></div></div>'
+        facultyConatiner += '<div class="invalid-feedback" style="width: 100%;">Your username is required.</div>'
+        facultyConatiner += '</div></div>'
+        facultyConatiner += '<div class="col-1" style="color: red;padding-top: 40px;"><i class="fas fa-trash-alt" style="cursor:pointer"></i></div>'
+        facultyConatiner += '</div>'
+
+        // console.log("'"+linkId+"'")
+        $(linkId).append(facultyConatiner);
+    })
+
 })
 
 // custion functions
