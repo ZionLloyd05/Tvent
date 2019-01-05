@@ -1,3 +1,4 @@
+import mongoose
 $(document).ready(function(){
     //serving forms based on category selection
     $('.category-dropdown').on('change', () => {
@@ -48,33 +49,74 @@ $(document).ready(function(){
         }
     })
 
+    let totalFaculty = 0
+    let facultyContainerNum = 0
+    let eventDay = {} //holds the amount of faculty for each day
+    let facultyContainerNums = []
 
     //add faculty handler
     $(document).on('click', '.day-link', function() {
         let link = $(this)
+        let linkAttr = link.attr('day-data')
         let linkId = '#'+link.attr('day-data')
-        
-        let facultyConatiner = '<div class="row ml-2 faculty-input">'
+
+        totalFaculty = totalFaculty + 1
+
+        //add day and added faculty value to eventDay object
+        if(eventDay[linkAttr] === undefined){
+            //day has no faculty
+            eventDay[linkAttr] = 1
+        }else{
+            //day has existing faculty
+            initialFacAmount = eventDay[linkAttr]
+            eventDay[linkAttr] = initialFacAmount + 1
+        }
+
+        //populating facultyContainerNums
+        facultyContainerNum = facultyContainerNum + 1
+        facultyContainerNums.push(facultyContainerNum)
+
+        let facultyConatiner = '<div fac-day-data="'+linkAttr+'" fac-container-num="'+facultyContainerNum+'" class="row ml-2 mb-2 faculty-input">'
         facultyConatiner += '<div class="col-5"><label for="event">Faculty Name *</label>'
-        facultyConatiner += '<div class="input-group"><input type="text" class="form-control" id="event" placeholder="" value="" required="">'
+        facultyConatiner += '<div class="input-group"><input type="text" class="form-control" id="fac-name-'+facultyContainerNum+'" placeholder="" value="" required="">'
         facultyConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-poll-h"></i></div></div>'
         facultyConatiner += '<div class="invalid-feedback" style="width: 100%;">Your username is required.</div>'
         facultyConatiner += '</div></div>'
         facultyConatiner += '<div class="col-3"><label for="event">Total Student Capacity *</label>'
-        facultyConatiner += '<div class="input-group"><input type="text" class="form-control" id="event" placeholder="" value="" required="">'
+        facultyConatiner += '<div class="input-group"><input type="text" class="form-control" id="std-capcity-'+facultyContainerNum+'" placeholder="" value="" required="">'
         facultyConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-user-graduate"></i></div></div>'
         facultyConatiner += '<div class="invalid-feedback" style="width: 100%;">Your username is required.</div>'
         facultyConatiner += '</div></div>'
         facultyConatiner += '<div class="col-3"><label for="event">Total Visitor Capacity *</label>'
-        facultyConatiner += '<div class="input-group"><input type="text" class="form-control" id="event" placeholder="" value="" required="">'
+        facultyConatiner += '<div class="input-group"><input type="text" class="form-control" id="vis-capacity-'+facultyContainerNum+'" placeholder="" value="" required="">'
         facultyConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-users"></i></div></div>'
         facultyConatiner += '<div class="invalid-feedback" style="width: 100%;">Your username is required.</div>'
         facultyConatiner += '</div></div>'
-        facultyConatiner += '<div class="col-1" style="color: red;padding-top: 40px;"><i class="fas fa-trash-alt" style="cursor:pointer"></i></div>'
+        facultyConatiner += '<div class="col-1" style="color: red;padding-top: 40px;"><i class="fas fa-trash-alt" id="trash-container" style="cursor:pointer"></i></div>'
         facultyConatiner += '</div>'
 
         // console.log("'"+linkId+"'")
         $(linkId).append(facultyConatiner);
+        // console.log(totalFaculty)
+    })
+
+    //trash faculty functionality
+    $(document).on('click', '#trash-container', function(){
+        
+        //removing fac-container-num from store
+        let facContNum = $(this).parent().parent().attr("fac-container-num")
+        let idx = facultyContainerNums.indexOf(facContNum)
+
+        facultyContainerNums.splice(idx, 1)
+
+        totalFaculty = totalFaculty - 1
+
+        //deduct from object in eventDay
+        let containerId = $(this).parent().parent().attr("fac-day-data")
+        let initialFacAmount = eventDay[containerId]
+        eventDay[containerId] = initialFacAmount - 1
+
+        $(this).parent().parent().remove();
     })
 
 })
