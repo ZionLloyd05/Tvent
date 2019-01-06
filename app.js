@@ -31,7 +31,7 @@ mongoose.connect(config.database, { useNewUrlParser: true });
 
 // logging database connection status
 mongoose.connection.on('connected', () => {
-  console.log('Connected to Database '+ config.database);
+  console.log('Connected to Database ');
 });
 mongoose.connection.on('error', (err) => {
   console.log('Database Error '+ err);

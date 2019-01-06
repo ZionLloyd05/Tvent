@@ -1,4 +1,4 @@
-import mongoose
+
 $(document).ready(function(){
     //serving forms based on category selection
     $('.category-dropdown').on('change', () => {
@@ -52,7 +52,7 @@ $(document).ready(function(){
     let totalFaculty = 0
     let facultyContainerNum = 0
     let eventDay = {} //holds the amount of faculty for each day
-    let facultyContainerNums = []
+    var facultyContainerNums = []
 
     //add faculty handler
     $(document).on('click', '.day-link', function() {
@@ -75,6 +75,8 @@ $(document).ready(function(){
         //populating facultyContainerNums
         facultyContainerNum = facultyContainerNum + 1
         facultyContainerNums.push(facultyContainerNum)
+
+        // console.log(facultyContainerNums)
 
         let facultyConatiner = '<div fac-day-data="'+linkAttr+'" fac-container-num="'+facultyContainerNum+'" class="row ml-2 mb-2 faculty-input">'
         facultyConatiner += '<div class="col-5"><label for="event">Faculty Name *</label>'
@@ -105,10 +107,9 @@ $(document).ready(function(){
         
         //removing fac-container-num from store
         let facContNum = $(this).parent().parent().attr("fac-container-num")
-        let idx = facultyContainerNums.indexOf(facContNum)
-
+        let idx = facultyContainerNums.indexOf(parseInt(facContNum))
         facultyContainerNums.splice(idx, 1)
-
+        
         totalFaculty = totalFaculty - 1
 
         //deduct from object in eventDay
