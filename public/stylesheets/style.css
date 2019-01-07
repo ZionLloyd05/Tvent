@@ -201,3 +201,7 @@ main {
 .tabtitle {
   font-size: 27px;
 }
+
+.faculty-input label{
+  font-size: 13px;
+}

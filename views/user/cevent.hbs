@@ -3,7 +3,7 @@
         <h3 class="display-4">New Event</h3>
     </div>
     <div class="col-6" style="text-align:right;padding: 2% 6% 0% 0%;">
-        <button class="btn ceventBtn" style="margin-right:2%;"><i class="far fa-save"></i> Save</button>
+        {{!-- <button class="btn ceventBtn" style="margin-right:2%;"><i class="far fa-save"></i> Save</button> --}}
         <button class="btn ceventBtn"><i class="fas fa-upload"></i> Publish</button>
     </div>
 </div>
@@ -42,7 +42,7 @@
                             <div class="col-6">
                                 <label for="event">Event Title *</label>
 
-                                <div class="input-group">
+                                <div class="input-group" id="eventtitle">
                                     <input type="text" class="form-control" id="event" placeholder="" value="" required="">
                                     <div class="input-group-append">
                                         <div class="input-group-text"><i class="fas fa-poll-h"></i></div>
@@ -55,7 +55,7 @@
                             <div class="col-6">
                                 <label for="event">Location *</label>
 
-                                <div class="input-group">
+                                <div class="input-group" id="location">
                                     <input type="text" class="form-control" id="event" placeholder="" value="" required="">
                                     <div class="input-group-append">
                                         <div class="input-group-text"><i class="fas fa-map-marked-alt"></i></div>
@@ -70,9 +70,8 @@
                         <div class="row mt-1">
                             <div class="col-6">
                                 <label for="event">Event Poster *</label>
-                                {{!-- <input type="Datetime" id="startdate" class="form-control" id="event" placeholder=""
-                                    value="" required=""> --}}
-                                <div class="input-group">
+                              
+                                <div class="input-group" id="posterurl">
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
                                         <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
@@ -85,8 +84,11 @@
                             </div>
                             <div class="col-6">
                                 <label for="event">Event Description *</label>
-                                <div>
+                                <div id="desc">
                                     <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Valid first name is required.
                                 </div>
                             </div>
                         </div>
@@ -124,60 +126,20 @@
                     </div>
                     <div class="row mt-2 day-allocation-section" style="margin:5px auto">
                         <div class="col-12 text-left lead">Enter both dates...</div>
-                        {{!-- <div class="row day mt-3" style="width: 100%;">
-                            <div class="col-12" style="text-align:left;">
-                                <p class="lead" style="border-bottom: 1px solid #ccc;"><a href="#" class="day-link" style="font-size: 17px;text-decoration: none;"><i class="fas fa-plus"></i> Add Faculty</a> for Day 1</p>
-                            </div> --}}
-                            {{!-- <div class="row ml-2 faculty-input">
-                                <div class="col-5">
-                                    <label for="event">Faculty Name *</label>
-
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="event" placeholder="" value="" required="">
-                                        <div class="input-group-append">
-                                            <div class="input-group-text"><i class="fas fa-poll-h"></i></div>
-                                        </div>
-                                        <div class="invalid-feedback" style="width: 100%;">
-                                            Your username is required.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <label for="event">Total Student Capacity *</label>
-
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="event" placeholder="" value="" required="">
-                                        <div class="input-group-append">
-                                            <div class="input-group-text"><i class="fas fa-user-graduate"></i></div>
-                                        </div>
-                                        <div class="invalid-feedback" style="width: 100%;">
-                                            Your username is required.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <label for="event">Total Visitor Capacity *</label>
-
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="event" placeholder="" value="" required="">
-                                        <div class="input-group-append">
-                                            <div class="input-group-text"><i class="fas fa-users"></i></div>
-                                        </div>
-                                        <div class="invalid-feedback" style="width: 100%;">
-                                            Your username is required.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-1" style="color: red;padding-top: 40px;">
-                                    <i class="fas fa-trash-alt" style="cursor:pointer"></i>
-                                </div>
-                            </div> --}}
-                        {{!-- </div> --}}
                     </div>
                 </div>
                 <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
                     <h5 class="display-4 tabtitle">Almost done!</h5>
                     <hr>
+                    <label for="" style="margin-right: 20px;">Make Event</label>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" value="true" id="customRadioInline1" name="customRadioInline1" class="custom-control-input">
+                        <label class="custom-control-label" for="customRadioInline1">Visible</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" value="false" id="customRadioInline2" name="customRadioInline1" class="custom-control-input">
+                        <label class="custom-control-label" for="customRadioInline2">Not Visible</label>
+                    </div>
                 </div>
             </div>
         </div>

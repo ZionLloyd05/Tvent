@@ -1,6 +1,8 @@
-
 $(document).ready(function(){
-    //serving forms based on category selection
+
+    let errorList = [];
+
+    //==========serving forms based on category selection=========================
     $('.category-dropdown').on('change', () => {
         let category = $('.category-dropdown').val()
         
@@ -15,7 +17,12 @@ $(document).ready(function(){
         }
     })
 
+    //=====Auto generating Day Handler===========================================
+
     //todo ===> validation -> making sure date are in correct format
+
+    let amountOfDay = 0
+    let eventDayLabel = [] //holds the label of day created
 
     $('#enddate').blur( function() {
         let startdate = $('#startdate').val()
@@ -34,27 +41,32 @@ $(document).ready(function(){
         let newstDate = new Date(stdateComp[0], stdateComp[1], stdateComp[2])
         let newedDate = new Date(eddateComp[0], eddateComp[1], eddateComp[2])
 
-        let days_btween = days_between(newstDate, newedDate)
+        amountOfDay = days_between(newstDate, newedDate)
         
         //fill days div
         $('.day-allocation-section').empty();
-        for (let index = 0; index < days_btween; index++) {
-            
+        for (let index = 0; index < amountOfDay; index++) {
+
             let dayDiv = '<div class="row day mt-3" id="day-'+(index+1)+'" style="width: 100%;">'
             dayDiv += '<div class="col-9" style="text-align:left;">'
-            dayDiv += '<p class="lead"><a class="day-link" day-data="day-'+(index+1)+'" style="color:#007BFF;cursor:pointer;font-size:17px;text-decoration: none;border-bottom: 1px solid #ccc;"><i class="fas fa-plus"></i> Add Faculty</a> for Day '+(index + 1)+'</p>'
+            dayDiv += '<p class="lead"><a class="day-link" day-data="day_'+(index+1)+'" style="color:#007BFF;cursor:pointer;font-size:17px;text-decoration: none;border-bottom: 1px solid #ccc;"><i class="fas fa-plus"></i> Add Faculty</a> for Day '+(index + 1)+'</p>'
             dayDiv += '</div></div>';
+
+            
+            eventDayLabel.push("day_"+(index+1))
 
             $('.day-allocation-section').append(dayDiv)
         }
+        // console.log(eventDayLabel)
     })
 
     let totalFaculty = 0
     let facultyContainerNum = 0
-    let eventDay = {} //holds the amount of faculty for each day
-    var facultyContainerNums = []
+    let eventDay = {} //holds the amount of faculty for each day as an object
+    let facultyContainerNums = []
 
-    //add faculty handler
+    //===========add faculty handler=============================================================================================================================================
+
     $(document).on('click', '.day-link', function() {
         let link = $(this)
         let linkAttr = link.attr('day-data')
@@ -71,12 +83,11 @@ $(document).ready(function(){
             initialFacAmount = eventDay[linkAttr]
             eventDay[linkAttr] = initialFacAmount + 1
         }
-
         //populating facultyContainerNums
         facultyContainerNum = facultyContainerNum + 1
         facultyContainerNums.push(facultyContainerNum)
 
-        // console.log(facultyContainerNums)
+        console.log(eventDayLabel)
 
         let facultyConatiner = '<div fac-day-data="'+linkAttr+'" fac-container-num="'+facultyContainerNum+'" class="row ml-2 mb-2 faculty-input">'
         facultyConatiner += '<div class="col-5"><label for="event">Faculty Name *</label>'
@@ -102,25 +113,67 @@ $(document).ready(function(){
         // console.log(totalFaculty)
     })
 
-    //trash faculty functionality
+    //=======trash faculty functionality===================================
     $(document).on('click', '#trash-container', function(){
         
         //removing fac-container-num from store
         let facContNum = $(this).parent().parent().attr("fac-container-num")
         let idx = facultyContainerNums.indexOf(parseInt(facContNum))
         facultyContainerNums.splice(idx, 1)
-        
+        console.log(facultyContainerNums)
+
         totalFaculty = totalFaculty - 1
 
         //deduct from object in eventDay
         let containerId = $(this).parent().parent().attr("fac-day-data")
         let initialFacAmount = eventDay[containerId]
         eventDay[containerId] = initialFacAmount - 1
-
+        console.log(eventDay)
         $(this).parent().parent().remove();
     })
 
+    
+    //=======event visibility setting================================
+    let isVisible = false
+    $('input[name="customRadioInline1"]').change(function(){
+        isVisible = $('input[name=customRadioInline1]:checked').val()
+        console.log(isVisible)
+    })
+
+    
+    //=======Submission Process======================================
+
+    //Overall Payload Stack Structure
+    // event = [
+    //     allocation = [
+    //         day_1 = [
+    //             day_11 = ["faculty of science", 1250, 1000],
+    //             day_12 = ["faculty of agric", 1050, 800],
+    //         ],
+    //         day_2 = [
+    //             day_21 = ["faculty of technology", 1150, 850]
+    //         ],
+    //         day_3 = [
+    //             day_31 = ["faculty of education", 2550, 1500]
+    //         ]
+    //     ],
+    //     "UI Convocation Ceremony",
+    //     "UI Conference Centre",
+    //     "/image/poster.png",
+    //     "Covocation ceremony"
+    // ]
+
+
 })
+
+
+
+
+
+
+
+
+
 
 // custion functions
 function days_between(date1, date2) {
