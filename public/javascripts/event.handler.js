@@ -24,7 +24,7 @@ $(document).ready(function(){
     let amountOfDay = 0
     let eventDayLabel = [] //holds the label of day created
 
-    $('#enddate').blur( function() {
+    $('.dayGenerate').click( function() {
         let startdate = $('#startdate').val()
         let enddate = $('#enddate').val()
         
