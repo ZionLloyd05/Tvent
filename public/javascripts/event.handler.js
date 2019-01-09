@@ -188,6 +188,19 @@ $(document).ready(function(){
                 let errIdx = errorList.indexOf(errorMsg)
                 errorList.splice(errIdx, 1)
             }
+            let errorTxt = "Number is require for student capacity"
+            let otherErrorBlock = $('.otherErrorlist')
+            if(isNaN(value)){
+                if(!errorList.includes(errorTxt)){
+                    errorList.push(errorTxt)
+                    otherErrorBlock.append()
+                }
+            }else{
+                if(errorList.includes(errorTxt)){
+                    let errIdx = errorList.indexOf(errorTxt)
+                    errorList.splice(errIdx, 1)
+                }
+            }
         }
         console.log(errorList)
     })
