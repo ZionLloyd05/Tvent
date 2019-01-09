@@ -139,7 +139,7 @@ $(document).ready(function(){
         facultyConatiner += '<div class="col-3"><label for="event">Total Student Capacity *</label>'
         facultyConatiner += '<div class="input-group"><input type="text" class="form-control std-cap" id="std-capcity-'+facultyContainerNum+'" placeholder="" value="" required="">'
         facultyConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-user-graduate"></i></div></div>'
-        facultyConatiner += '<div class="invalid-feedback" style="width: 100%;">Total vis capacity '+(facultyContainerNum)+' cannot cannot be empty.</div>'
+        facultyConatiner += '<div class="invalid-feedback" style="width: 100%;">Total student capacity '+(facultyContainerNum)+' cannot cannot be empty.</div>'
         facultyConatiner += '</div></div>'
         facultyConatiner += '<div class="col-3"><label for="event">Total Visitor Capacity *</label>'
         facultyConatiner += '<div class="input-group"><input type="text" class="form-control vis-cap" id="vis-capacity-'+facultyContainerNum+'" placeholder="" value="" required="">'
@@ -216,19 +216,10 @@ $(document).ready(function(){
         let idx = facultyContainerNums.indexOf(parseInt(facContNum))
         let facBlockNum = $(this).attr('facblock-data')
 
-        //check for patterns in errorlist and pop them from the array
-        //algorithm
-            //loop through the array
-                //if (this) item matches the pattern, get the string index and splice it
-        errorList.forEach((error, index) => {
-            let res = error.match(facBlockNum)
-            lg(error)
-            if(res){
-                lg("found and be removed")
-                errorList.splice(index, 1)
-            }
+        errorList = errorList.filter(error => {
+            return !error.includes(facBlockNum)
         })
-
+        
         //removing fac-container-num from store
         facultyContainerNums.splice(idx, 1)
         //  
