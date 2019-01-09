@@ -4,13 +4,13 @@ const config = require('../config/database');
 var bcrypt = require('bcrypt-nodejs');
 
 mongoose.connect(config.database)
-let pass = bcrypt.hashSync('damiself', bcrypt.genSaltSync(5), null);
+let pass = bcrypt.hashSync('testme', bcrypt.genSaltSync(5), null);
 
 var users = [
     new User({
-        email: 'alagbaladamilola@gmail.com',
-        firstname: 'Alagbala',
-        lastname: 'Damilola',
+        email: 'testme@gmail.com',
+        firstname: 'testme',
+        lastname: 'testme',
         password: pass
     })
 ]

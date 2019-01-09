@@ -4,7 +4,7 @@
     </div>
     <div class="col-6" style="text-align:right;padding: 2% 6% 0% 0%;">
         {{!-- <button class="btn ceventBtn" style="margin-right:2%;"><i class="far fa-save"></i> Save</button> --}}
-        <button class="btn ceventBtn"><i class="fas fa-upload"></i> Publish</button>
+        <button class="btn ceventBtn" disabled id="btnPublish"><i class="fas fa-upload"></i> Publish</button>
     </div>
 </div>
 <hr style="padding: 5px;">
@@ -12,13 +12,13 @@
     <div class="row">
         <div class="col-3">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab"
-                    aria-controls="v-pills-home" aria-selected="true"><i class="far fa-calendar-plus"></i> Event
+                <a class="nav-link active" id="v-pills-event-tab" data-toggle="pill" href="#v-pills-home" role="tab"
+                    aria-controls="v-pills-home" aria-selected="true">1. <i class="far fa-calendar-plus"></i> Event
                     Details</a>
-                <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab"
-                    aria-controls="v-pills-profile" aria-selected="false"><i class="far fa-id-card"></i> Allocation Strategy</a>
-                <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab"
-                    aria-controls="v-pills-messages" aria-selected="false"><i class="fas fa-cog"></i> Additional Setup</a>
+                <a class="nav-link" id="v-pills-allocation-tab" data-toggle="pill" href="#v-pills-profile" role="tab"
+                    aria-controls="v-pills-profile" aria-selected="false">2. <i class="far fa-id-card"></i> Allocation Strategy</a>
+                <a class="nav-link" id="v-pills-additional-tab" data-toggle="pill" href="#v-pills-messages" role="tab"
+                    aria-controls="v-pills-messages" aria-selected="false">3. <i class="fas fa-cog"></i> Additional Setup</a>
             </div>
         </div>
         <div class="col-9">
@@ -43,12 +43,12 @@
                                 <label for="event">Event Title *</label>
 
                                 <div class="input-group" id="eventtitle">
-                                    <input type="text" class="form-control" id="event" placeholder="" value="" required="">
+                                    <input type="text" class="form-control" id="event" placeholder="" value="qwe" required="">
                                     <div class="input-group-append">
                                         <div class="input-group-text"><i class="fas fa-poll-h"></i></div>
                                     </div>
                                     <div class="invalid-feedback" style="width: 100%;">
-                                        Your username is required.
+                                        Event title is required.
                                     </div>
                                 </div>
                             </div>
@@ -56,12 +56,12 @@
                                 <label for="event">Location *</label>
 
                                 <div class="input-group" id="location">
-                                    <input type="text" class="form-control" id="event" placeholder="" value="" required="">
+                                    <input type="text" class="form-control" id="loc" placeholder="" value="qw">
                                     <div class="input-group-append">
                                         <div class="input-group-text"><i class="fas fa-map-marked-alt"></i></div>
                                     </div>
                                     <div class="invalid-feedback" style="width: 100%;">
-                                        Your username is required.
+                                        Event location is required
                                     </div>
                                 </div>
                             </div>
@@ -73,7 +73,7 @@
                               
                                 <div class="input-group" id="posterurl">
                                     <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                                        <input type="file" class="custom-file-input" id="file" aria-describedby="inputGroupFileAddon01">
                                         <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                                     </div>
 
@@ -85,10 +85,10 @@
                             <div class="col-6">
                                 <label for="event">Event Description *</label>
                                 <div id="desc">
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                    <textarea class="form-control description" rows="3">qww</textarea>
                                 </div>
                                 <div class="invalid-feedback">
-                                    Valid first name is required.
+                                    A brief description of event is required
                                 </div>
                             </div>
                         </div>
@@ -102,12 +102,12 @@
                         <div class="col-6">
                             <label for="event">Start Date *</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="startdate" placeholder="YYYY-MM-DD 00:00" value="" required="">
+                                <input type="text" class="form-control" id="startdate" placeholder="YYYY-MM-DD HH:MM" value="" required="">
                                 <div class="input-group-append">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
                                 <div class="invalid-feedback" style="width: 100%;">
-                                    Your username is required.
+                                    A start date and time is required.
                                 </div>
                             </div>
                         </div>
@@ -119,13 +119,18 @@
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
                                 <div class="invalid-feedback" style="width: 100%;">
-                                    Your username is required.
+                                    An end date and time is required.
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row mt-2 day-allocation-section" style="margin:5px auto">
-                        <div class="col-12 text-left lead">Enter both dates...</div>
+                        <div class="col-12 text-center ">
+                            <button class="btn mt-3 dayGenerate" style="width:80%">Generate Day of Event</button>
+                            <div class="errorlist2" style="display:none;width:80%;margin:5px auto;text-align:left">
+                                
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
@@ -133,12 +138,14 @@
                     <hr>
                     <label for="" style="margin-right: 20px;">Make Event</label>
                     <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" value="true" id="customRadioInline1" name="customRadioInline1" class="custom-control-input">
+                        <input type="radio" checked value="true" id="customRadioInline1" name="customRadioInline1" class="custom-control-input">
                         <label class="custom-control-label" for="customRadioInline1">Visible</label>
                     </div>
                     <div class="custom-control custom-radio custom-control-inline">
                         <input type="radio" value="false" id="customRadioInline2" name="customRadioInline1" class="custom-control-input">
                         <label class="custom-control-label" for="customRadioInline2">Not Visible</label>
+                    </div>
+                    <div class="errorlist3 mt-3">
                     </div>
                 </div>
             </div>
