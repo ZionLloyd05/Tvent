@@ -193,7 +193,8 @@ $(document).ready(function(){
             if(isNaN(value)){
                 if(!errorList.includes(errorTxt)){
                     errorList.push(errorTxt)
-                    otherErrorBlock.append()
+                    otherErrorBlock.append('<p style="display:block" class="invalid-feedback">. '+errorTxt+'</p>')
+                    otherErrorBlock.show("fadeIn")
                 }
             }else{
                 if(errorList.includes(errorTxt)){
