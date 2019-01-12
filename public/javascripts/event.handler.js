@@ -45,7 +45,11 @@ $(document).ready(function(){
     let eventDayLabel = [] //holds the label of day created
     // lg(errorList)
     $('.dayGenerate').click( function() {
-        lg("yo")
+
+        var sectionAllocation = document.getElementById('allocation-section')
+        while(sectionAllocation.firstChild)
+            sectionAllocation.removeChild(sectionAllocation.firstChild)
+        
         let evTitle = $('#event').val()
         let evLoc = $('#loc').val()
         let evDesc = $('.description').val()
@@ -73,7 +77,10 @@ $(document).ready(function(){
             let errIdx = errorList.indexOf(errorMsg)
             errorList.splice(errIdx, 1)
         }
-
+        //and remove it from the DOM
+        let errorList2 = document.getElementById('errList2')
+        while(errorList2.firstChild)
+            errorList2.removeChild(errorList2.firstChild)
 
         // if(errorList.length > 0 && errorList[0] != ""){
         if(errorList.length > 0){
@@ -470,30 +477,50 @@ $(document).ready(function(){
     
 
 })
+
+// ====================== VANILLA JAVASCRIPT ==================================
  //new process
     // Create event first(event)
         // .then(create allocations, event._id)
         // .then(create tags, event._id)
-document.addEventListener('click', function(event){
-    if(event.target.matches('#btnPublish')){
-        let eventForm = document.getElementById('eventForm')
-        formData = new FormData(eventForm)
+var eventTitle = document.getElementById('event')
 
-        for(var pair of formData.entries()){
-            console.log(pair[0]+" => "+pair[1])
-        }
+eventTitle.addEventListener('keyup', twoWayBinding)
 
-        fetch('/event/create', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: formData
-        })
-        .then(response => console.log(response.json()))
+
+// document.addEventListener('click', function(event){
+//     if(event.target.matches('#btnPublish')){
+//         let eventForm = document.getElementById('eventForm')
+//         formData = new FormData(eventForm)
+
+//         for(var pair of formData.entries()){
+//             console.log(pair[0]+" => "+pair[1])
+//         }
+
+//         fetch('/event/create', {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json"
+//             },
+//             body: formData
+//         })
+//         .then(response => console.log(response.json()))
+//     }
+// })
+// =========== FUNCTIONS ========================
+
+function twoWayBinding(e) {
+    let title = e.target.value
+    let displayEventElement = document.getElementById('eventDisplay')
+
+    if(title === ''){
+        displayEventElement.textContent = "New Event"
+    }else{
+        displayEventElement.textContent = title
     }
-})
+    
 
+}
 
 // custion functions
 function days_between(date1, date2) {
