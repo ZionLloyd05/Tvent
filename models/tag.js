@@ -4,16 +4,13 @@ var Schema = mongoose.Schema;
 var tagSchema = new Schema({
     event: {
         ref: 'Event',
-        title: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         required: true
     },
     title: {
         type: String,
-        required: true
-    },
-    description: {
-        type: String,
-        required: true
+        required: true,
+        trim: true
     }
 });
 

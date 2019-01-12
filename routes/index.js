@@ -4,7 +4,7 @@ var csrf = require('csurf');
 var passport = require('passport');
 
 var csrfProtection = csrf();
-router.use(csrfProtection);
+// router.use(csrfProtection);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

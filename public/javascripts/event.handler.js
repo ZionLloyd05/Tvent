@@ -1,5 +1,25 @@
 $(document).ready(function(){
 
+    // event = [
+    //     ["faculty of science", 1250, 1000],
+    //     ["faculty of agric", 1050, 800],
+    //     ["faculty of technology", 1150, 850],
+    //     ["faculty of education", 2550, 1500],
+    //     ["faculty of education", 2550, 1500],
+    //     ["faculty of education", 2550, 1500]
+    // ]
+    // jsonEvent = Object.assign({}, event);
+    // $.ajax({
+    //     url: '/event/create',
+    //     type: 'post',
+    //     data: jsonEvent,
+    //     cache: false,
+    //     dataType: 'text',
+    //     success: function(res){
+    //         console.log(res)
+    //     } 
+    // })
+
     let errorList = [];
 
     //==========serving forms based on category selection=========================
@@ -23,8 +43,9 @@ $(document).ready(function(){
 
     let amountOfDay = 0
     let eventDayLabel = [] //holds the label of day created
-    lg(errorList)
+    // lg(errorList)
     $('.dayGenerate').click( function() {
+        lg("yo")
         let evTitle = $('#event').val()
         let evLoc = $('#loc').val()
         let evDesc = $('.description').val()
@@ -36,22 +57,27 @@ $(document).ready(function(){
         if(evTitle == "" || evLoc == "" || evDesc == "" || startdate == "" || enddate == ""){
             if(!errorList.includes(errorMsg)){
                 errorList.push(errorMsg)
-                lg("1")
+                // lg("1")
             }
         }else{
             if(errorList.includes(errorMsg)){
                 let errIdx = errorList.indexOf(errorMsg)
                 errorList.splice(errIdx, 1)
-                lg("2")
+                // lg("2")
             }
         }
 
-        //  
-        
-        // console.log(errorList)
+        //removing dates error message having not checked yet
+        let errorMsgForDates = "End date cannot be less than start date."
+        if(errorList.includes(errorMsgForDates)){
+            let errIdx = errorList.indexOf(errorMsg)
+            errorList.splice(errIdx, 1)
+        }
+
+
         // if(errorList.length > 0 && errorList[0] != ""){
         if(errorList.length > 0){
-            lg("3")
+            
             let errDiv = $('.errorlist2')
             errDiv.empty()
             let error = ""
@@ -63,7 +89,7 @@ $(document).ready(function(){
             errDiv.show('fadeIn')
         }
         else {
-            lg("4")
+            // lg("4")
             // console.log("other side")
             //...validate day
             //...validate that start date is less or equal to end date
@@ -74,6 +100,15 @@ $(document).ready(function(){
             
             let stdate = startDateComp[0]
             let eddate = endDateComp[0]
+
+            let sttime = startDateComp[1]
+            let edtime = endDateComp[1]
+
+            //assign date and time info to their input field
+            document.getElementById('start').value = stdate
+            document.getElementById('end').value = eddate
+            document.getElementById('starttime').value = sttime
+            document.getElementById('endtime').value = edtime
             
             //convert to real date
             let stdateComp = stdate.split('-')
@@ -82,21 +117,40 @@ $(document).ready(function(){
             let newstDate = new Date(stdateComp[0], stdateComp[1], stdateComp[2])
             let newedDate = new Date(eddateComp[0], eddateComp[1], eddateComp[2])
 
+            if( newstDate > newedDate){
+                let errorMsg = "End date cannot be less than start date."
+                if(!errorList.includes(errorMsg)){
+                    errorList.push(errorMsg)
+                }
+            }  
+            
             amountOfDay = days_between(newstDate, newedDate)
             
-            //fill days div
-            $('.day-allocation-section').empty();
-            for (let index = 0; index < amountOfDay; index++) {
+            //fill days div only if error list is empty
+            if(errorList.length > 0){
+                let errDiv = $('.errorlist2')
+                errDiv.empty()
+                let error = ""
+                errDiv.append('<h6>Error List</h6>')
+                for (let idx = 0; idx < errorList.length; idx++) {
+                    error = errorList[idx];
+                    errDiv.append('<p style="display:block" class="invalid-feedback">. '+error+'</p>')
+                }
+                errDiv.show('fadeIn')
+            }else{
+                $('.day-allocation-section').empty();
+                for (let index = 0; index < amountOfDay; index++) {
 
-                let dayDiv = '<div class="row day mt-3" id="day_'+(index+1)+'" style="width: 100%;">'
-                dayDiv += '<div class="col-9" style="text-align:left;">'
-                dayDiv += '<p class="lead"><a class="day-link" day='+(index+1)+' day-data="day_'+(index+1)+'" style="color:#007BFF;cursor:pointer;font-size:17px;text-decoration: none;border-bottom: 1px solid #ccc;"><i class="fas fa-plus"></i> Add Faculty</a> for Day '+(index + 1)+'</p>'
-                dayDiv += '</div></div>';
+                    let dayDiv = '<div class="row day mt-3" id="day_'+(index+1)+'" style="width: 100%;">'
+                    dayDiv += '<div class="col-9" style="text-align:left;">'
+                    dayDiv += '<p class="lead"><a class="day-link" day='+(index+1)+' day-data="day_'+(index+1)+'" style="color:#007BFF;cursor:pointer;font-size:17px;text-decoration: none;border-bottom: 1px solid #ccc;"><i class="fas fa-plus"></i> Add Faculty</a> for Day '+(index + 1)+'</p>'
+                    dayDiv += '</div></div>';
 
-                
-                eventDayLabel.push("day_"+(index+1))
+                    
+                    eventDayLabel.push("day_"+(index+1))
 
-                $('.day-allocation-section').append(dayDiv)
+                    $('.day-allocation-section').append(dayDiv)
+                }
             }
         }
         //  
@@ -132,17 +186,17 @@ $(document).ready(function(){
 
         let facultyConatiner = '<div fac-day-data="'+linkAttr+'" fac-container-num="'+facultyContainerNum+'" class="row ml-2 mb-2 faculty-input">'
         facultyConatiner += '<div class="col-5"><label for="event">Faculty Name *</label>'
-        facultyConatiner += '<div class="input-group"><input type="text" class="form-control fac-name" id="fac-name-'+facultyContainerNum+'" placeholder="" value="" required="">'
+        facultyConatiner += '<div class="input-group"><input type="text" class="form-control fac-name" num-data="'+facultyContainerNum+'" id="fac-name-'+facultyContainerNum+'" placeholder="" value="" required="">'
         facultyConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-poll-h"></i></div></div>'
         facultyConatiner += '<div class="invalid-feedback" style="width: 100%;">Faculty '+(facultyContainerNum)+' name for day '+(dayNum)+' cannot be empty.</div>'
         facultyConatiner += '</div></div>'
         facultyConatiner += '<div class="col-3"><label for="event">Total Student Capacity *</label>'
-        facultyConatiner += '<div class="input-group"><input type="text" class="form-control std-cap" id="std-capcity-'+facultyContainerNum+'" placeholder="" value="" required="">'
+        facultyConatiner += '<div class="input-group"><input type="text" class="form-control std-cap" num-data="'+facultyContainerNum+'" id="std-capcity-'+facultyContainerNum+'" placeholder="" value="" required="">'
         facultyConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-user-graduate"></i></div></div>'
         facultyConatiner += '<div class="invalid-feedback" style="width: 100%;">Total student capacity '+(facultyContainerNum)+' cannot cannot be empty.</div>'
         facultyConatiner += '</div></div>'
         facultyConatiner += '<div class="col-3"><label for="event">Total Visitor Capacity *</label>'
-        facultyConatiner += '<div class="input-group"><input type="text" class="form-control vis-cap" id="vis-capacity-'+facultyContainerNum+'" placeholder="" value="" required="">'
+        facultyConatiner += '<div class="input-group"><input type="text" class="form-control vis-cap" num-data="'+facultyContainerNum+'" id="vis-capacity-'+facultyContainerNum+'" placeholder="" value="" required="">'
         facultyConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-users"></i></div></div>'
         facultyConatiner += '<div class="invalid-feedback" style="width: 100%;">Total visitor capacity '+(facultyContainerNum)+' cannot cannot be empty.</div>'
         facultyConatiner += '</div></div>'
@@ -169,6 +223,7 @@ $(document).ready(function(){
             if(errorList.includes(errorMsg)){
                 let errIdx = errorList.indexOf(errorMsg)
                 errorList.splice(errIdx, 1)
+                errorBlock.hide()
             }
         }
         lg(errorList)
@@ -178,7 +233,14 @@ $(document).ready(function(){
         let value = $(this).val()
         let errorBlock = $(this).parent().parent().find('.invalid-feedback');
         let errorMsg = errorBlock.html().trim()
+        let numData =  $(this).attr('num-data')
         if(value == ''){
+            //check if num error is in array, then remove if //true
+            let errorTxt = "Number is require for student capacity "+ numData
+            if(errorList.includes(errorTxt)){
+                let errIdx = errorList.indexOf(errorTxt)
+                errorList.splice(errIdx, 1)
+            }
             errorBlock.show()
             if(!errorList.includes(errorMsg)){
                 errorList.push(errorMsg)
@@ -187,14 +249,12 @@ $(document).ready(function(){
             if(errorList.includes(errorMsg)){
                 let errIdx = errorList.indexOf(errorMsg)
                 errorList.splice(errIdx, 1)
+                errorBlock.hide()
             }
-            let errorTxt = "Number is require for student capacity"
-            let otherErrorBlock = $('.otherErrorlist')
+            let errorTxt = "Number is require for student capacity "+ numData
             if(isNaN(value)){
                 if(!errorList.includes(errorTxt)){
                     errorList.push(errorTxt)
-                    otherErrorBlock.append('<p style="display:block" class="invalid-feedback">. '+errorTxt+'</p>')
-                    otherErrorBlock.show("fadeIn")
                 }
             }else{
                 if(errorList.includes(errorTxt)){
@@ -210,7 +270,15 @@ $(document).ready(function(){
         let value = $(this).val()
         let errorBlock = $(this).parent().parent().find('.invalid-feedback');
         let errorMsg = errorBlock.html().trim()
+        let numData =  $(this).attr('num-data')
         if(value == ''){
+            //check if num error is in array, then remove if //true
+            let errorTxt = "Number is require for visitor capacity "+ numData
+            if(errorList.includes(errorTxt)){
+                let errIdx = errorList.indexOf(errorTxt)
+                errorList.splice(errIdx, 1)
+            }
+            //empty error message
             errorBlock.show()
             if(!errorList.includes(errorMsg)){
                 errorList.push(errorMsg)
@@ -219,6 +287,19 @@ $(document).ready(function(){
             if(errorList.includes(errorMsg)){
                 let errIdx = errorList.indexOf(errorMsg)
                 errorList.splice(errIdx, 1)
+                errorBlock.hide()
+            }
+            let errorTxt = "Number is require for visitor capacity "+ numData
+            let otherErrorBlock = $('.otherErrorlist')
+            if(isNaN(value)){
+                if(!errorList.includes(errorTxt)){
+                    errorList.push(errorTxt)
+                }
+            }else{
+                if(errorList.includes(errorTxt)){
+                    let errIdx = errorList.indexOf(errorTxt)
+                    errorList.splice(errIdx, 1)
+                }
             }
         }
         console.log(errorList)
@@ -249,12 +330,11 @@ $(document).ready(function(){
         
         lg(errorList)
     })
-
     
     //=======event visibility setting================================
-    let isVisible = false
     $('input[name="customRadioInline1"]').change(function(){
-        isVisible = $('input[name=customRadioInline1]:checked').val()
+        let elStatus = document.getElementById('evstatus');
+        elStatus.value = $('input[name=customRadioInline1]:checked').val()
     })
 
     //========Validation Handling==================================
@@ -264,9 +344,9 @@ $(document).ready(function(){
         let errorMsg =  ""
         //setting global errorMsg
         if(inputType === "startdate"){
-            errorMsg = "Incorrect date pattern for start date, kindly follow this pattern YYYY-MM-DD"
+            errorMsg = "Incorrect date pattern for start date, kindly follow this pattern YYYY-MM-DD HH:SS"
         }else if(inputType === "enddate"){
-            errorMsg = "Incorrect date pattern for end date, kindly follow this pattern YYYY-MM-DD"
+            errorMsg = "Incorrect date pattern for end date, kindly follow this pattern YYYY-MM-DD HH:SS"
         }
         let errorBlock = $(this).parent().parent().find('.invalid-feedback');
         let errorText = errorBlock.html().trim()
@@ -288,7 +368,7 @@ $(document).ready(function(){
             }
             if(value && (inputType === "startdate" || inputType === "enddate")){
                
-                const re = /(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})\s(?<hour>\d{2}):(?<minute>\d{2})/
+                const re = /^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})\s(?<hour>\d{2}):(?<minute>\d{2})$/
 
                 if(re.test(value)){
                      
@@ -385,38 +465,34 @@ $(document).ready(function(){
         }
     })
     
-    //=======Submission Process======================================
-
-    //Overall Payload Stack Structure
-    // event = [
-    //     allocation = [
-    //         day_1 = [
-    //             day_11 = ["faculty of science", 1250, 1000],
-    //             day_12 = ["faculty of agric", 1050, 800],
-    //         ],
-    //         day_2 = [
-    //             day_21 = ["faculty of technology", 1150, 850]
-    //         ],
-    //         day_3 = [
-    //             day_31 = ["faculty of education", 2550, 1500]
-    //         ]
-    //     ],
-    //     "UI Convocation Ceremony",
-    //     "UI Conference Centre",
-    //     "/image/poster.png",
-    //     "Covocation ceremony"
-    // ]
-
+   
+   
+    
 
 })
+ //new process
+    // Create event first(event)
+        // .then(create allocations, event._id)
+        // .then(create tags, event._id)
+document.addEventListener('click', function(event){
+    if(event.target.matches('#btnPublish')){
+        let eventForm = document.getElementById('eventForm')
+        formData = new FormData(eventForm)
 
+        for(var pair of formData.entries()){
+            console.log(pair[0]+" => "+pair[1])
+        }
 
-
-
-
-
-
-
+        fetch('/event/create', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: formData
+        })
+        .then(response => console.log(response.json()))
+    }
+})
 
 
 // custion functions
