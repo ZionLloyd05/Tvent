@@ -483,32 +483,17 @@ $(document).ready(function(){
     // Create event first(event)
         // .then(create allocations, event._id)
         // .then(create tags, event._id)
-var eventTitle = document.getElementById('event')
 
+//variable declarations
+let eventTitle = document.getElementById('event')
+let publishBtn = document.getElementById('btnPublish')
+
+//event bindings
 eventTitle.addEventListener('keyup', twoWayBinding)
+publishBtn.addEventListener('click', createEvent)
 
 
-// document.addEventListener('click', function(event){
-//     if(event.target.matches('#btnPublish')){
-//         let eventForm = document.getElementById('eventForm')
-//         formData = new FormData(eventForm)
-
-//         for(var pair of formData.entries()){
-//             console.log(pair[0]+" => "+pair[1])
-//         }
-
-//         fetch('/event/create', {
-//             method: "POST",
-//             headers: {
-//                 "Content-Type": "application/json"
-//             },
-//             body: formData
-//         })
-//         .then(response => console.log(response.json()))
-//     }
-// })
-// =========== FUNCTIONS ========================
-
+//event functions
 function twoWayBinding(e) {
     let title = e.target.value
     let displayEventElement = document.getElementById('eventDisplay')
@@ -520,6 +505,19 @@ function twoWayBinding(e) {
     }
     
 
+}
+function createEvent() {
+    let eventForm = document.getElementById('eventForm')
+    formData = new FormData(eventForm)
+
+    fetch('/event/create', {
+        method: "POST",
+        body: formData
+    })
+    .then(response => {
+        console.log(response.json())
+    })
+    .catch(error => console.log(error))
 }
 
 // custion functions

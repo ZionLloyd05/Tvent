@@ -19,19 +19,23 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage: storage,
     limits:{fileSize: 100000}
-}).single('myImage')
+}).single('poster')
 
 
 router
 .post('/create',(req, res) => {
+    // console.log(req.body)
     upload(req,res, (err) => {
         if(err)
             return res.status(402).send(err)
         else{
-            if(req.file)
+            if(req.file){
+                console.log("here")
                 req.body.postUrl = req.file.filename
-            else
+            }else{
+                console.log("nononop")
                 req.body.postUrl = '/image/event.png';
+            }
             eventController.addEvent(req.body)
             .then(event => {
                 res.status(200).send(event);

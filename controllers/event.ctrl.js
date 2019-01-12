@@ -16,6 +16,7 @@ module.exports = {
             const {value, error} = Joi.validate({ title, location, start, end, starttime, endtime, posterUrl, description, status}, eventValidation.schema);
             
             if(error){
+                log(error.message)
                 reject(error.message);
             }else{
                 let obj = value;
@@ -26,6 +27,7 @@ module.exports = {
                 try {
                     new Event(obj).save((err, event) => {
                         if(err){
+                            log(err)
                             reject(err);
                         }else{
                             resolve(event);
