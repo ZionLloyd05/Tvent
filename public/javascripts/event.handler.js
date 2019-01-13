@@ -25,7 +25,9 @@ $(document).ready(function(){
     //==========serving forms based on category selection=========================
     $('.category-dropdown').on('change', () => {
         let category = $('.category-dropdown').val()
-        
+        let catInp = document.getElementById('category')
+        catInp.value = category
+
         if (category === 'convocation'){
             $('.category-conv-section').show('fadeIn')
         }
@@ -348,67 +350,69 @@ $(document).ready(function(){
     $('input[type="text"]').focusout(function(){
         let value = $(this).val()
         let inputType = $(this).attr("id")
-        let errorMsg =  ""
-        //setting global errorMsg
-        if(inputType === "startdate"){
-            errorMsg = "Incorrect date pattern for start date, kindly follow this pattern YYYY-MM-DD HH:SS"
-        }else if(inputType === "enddate"){
-            errorMsg = "Incorrect date pattern for end date, kindly follow this pattern YYYY-MM-DD HH:SS"
-        }
-        let errorBlock = $(this).parent().parent().find('.invalid-feedback');
-        let errorText = errorBlock.html().trim()
-        if(value == "" && !errorList.includes(errorText)){
-             //check if match error exist
-            
-            if(errorList.includes(errorMsg)){
-                 
-                let errIdx = errorList.indexOf(errorMsg)
-                errorList.splice(errIdx, 1)
+        if(inputType != 'tag'){
+            let errorMsg =  ""
+            //setting global errorMsg
+            if(inputType === "startdate"){
+                errorMsg = "Incorrect date pattern for start date, kindly follow this pattern YYYY-MM-DD HH:SS"
+            }else if(inputType === "enddate"){
+                errorMsg = "Incorrect date pattern for end date, kindly follow this pattern YYYY-MM-DD HH:SS"
             }
-            errorBlock.show()
-            errorList.push(errorText)
-        }else{
-            if(errorList.includes(errorText) && value != ""){
-                let errIdx = errorList.indexOf(errorText)
-                errorList.splice(errIdx, 1)
-                errorBlock.hide()               
-            }
-            if(value && (inputType === "startdate" || inputType === "enddate")){
-               
-                const re = /^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})\s(?<hour>\d{2}):(?<minute>\d{2})$/
-
-                if(re.test(value)){
-                     
-                    //check if match error exist
+            let errorBlock = $(this).parent().parent().find('.invalid-feedback');
+            let errorText = errorBlock.html().trim()
+            if(value == "" && !errorList.includes(errorText)){
+                //check if match error exist
+                
+                if(errorList.includes(errorMsg)){
                     
-                    if(errorList.includes(errorMsg)){
-                        let errIdx = errorList.indexOf(errorMsg)
-                        errorList.splice(errIdx, 1)
-                    }
+                    let errIdx = errorList.indexOf(errorMsg)
+                    errorList.splice(errIdx, 1)
+                }
+                errorBlock.show()
+                errorList.push(errorText)
+            }else{
+                if(errorList.includes(errorText) && value != ""){
+                    let errIdx = errorList.indexOf(errorText)
+                    errorList.splice(errIdx, 1)
+                    errorBlock.hide()               
+                }
+                if(value && (inputType === "startdate" || inputType === "enddate")){
+                
+                    const re = /^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})\s(?<hour>\d{2}):(?<minute>\d{2})$/
 
-                    const date_result = re.exec(value)
-
-                    //...validate month -- 01 = 12
-                    let startdate_month = date_result.groups.month
-                    var monthErrorMsg = "Incorrect month, kindly follow this pattern YYYY-MM-DD"
-
-                    if((startdate_month > 12 || startdate_month < 00 )){
-                        errorBlock.append('<p>Incorrect month, kindly follow this pattern YYYY-MM-DD</p>')
-                        if(!errorList.includes(monthErrorMsg)){
-                            errorList.push(monthErrorMsg)
-                        }
-                    }else{
-                        if(errorList.includes(monthErrorMsg)){
-                            let errIdx = errorList.indexOf(monthErrorMsg)
+                    if(re.test(value)){
+                        
+                        //check if match error exist
+                        
+                        if(errorList.includes(errorMsg)){
+                            let errIdx = errorList.indexOf(errorMsg)
                             errorList.splice(errIdx, 1)
                         }
+
+                        const date_result = re.exec(value)
+
+                        //...validate month -- 01 = 12
+                        let startdate_month = date_result.groups.month
+                        var monthErrorMsg = "Incorrect month, kindly follow this pattern YYYY-MM-DD"
+
+                        if((startdate_month > 12 || startdate_month < 00 )){
+                            errorBlock.append('<p>Incorrect month, kindly follow this pattern YYYY-MM-DD</p>')
+                            if(!errorList.includes(monthErrorMsg)){
+                                errorList.push(monthErrorMsg)
+                            }
+                        }else{
+                            if(errorList.includes(monthErrorMsg)){
+                                let errIdx = errorList.indexOf(monthErrorMsg)
+                                errorList.splice(errIdx, 1)
+                            }
+                        }
+                    }else{
+                        //errorBlock.empty()
+                        if(!errorList.includes(errorMsg)){
+                            errorList.push(errorMsg)
+                        }
+                    
                     }
-                }else{
-                    //errorBlock.empty()
-                    if(!errorList.includes(errorMsg)){
-                        errorList.push(errorMsg)
-                    }
-                
                 }
             }
         }
@@ -472,10 +476,6 @@ $(document).ready(function(){
         }
     })
     
-   
-   
-    
-
 })
 
 // ====================== VANILLA JAVASCRIPT ==================================
@@ -487,10 +487,17 @@ $(document).ready(function(){
 //variable declarations
 let eventTitle = document.getElementById('event')
 let publishBtn = document.getElementById('btnPublish')
+let tagInput = document.getElementById('tag')
+let tagList = document.getElementById('taglist')
 
 //event bindings
-eventTitle.addEventListener('keyup', twoWayBinding)
-publishBtn.addEventListener('click', createEvent)
+if(eventTitle)
+    eventTitle.addEventListener('keyup', twoWayBinding)
+if(publishBtn)
+    publishBtn.addEventListener('click', createEvent)
+if(tagInput)
+    tagInput.addEventListener('keydown', addTag)
+
 
 
 //event functions
@@ -515,9 +522,38 @@ function createEvent() {
         body: formData
     })
     .then(response => {
-        console.log(response.json())
+        response.json()
+        .then(res => console.log(res))
     })
     .catch(error => console.log(error))
+}
+function addTag(e){
+    if(e.code == 'Enter'){
+        let tagslen = tagList.children.length
+        if(tagslen < 5){
+            let text = e.target.value
+            let a = document.createElement('a')
+            a.className = 'badge badge-light'
+            a.id = 'tagcreated'
+            let atxt = document.createTextNode(text)
+            a.appendChild(atxt)
+            let btn = document.createElement('span')
+            btn.className = 'btCancel'
+            btn.id = 'tgCancel'
+            btn.append(document.createTextNode('X'))
+            a.appendChild(btn)
+            a.addEventListener('click', removeTag)
+            tagList.appendChild(a)
+            tagInput.value = ''
+        }else{
+            alert("Tag limit reached!")
+        }        
+    }
+}
+function removeTag(e){
+    if(e.target.classList.contains('btCancel')){
+        tagList.removeChild(this)
+    }
 }
 
 // custion functions

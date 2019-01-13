@@ -29,16 +29,10 @@ router
         if(err)
             return res.status(402).send(err)
         else{
-            if(req.file){
-                console.log("here")
-                req.body.postUrl = req.file.filename
-            }else{
-                console.log("nononop")
-                req.body.postUrl = '/image/event.png';
-            }
-            eventController.addEvent(req.body)
+            // console.log(req)
+            eventController.addEvent(req)
             .then(event => {
-                res.status(200).send(event);
+                res.status(200).json(event);
             })
             .catch(error => {
                 res.send(error)

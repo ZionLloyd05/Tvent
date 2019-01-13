@@ -5,7 +5,7 @@ const joi = BaseJoi.extend(Extension);
 exports.schema = joi.object().keys({
     title: joi.string().min(5).max(60).required(),
     location: joi.string().required(),
-    posterUrl: joi.string().alphanum().max(30),
+    posterUrl: joi.string().max(30),
     description: joi.string().required().min(10).max(100),
     status: joi.string().required(),
     start: joi.date().required().min('now').format('YYYY-MM-DD'),

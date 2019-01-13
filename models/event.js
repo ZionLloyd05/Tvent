@@ -2,16 +2,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 var eventSchema = new Schema({
-    // user:  {
-    //     ref: 'User',
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     required: true
-    // },
-    // category: {
-    //     ref: 'Category',
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     required: true
-    // },
+    user:  {
+        ref: 'User',
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
+    },
+    category: {
+        type: String,
+    },
     reference: {
         type: String,
         unique: true
@@ -42,7 +40,8 @@ var eventSchema = new Schema({
         type: String
     },
     posterUrl: {
-        type: String
+        type: String,
+        default: 'event.png'
     },
     description: {
         type: String,

@@ -90,6 +90,7 @@
                             <input type="hidden" name="status" id="evstatus" value="open">
                             <input type="hidden" name="start" id="start" value="">
                             <input type="hidden" name="end" id="end" value="">
+                            <input type="hidden" name="category" id="category" value="">
                             <input type="hidden" name="starttime" id="starttime" value="">
                             <input type="hidden" name="endtime" id="endtime" value="">
                         </div>
@@ -146,7 +147,7 @@
                     <h5 class="display-4 tabtitle">Almost done!</h5>
                     <hr>
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-12">
                             <label for="" style="margin-right: 20px;">Make Event</label>
                             <div class="custom-control custom-radio custom-control-inline">
                                 <input type="radio" checked value="open" id="customRadioInline1" name="customRadioInline1" class="custom-control-input">
@@ -157,10 +158,12 @@
                                 <label class="custom-control-label" for="customRadioInline2">Not Visible</label>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <label for="tags">Related Tags</label>
+                        <div class="col-12 mt-3">
                             <div class="input-group">
-                                <input type="text" class="form-control" id="tag" placeholder="convocation,ceremony,party,UI,student convo" value="">
+                                <input type="text" class="form-control" id="tag" placeholder="type related tag and press enter" value="">
+                            </div>
+                            <div class="" id="taglist" style="padding: 20px 0px 0px 40px;">
+                                
                             </div>
                         </div>
                     </div>
