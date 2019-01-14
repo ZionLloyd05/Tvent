@@ -9,6 +9,20 @@ var allocationSchema = new Schema({
     },
     day: {
         type: Number,
-        
+        required: true
+    },
+    division: {
+        type: String,
+        required: true
+    },
+    capacity: {
+        type: Number,
+        default: 0
+    },
+    extra: {
+        type: Number,
+        default: 0
     }
 })
+
+module.exports = mongoose.model('Allocation', allocationSchema)

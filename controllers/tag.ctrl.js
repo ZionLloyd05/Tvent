@@ -22,7 +22,7 @@ module.exports = {
                         new Tag(obj).save();
                     }
                 }
-                resolve("Done")
+                resolve({status: "Done"})
             } catch(error){
                 reject(error)
             }

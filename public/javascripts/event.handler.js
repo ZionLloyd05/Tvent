@@ -1,26 +1,11 @@
 $(document).ready(function(){
 
-    // event = [
-    //     ["faculty of science", 1250, 1000],
-    //     ["faculty of agric", 1050, 800],
-    //     ["faculty of technology", 1150, 850],
-    //     ["faculty of education", 2550, 1500],
-    //     ["faculty of education", 2550, 1500],
-    //     ["faculty of education", 2550, 1500]
-    // ]
-    // jsonEvent = Object.assign({}, event);
-    // $.ajax({
-    //     url: '/event/create',
-    //     type: 'post',
-    //     data: jsonEvent,
-    //     cache: false,
-    //     dataType: 'text',
-    //     success: function(res){
-    //         console.log(res)
-    //     } 
-    // })
-
     let errorList = [];
+    let totalFaculty = 0
+    let facultyContainerNum = 0
+    let eventDay = {} //holds the amount of faculty for each day as an object
+    let facultyContainerNums = []
+
 
     //==========serving forms based on category selection=========================
     $('.category-dropdown').on('change', () => {
@@ -47,6 +32,10 @@ $(document).ready(function(){
     let eventDayLabel = [] //holds the label of day created
     // lg(errorList)
     $('.dayGenerate').click( function() {
+        eventDay = {}
+        facultyContainerNums = []
+        totalFaculty = 0
+        facultyContainerNum = 0
 
         var sectionAllocation = document.getElementById('allocation-section')
         while(sectionAllocation.firstChild)
@@ -165,11 +154,6 @@ $(document).ready(function(){
         //  
     })
 
-    let totalFaculty = 0
-    let facultyContainerNum = 0
-    let eventDay = {} //holds the amount of faculty for each day as an object
-    let facultyContainerNums = []
-
     //===========add faculty handler=============================================================================================================================================
 
     $(document).on('click', '.day-link', function() {
@@ -200,7 +184,7 @@ $(document).ready(function(){
         facultyConatiner += '<div class="invalid-feedback" style="width: 100%;">Faculty '+(facultyContainerNum)+' name for day '+(dayNum)+' cannot be empty.</div>'
         facultyConatiner += '</div></div>'
         facultyConatiner += '<div class="col-3"><label for="event">Total Student Capacity *</label>'
-        facultyConatiner += '<div class="input-group"><input type="text" class="form-control std-cap" num-data="'+facultyContainerNum+'" id="std-capcity-'+facultyContainerNum+'" placeholder="" value="" required="">'
+        facultyConatiner += '<div class="input-group"><input type="text" class="form-control std-cap" num-data="'+facultyContainerNum+'" id="std-capacity-'+facultyContainerNum+'" placeholder="" value="" required="">'
         facultyConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-user-graduate"></i></div></div>'
         facultyConatiner += '<div class="invalid-feedback" style="width: 100%;">Total student capacity '+(facultyContainerNum)+' cannot cannot be empty.</div>'
         facultyConatiner += '</div></div>'
@@ -214,6 +198,8 @@ $(document).ready(function(){
 
         // console.log(facultyConatiner)
         $(linkId).append(facultyConatiner);
+        console.log(eventDay)
+        console.log(facultyContainerNums)
         //  
     })
 
@@ -235,7 +221,7 @@ $(document).ready(function(){
                 errorBlock.hide()
             }
         }
-        lg(errorList)
+        // lg(errorList)
     })
 
     $(document).on('focusout', '.std-cap', function(){
@@ -272,7 +258,7 @@ $(document).ready(function(){
                 }
             }
         }
-        console.log(errorList)
+        // console.log(errorList)
     })
 
     $(document).on('focusout', '.vis-cap', function(){
@@ -311,7 +297,7 @@ $(document).ready(function(){
                 }
             }
         }
-        console.log(errorList)
+        // console.log(errorList)
     })
 
     //=======trash faculty functionality===================================
@@ -337,7 +323,8 @@ $(document).ready(function(){
         //  
         $(this).parent().parent().remove();
         
-        lg(errorList)
+        console.log(eventDay)
+        console.log(facultyContainerNums)
     })
     
     //=======event visibility setting================================
@@ -476,7 +463,6 @@ $(document).ready(function(){
         }
     })
     
-})
 
 // ====================== VANILLA JAVASCRIPT ==================================
  //new process
@@ -513,11 +499,13 @@ function twoWayBinding(e) {
     
 
 }
+var globalRes = []
 function createEvent() {
+    
     let eventForm = document.getElementById('eventForm')
     formData = new FormData(eventForm)
 
-    fetch('/event/create', {
+    fetch('/events/create', {
         method: "POST",
         body: formData
     })
@@ -541,11 +529,55 @@ function createEvent() {
                 tagObjs[idx] = tag
             })
             // console.log(tagObjs)
-            postTag('/tag/save', tagObjs)
-                .then(data => console.log(data))
+            postTag('/tags/save', tagObjs)
+
+            allocation = []
+            let containerNum = 0
+            Object.keys(eventDay).map(key => {
+                
+                for (let x = 0; x < eventDay[key]; x++) {
+                    fac_input_id = "fac-name-"+facultyContainerNums[containerNum]
+                    std_capacity_id = "std-capacity-"+facultyContainerNums[containerNum]
+                    vis_capacity_id = "vis-capacity-"+facultyContainerNums[containerNum]
+
+                    individual_allocation = []
+                    individual_allocation.push(key)
+                    individual_allocation.push(document.getElementById(fac_input_id).value)
+                    individual_allocation.push(document.getElementById(std_capacity_id).value)
+                    individual_allocation.push(document.getElementById(vis_capacity_id).value)
+                    allocation.push(individual_allocation)
+                    containerNum = containerNum + 1
+                }
+            })
+
+            let obj = {}
+            obj[0] = res._id
+            allocation.forEach((block, x) => {
+                let sobj = {}
+                block.forEach((item, y) => {
+                    sobj[y] = item
+                })
+                obj[x+1] = sobj
+            })
+
+            postAllocation('/allocations/save', obj)
+            console.log(globalRes)
         })
     })
     .catch(error => console.log(error))
+}
+function postAllocation(url = '', allObj){
+    return fetch(url, {
+            method: "POST",
+            body: JSON.stringify(allObj),
+            headers: {
+                "Content-Type": "application/json",
+                // "Content-Type": "application/x-www-form-urlencoded",
+            },
+        })
+        .then(res => {
+           globalRes.push(res)
+        })
 }
 function postTag(url = '', tgObj){
     return fetch(url, {
@@ -557,7 +589,7 @@ function postTag(url = '', tgObj){
             },
         })
         .then(res => {
-            console.log(res)
+           globalRes.push(res)
         })
 }
 function addTag(e){
@@ -609,3 +641,5 @@ function days_between(date1, date2) {
 function lg(message){
     console.log(message)
 }
+
+})

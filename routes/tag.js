@@ -5,8 +5,8 @@ const tagController = require('../controllers/tag.ctrl')
 router
 .post('/save', (req, res) => {
     tagController.addTag(req)
-    .then(response => {
-        res.send(response)
+    .then(data => {
+        res.json(data)
     })
 })
 

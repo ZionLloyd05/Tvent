@@ -21,6 +21,7 @@ let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');
 let eventRouter = require('./routes/event');
 let tagRouter = require('./routes/tag');
+let allocationRouter = require('./routes/allocation');
 var expressHbs = require('express-handlebars');
 
 var app = express();
@@ -69,10 +70,11 @@ app.use(function(req, res, next){
 //==========================================
 //  Routing Routes
 //==========================================
-app.use('/', indexRouter);
-app.use('/user', usersRouter);
-app.use('/event', eventRouter);
-app.use('/tag', tagRouter)
+app.use('/', indexRouter)
+app.use('/users', usersRouter)
+app.use('/events', eventRouter)
+app.use('/tags', tagRouter)
+app.use('/allocations', allocationRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
