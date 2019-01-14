@@ -1,5 +1,4 @@
 const Event = require('../models/event')
-const Tag = require('../models/tag')
 
 const Joi = require('joi')
 const uuidv4 = require('uuid/v4');
@@ -16,32 +15,32 @@ module.exports = {
             if(req.file)
                 posterUrl = req.file.filename
 
-                console.log(req.body)
-            let {value, error} = Joi.validate({ title, location, start, end, starttime, endtime, posterUrl, description, status}, eventValidation.schema);
+                
+            let {value, error} = Joi.validate({ title, location, start, end, starttime, endtime, posterUrl, description, status, category}, eventValidation.schema);
             
             if(error){
                 reject(error.message);
             }else{
                 let obj = new Event();
                 obj = { ...value }
-                obj.user = req.session.id
+                obj.user = req.session._id
                 obj.reference = uuidv4();
                 const hostUrl = "http://localhost:3000/";
                 const eventLink = hostUrl+obj.reference;
                 obj.link = eventLink;
-                resolve(obj)
-                // try {
-                //     new Event(obj).save((err, event) => {
-                //         if(err){
-                //             log(err)
-                //             reject(err);
-                //         }else{
-                //             resolve(event);
-                //         }
-                //     })
-                // } catch (error) {
-                //     reject(error);
-                // }
+                
+                try {
+                    new Event(obj).save((err, event) => {
+                        if(err){
+                            log(err)
+                            reject(err);
+                        }else{
+                            resolve(event);
+                        }
+                    })
+                } catch (error) {
+                    reject(error);
+                }
                 
             }
 

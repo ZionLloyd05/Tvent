@@ -523,9 +523,42 @@ function createEvent() {
     })
     .then(response => {
         response.json()
-        .then(res => console.log(res))
+        .then(res => {
+            //save tags
+            //save allocation
+            tags = []
+            tags.push(res._id)
+            // console.log(res)
+            var badges = document.getElementsByClassName('badge')
+            if(badges.length > 0){
+                Array.from(badges).forEach(badge => {
+                    tags.push(badge.firstChild.textContent)
+                })
+            }
+            let tagObjs = {}
+
+            tags.forEach((tag, idx) => {
+                tagObjs[idx] = tag
+            })
+            // console.log(tagObjs)
+            postTag('/tag/save', tagObjs)
+                .then(data => console.log(data))
+        })
     })
     .catch(error => console.log(error))
+}
+function postTag(url = '', tgObj){
+    return fetch(url, {
+            method: "POST",
+            body: JSON.stringify(tgObj),
+            headers: {
+                "Content-Type": "application/json",
+                // "Content-Type": "application/x-www-form-urlencoded",
+            },
+        })
+        .then(res => {
+            console.log(res)
+        })
 }
 function addTag(e){
     if(e.code == 'Enter'){

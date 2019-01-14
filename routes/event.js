@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
       cb(null, './public/uploads/')
     },
     filename: (req, file, cb)=> {
-      cb(null, file.fieldname + "-" + file.originalname);
+      cb(null, file.fieldname + "-" + Date.now());
     }
   })
 
@@ -24,12 +24,10 @@ const upload = multer({
 
 router
 .post('/create',(req, res) => {
-    // console.log(req.body)
     upload(req,res, (err) => {
         if(err)
             return res.status(402).send(err)
         else{
-            // console.log(req)
             eventController.addEvent(req)
             .then(event => {
                 res.status(200).json(event);

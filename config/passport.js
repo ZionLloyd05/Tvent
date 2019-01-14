@@ -88,8 +88,10 @@ passport.use('local.signin', new LocalStrategy({
                 message: 'Incorrect Password'
             });
         }
+        // console.log(user)
+        req.session._id = user._id;
         req.session.email = user.email;
-        req.session.id = user._id;
+        // console.log(req.session)
         return done(null, user);
     })
 }));

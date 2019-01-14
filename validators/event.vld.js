@@ -11,5 +11,6 @@ exports.schema = joi.object().keys({
     start: joi.date().required().min('now').format('YYYY-MM-DD'),
     end: joi.date().min(joi.ref('start')).required().format('YYYY-MM-DD'),
     starttime: joi.string().regex(/^\d{2}:\d{2}/).required(),
-    endtime: joi.string().regex(/^\d{2}:\d{2}/).required()
+    endtime: joi.string().regex(/^\d{2}:\d{2}/).required(),
+    category: joi.string().required()
 })
