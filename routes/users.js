@@ -10,13 +10,16 @@ router.use(csrfProtection);
 //  Routes that requires user to be logged in
 //============================================
 
-router.get('/create-event', isLoggedIn, function (req, res, next) {
+router
+.get('/create-event', isLoggedIn, (req, res) => {
   res.render('user/cevent', {csrfToken: req.csrfToken()});
 })
 
+.get('/myevent', isLoggedIn, (req, res) => {
+  res.render('user/myevent')
+})
 
-
-router.get('/logout', isLoggedIn, function (req, res, next) {
+.get('/logout', isLoggedIn, (req, res, next) => {
   req.session.destroy(function (err) {
     if (err)
       next(err);
@@ -32,11 +35,11 @@ router.get('/logout', isLoggedIn, function (req, res, next) {
 //  Public Routes
 //============================================
 
-router.all('/', isNotLoggedIn, function (req, res, next) {
+.all('/', isNotLoggedIn, function (req, res, next) {
   next();
 })
 
-router.get('/signin', function (req, res, next) {
+.get('/signin', function (req, res, next) {
   var messages = req.flash('error');
   res.render('user/signin', {
     csrfToken: req.csrfToken(),
@@ -45,7 +48,7 @@ router.get('/signin', function (req, res, next) {
   });
 })
 
-router.post('/signin', passport.authenticate('local.signin', {
+.post('/signin', passport.authenticate('local.signin', {
   successRedirect: '/',
   failureRedirect: '/user/signin',
   failureFlash: true

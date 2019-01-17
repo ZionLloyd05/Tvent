@@ -1,0 +1,96 @@
+<div class="row cevent" style="width:100%;">
+    <div class="col-7" style="padding-left: 5%;">
+        <h3 class="display-4" id="eventDisplay">Manage Events</h3>
+    </div>
+    <div class="col-5" style="text-align:right;padding: 2% 6% 0% 0%;">
+        {{!-- <button class="btn ceventBtn" style="margin-right:2%;"><i class="far fa-save"></i> Save</button> --}}
+        
+    </div>
+
+</div>
+<hr style="padding: 5px;">
+<div class="container" style="margin-bottom:70px">
+    <div class="row">
+        <div class="col-5 eventListContainer">
+            <div class="input-group mb-3">
+                <input type="text" style="border-radius: 5px 0px 0px 5px;" class="form-control searchInp" id="username" placeholder="search for events">
+                <div class="invalid-feedback" style="width: 100%;">
+                    Your username is required.
+                </div>
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        {{!-- <i class="fa fa-spinner fa-spin" style="display:none;font-size:24px"></i> --}}
+                        <i class="fas fa-search" style="font-size:18px"></i>
+                    </span>
+                </div> 
+            </div>
+            <div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" checked value="public" id="customRadioInline1" name="customRadioInline1" class="custom-control-input">
+                    <label class="custom-control-label" for="customRadioInline1">Public (10)</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" value="private" id="customRadioInline2" name="customRadioInline1" class="custom-control-input">
+                    <label class="custom-control-label" for="customRadioInline2">Private (0)</label>
+                </div>
+            </div>
+            <hr/>
+            <div class="event" id="event">
+                <h6>Node.Js Conference</h6>
+                <span>Jan 1, 2019 7:00 PM</span><span style="float:right">25/200</span>
+            </div>
+            <div class="event" id="event">
+                <h6>Node.Js Conference</h6>
+                <span>Jan 1, 2019 7:00 PM</span><span style="float:right">25/200</span>
+            </div>
+            <div class="event" id="event">
+                <h6>70th UI Convocation</h6>
+                <span>Jan 1, 2019 9:00 AM - Jan 4, 2019 2:00 AM </span><span style="float:right">1050/5500</span>
+            </div>
+            <div class="event" id="event">
+                <h6>Node.Js Conference</h6>
+                <span>Jan 1, 2019 7:00 PM</span><span style="float:right">25/200</span>
+            </div>
+            <div class="event" id="event">
+                <h6>Node.Js Conference</h6>
+                <span>Jan 1, 2019 7:00 PM</span><span style="float:right">25/200</span>
+            </div>
+            <div class="event" id="event">
+                <h6>Node.Js Conference</h6>
+                <span>Jan 1, 2019 7:00 PM</span><span style="float:right">25/200</span>
+            </div>
+        </div>
+        <div class="col-7 eventViewContainer">
+            <div class="row">
+                <div class="col-7" style="padding-left:5%;">
+                <h4 class="display-4" style="font-size:20px;">Node.Js Conference </h4>
+                </div>
+                <div class="col-5" style="text-align:right;">
+                    <button class="btn"  data-toggle="modal" data-target="#itemModal" style="margin-right:2%;"><i class="fas fa-edit"></i>  Edit</button>
+                    <button class="btn"  data-toggle="modal" data-target="#itemModal" style="margin-right:2%;"><i class="far fa-eye"></i>  Preview</button>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-7">
+                    <img src="/uploads/poster_1547753994396.jpg" style="max-width:100%" alt="event poster">
+                </div>
+                <div class="col-5">
+                    <p>Jan 1, 2019 9:00 AM - Jan 4, 2019 2:00 AM </p>
+                    <p>A conference for Web developers from allover the world</p>
+                    <a class="badge badge-light">Lagos show</a>
+                    <a class="badge badge-light">Party</a>
+                    <a class="badge badge-light">Convocation</a>
+                    <a class="badge badge-light">Ibadan for sho</a>
+                </div>
+                <div class="col-12 mt-3">
+                    <p>Event Allocation</p>
+                    <ol style="list-style-type:none;font-size:15px;">
+                        <li>Day 1: Diving into REST Api Pattern designs <span style="float:right">Capacity: 200</span></li>
+                        <li>Day 2: Diving into REST Api Pattern designs <span style="float:right">Capacity: 200</span></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
