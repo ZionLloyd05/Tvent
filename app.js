@@ -71,7 +71,7 @@ app.use(function(req, res, next){
 //  Routing Routes
 //==========================================
 app.use('/', indexRouter)
-app.use('/users', usersRouter)
+app.use('/user', usersRouter)
 app.use('/events', eventRouter)
 app.use('/tags', tagRouter)
 app.use('/allocations', allocationRouter)

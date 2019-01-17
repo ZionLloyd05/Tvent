@@ -8,7 +8,7 @@ const log = console.log;
 
 module.exports = {
     addEvent: (req) => {
-        return new Promise((resolve, reject)=> {
+        return new Promise(async(resolve, reject)=> {
         
             let { title, location, start, end, starttime, endtime, posterUrl, description, status, category } = req.body;
             
@@ -30,14 +30,17 @@ module.exports = {
                 obj.link = eventLink;
                 
                 try {
-                    new Event(obj).save((err, event) => {
-                        if(err){
-                            log(err)
-                            reject(err);
-                        }else{
-                            resolve(event);
-                        }
-                    })
+                    // new Event(obj).save((err, event) => {
+                    //     if(err){
+                    //         log(err)
+                    //         reject(err);
+                    //     }else{
+                    //         resolve(event);
+                    //     }
+                    // })
+                    const event = new Event(obj).save()
+                    console.log(event)
+                    resolve(event)
                 } catch (error) {
                     reject(error);
                 }

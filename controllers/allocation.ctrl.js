@@ -30,10 +30,10 @@ module.exports = {
                             capacity: arr[2],
                             extra: arr[3]
                         }
-                        new Allocation(obj).save();
+                       new Allocation(obj).save()
                     }
                 }
-                resolve({status: "Done"})
+                resolve({status: "Allocations Saved"})
             } catch(error){
                 reject(error)
             }

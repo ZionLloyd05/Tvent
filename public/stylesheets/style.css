@@ -28,7 +28,6 @@ main {
 .btn:hover {
   background: #67324d;
   color: #f5deb3;
-  ;
 }
 
 .btn:active {
@@ -210,4 +209,13 @@ main {
   margin-left: 10px;
   color: #E4C181;
   cursor: pointer;
+}
+.toast-bottom-right {
+  margin-bottom: 40px;
+}
+.toast-info {
+  background-color: #783B5A !important;
+}
+h5.display-4{
+  font-size: 20px;
 }

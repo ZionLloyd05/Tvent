@@ -1,6 +1,7 @@
-$(document).ready(function(){
 
-    let errorList = [];
+$(document).ready(function(){
+      
+    let errorList = []
     let totalFaculty = 0
     let facultyContainerNum = 0
     let eventDay = {} //holds the amount of faculty for each day as an object
@@ -81,7 +82,7 @@ $(document).ready(function(){
             let error = ""
             errDiv.append('<h6>Error List</h6>')
             for (let idx = 0; idx < errorList.length; idx++) {
-                error = errorList[idx];
+                error = errorList[idx]
                 errDiv.append('<p style="display:block" class="invalid-feedback">. '+error+'</p>')
             }
             errDiv.show('fadeIn')
@@ -131,18 +132,18 @@ $(document).ready(function(){
                 let error = ""
                 errDiv.append('<h6>Error List</h6>')
                 for (let idx = 0; idx < errorList.length; idx++) {
-                    error = errorList[idx];
+                    error = errorList[idx]
                     errDiv.append('<p style="display:block" class="invalid-feedback">. '+error+'</p>')
                 }
                 errDiv.show('fadeIn')
             }else{
-                $('.day-allocation-section').empty();
+                $('.day-allocation-section').empty()
                 for (let index = 0; index < amountOfDay; index++) {
 
                     let dayDiv = '<div class="row day mt-3" id="day_'+(index+1)+'" style="width: 100%;">'
                     dayDiv += '<div class="col-9" style="text-align:left;">'
                     dayDiv += '<p class="lead"><a class="day-link" day='+(index+1)+' day-data="day_'+(index+1)+'" style="color:#007BFF;cursor:pointer;font-size:17px;text-decoration: none;border-bottom: 1px solid #ccc;"><i class="fas fa-plus"></i> Add Faculty</a> for Day '+(index + 1)+'</p>'
-                    dayDiv += '</div></div>';
+                    dayDiv += '</div></div>'
 
                     
                     eventDayLabel.push("day_"+(index+1))
@@ -179,7 +180,7 @@ $(document).ready(function(){
 
         let facultyConatiner = '<div fac-day-data="'+linkAttr+'" fac-container-num="'+facultyContainerNum+'" class="row ml-2 mb-2 faculty-input">'
         facultyConatiner += '<div class="col-5"><label for="event">Faculty Name *</label>'
-        facultyConatiner += '<div class="input-group"><input type="text" class="form-control fac-name" num-data="'+facultyContainerNum+'" id="fac-name-'+facultyContainerNum+'" placeholder="" value="" required="">'
+        facultyConatiner += '<div class="input-group"><input type="text" day-what="'+linkAttr+'" class="form-control fac-name" num-data="'+facultyContainerNum+'" id="fac-name-'+facultyContainerNum+'" placeholder="" value="" required="">'
         facultyConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-poll-h"></i></div></div>'
         facultyConatiner += '<div class="invalid-feedback" style="width: 100%;">Faculty '+(facultyContainerNum)+' name for day '+(dayNum)+' cannot be empty.</div>'
         facultyConatiner += '</div></div>'
@@ -197,7 +198,7 @@ $(document).ready(function(){
         facultyConatiner += '</div>'
 
         // console.log(facultyConatiner)
-        $(linkId).append(facultyConatiner);
+        $(linkId).append(facultyConatiner)
         console.log(eventDay)
         console.log(facultyContainerNums)
         //  
@@ -207,7 +208,7 @@ $(document).ready(function(){
     $(document).on('focusout', '.fac-name', function(){
         // lg("in hrere")
         let value = $(this).val()
-        let errorBlock = $(this).parent().parent().find('.invalid-feedback');
+        let errorBlock = $(this).parent().parent().find('.invalid-feedback')
         let errorMsg = errorBlock.html().trim()
         if(value == ''){
             errorBlock.show()
@@ -226,7 +227,7 @@ $(document).ready(function(){
 
     $(document).on('focusout', '.std-cap', function(){
         let value = $(this).val()
-        let errorBlock = $(this).parent().parent().find('.invalid-feedback');
+        let errorBlock = $(this).parent().parent().find('.invalid-feedback')
         let errorMsg = errorBlock.html().trim()
         let numData =  $(this).attr('num-data')
         if(value == ''){
@@ -263,7 +264,7 @@ $(document).ready(function(){
 
     $(document).on('focusout', '.vis-cap', function(){
         let value = $(this).val()
-        let errorBlock = $(this).parent().parent().find('.invalid-feedback');
+        let errorBlock = $(this).parent().parent().find('.invalid-feedback')
         let errorMsg = errorBlock.html().trim()
         let numData =  $(this).attr('num-data')
         if(value == ''){
@@ -321,7 +322,7 @@ $(document).ready(function(){
         let initialFacAmount = eventDay[containerId]
         eventDay[containerId] = initialFacAmount - 1
         //  
-        $(this).parent().parent().remove();
+        $(this).parent().parent().remove()
         
         console.log(eventDay)
         console.log(facultyContainerNums)
@@ -329,7 +330,7 @@ $(document).ready(function(){
     
     //=======event visibility setting================================
     $('input[name="customRadioInline1"]').change(function(){
-        let elStatus = document.getElementById('evstatus');
+        let elStatus = document.getElementById('evstatus')
         elStatus.value = $('input[name=customRadioInline1]:checked').val()
     })
 
@@ -345,7 +346,7 @@ $(document).ready(function(){
             }else if(inputType === "enddate"){
                 errorMsg = "Incorrect date pattern for end date, kindly follow this pattern YYYY-MM-DD HH:SS"
             }
-            let errorBlock = $(this).parent().parent().find('.invalid-feedback');
+            let errorBlock = $(this).parent().parent().find('.invalid-feedback')
             let errorText = errorBlock.html().trim()
             if(value == "" && !errorList.includes(errorText)){
                 //check if match error exist
@@ -408,7 +409,7 @@ $(document).ready(function(){
         //validating textarea
     $('.description').focusout(function(){
         let value = $(this).val()
-        let errorBlock = $(this).parent().parent().find('.invalid-feedback');
+        let errorBlock = $(this).parent().parent().find('.invalid-feedback')
         let errorText = errorBlock.html().trim()
         if(value == "" && !errorList.includes(errorText)){
             errorBlock.show()
@@ -453,7 +454,7 @@ $(document).ready(function(){
             let error = ""
             errDiv.append('<h6>Error List</h6>')
             for (let idx = 0; idx < errorList.length; idx++) {
-                error = errorList[idx];
+                error = errorList[idx]
                 errDiv.append('<p style="display:block" class="invalid-feedback">. '+error+'</p>')
             }
             errDiv.show('fadeIn')
@@ -499,98 +500,123 @@ function twoWayBinding(e) {
     
 
 }
-var globalRes = []
-function createEvent() {
-    
-    let eventForm = document.getElementById('eventForm')
-    formData = new FormData(eventForm)
+async function createEvent() {
 
-    fetch('/events/create', {
-        method: "POST",
-        body: formData
-    })
-    .then(response => {
-        response.json()
-        .then(res => {
-            //save tags
-            //save allocation
-            tags = []
-            tags.push(res._id)
-            // console.log(res)
-            var badges = document.getElementsByClassName('badge')
-            if(badges.length > 0){
-                Array.from(badges).forEach(badge => {
-                    tags.push(badge.firstChild.textContent)
+    if(errorList.length ==  0){
+
+        publishBtn.textContent = ''
+        let spin = document.createElement('i')
+        spin.className = 'fas fa-spinner fa-spin'
+        
+        let txt = document.createTextNode(' Publishing your event...')
+        publishBtn.append(spin)
+        publishBtn.append(txt)
+        publishBtn.disabled = true
+            
+        let eventForm = document.getElementById('eventForm')
+        formData = new FormData(eventForm)
+        try {
+           
+            //saving event
+            const response_event = await fetch('/events/create', {method: 'Post', body: formData})
+            const newEvent = await response_event.json()
+            console.log(newEvent)
+
+            if(newEvent.error){
+                toastr.options.timeOut = 0
+                toastr.options.extendedTimeOut = 0
+                toastr.options.positionClass = "toast-bottom-right"
+                toastr.info(newEvent.error)
+            }else{
+
+                allocation = []
+                let containerNum = 0
+                Object.keys(eventDay).map(key => {
+                    
+                    for (let x = 0; x < eventDay[key]; x++) {
+                        fac_input_id = "fac-name-"+facultyContainerNums[containerNum]
+                        std_capacity_id = "std-capacity-"+facultyContainerNums[containerNum]
+                        vis_capacity_id = "vis-capacity-"+facultyContainerNums[containerNum]
+
+                        individual_allocation = []
+                        individual_allocation.push(document.getElementById(fac_input_id).getAttribute('day-what'))
+                        individual_allocation.push(document.getElementById(fac_input_id).value)
+                        individual_allocation.push(document.getElementById(std_capacity_id).value)
+                        individual_allocation.push(document.getElementById(vis_capacity_id).value)
+                        allocation.push(individual_allocation)
+                        containerNum = containerNum + 1
+                    }
                 })
-            }
-            let tagObjs = {}
+                console.log(allocation)
 
-            tags.forEach((tag, idx) => {
-                tagObjs[idx] = tag
-            })
-            // console.log(tagObjs)
-            postTag('/tags/save', tagObjs)
+                let obj = {}
+                obj[0] = newEvent._id
+                allocation.forEach((block, x) => {
+                    let sobj = {}
+                    block.forEach((item, y) => {
+                        sobj[y] = item
+                    })
+                    obj[x+1] = sobj
+                })
+                console.log(obj)
 
-            allocation = []
-            let containerNum = 0
-            Object.keys(eventDay).map(key => {
-                
-                for (let x = 0; x < eventDay[key]; x++) {
-                    fac_input_id = "fac-name-"+facultyContainerNums[containerNum]
-                    std_capacity_id = "std-capacity-"+facultyContainerNums[containerNum]
-                    vis_capacity_id = "vis-capacity-"+facultyContainerNums[containerNum]
+                //save allocation
+                const save_allocation_response = await fetch('/allocations/save', {method: 'POST', body: JSON.stringify(obj), headers : {"Content-Type": "application/json"}})
+                const allocation_response = await save_allocation_response.json()
+                console.log(allocation_response)
+                console.log(allocation_response.status)
 
-                    individual_allocation = []
-                    individual_allocation.push(key)
-                    individual_allocation.push(document.getElementById(fac_input_id).value)
-                    individual_allocation.push(document.getElementById(std_capacity_id).value)
-                    individual_allocation.push(document.getElementById(vis_capacity_id).value)
-                    allocation.push(individual_allocation)
-                    containerNum = containerNum + 1
+                toastr.options.timeOut = 1000
+                // toastr.options.extendedTimeOut = 0
+                toastr.options.positionClass = "toast-bottom-right"
+                toastr.info(allocation_response.status)
+
+                tags = []
+                tags.push(newEvent._id)
+                var badges = document.getElementsByClassName('badge')
+                if(badges.length > 0){
+                    Array.from(badges).forEach(badge => {
+                        tags.push(badge.firstChild.textContent)
+                    })
                 }
-            })
 
-            let obj = {}
-            obj[0] = res._id
-            allocation.forEach((block, x) => {
-                let sobj = {}
-                block.forEach((item, y) => {
-                    sobj[y] = item
+                // tags = ["5c3ef4a01a3cce0b20bc2c45" ,"convocation", "ceremony", "graduation"]
+                let tagObjs = {}
+
+                tags.forEach((tag, idx) => {
+                    tagObjs[idx] = tag
                 })
-                obj[x+1] = sobj
-            })
 
-            postAllocation('/allocations/save', obj)
-            console.log(globalRes)
-        })
-    })
-    .catch(error => console.log(error))
-}
-function postAllocation(url = '', allObj){
-    return fetch(url, {
-            method: "POST",
-            body: JSON.stringify(allObj),
-            headers: {
-                "Content-Type": "application/json",
-                // "Content-Type": "application/x-www-form-urlencoded",
-            },
-        })
-        .then(res => {
-           globalRes.push(res)
-        })
-}
-function postTag(url = '', tgObj){
-    return fetch(url, {
-            method: "POST",
-            body: JSON.stringify(tgObj),
-            headers: {
-                "Content-Type": "application/json",
-                // "Content-Type": "application/x-www-form-urlencoded",
-            },
-        })
-        .then(res => {
-           globalRes.push(res)
-        })
+                //save tag
+                const save_tag_response = await fetch('/tags/save', {method: 'POST', body: JSON.stringify(tagObjs), headers : {"Content-Type": "application/json"}})
+                const tag_response = await save_tag_response.json()
+                console.log(tag_response)
+                console.log(tag_response.status)
+
+                toastr.options.timeOut = 1000
+                // toastr.options.extendedTimeOut = 0
+                toastr.options.positionClass = "toast-bottom-right"
+                toastr.info(tag_response.status)
+                
+                
+                swal("All Done", "Event saved successfully!", "success");
+            }
+            
+        }
+        catch (error){
+            console.log(error)
+        }
+
+    }
+
+    publishBtn.textContent = ''
+    let upload = document.createElement('i')
+    upload.className = 'fas fa-upload'
+    
+    let txt = document.createTextNode(' Publish Event')
+    publishBtn.append(upload)
+    publishBtn.append(txt)
+    publishBtn.disabled = false
 }
 function addTag(e){
     if(e.code == 'Enter'){
@@ -625,21 +651,34 @@ function removeTag(e){
 function days_between(date1, date2) {
 
     // The number of milliseconds in one day
-    var ONE_DAY = 1000 * 60 * 60 * 24;
+    var ONE_DAY = 1000 * 60 * 60 * 24
 
     // Convert both dates to milliseconds
-    var date1_ms = date1.getTime();
-    var date2_ms = date2.getTime();
+    var date1_ms = date1.getTime()
+    var date2_ms = date2.getTime()
 
     // Calculate the difference in milliseconds
-    var difference_ms = Math.abs(date1_ms - date2_ms);
+    var difference_ms = Math.abs(date1_ms - date2_ms)
 
     // Convert back to days and return
-    return (Math.floor(difference_ms/ONE_DAY) + 1);
+    return (Math.floor(difference_ms/ONE_DAY) + 1)
 }
 
 function lg(message){
     console.log(message)
 }
+
+function checkError(){
+    lg("checking")
+    let publishBtn = document.getElementById('btnPublish')
+    if(errorList.length > 0){
+        publishBtn.disabled = true
+    }else{
+        if(publishBtn.disabled)
+            publishBtn.disabled = false
+    }
+}
+
+// setInterval(checkError, 3000);
 
 })

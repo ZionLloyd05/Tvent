@@ -1,7 +1,8 @@
-const express = require('express');
-const router = express.Router();
-const eventController = require('../controllers/event.ctrl');
-const multer = require('multer');
+const express = require('express')
+const router = express.Router()
+const eventController = require('../controllers/event.ctrl')
+const multer = require('multer')
+const path = require('path')
 
 //=====================================================
 //  Multer Storage Engine Configuration for user image
@@ -11,7 +12,7 @@ const storage = multer.diskStorage({
       cb(null, './public/uploads/')
     },
     filename: (req, file, cb)=> {
-      cb(null, file.fieldname + "-" + Date.now());
+      cb(null, file.fieldname + "_" + Date.now()+path.extname(file.originalname))
     }
   })
 
@@ -23,20 +24,26 @@ const upload = multer({
 
 
 router
-.post('/create',(req, res) => {
-    upload(req,res, (err) => {
+.post('/create', (req, res) => {
+    upload (req,res, async (err) => {
         if(err)
             return res.status(402).send(err)
         else{
-            eventController.addEvent(req)
-            .then(event => {
-                res.status(200).json(event);
-            })
-            .catch(error => {
-                res.send(error)
-            })
+            try{
+                let event = await eventController.addEvent(req)
+                res.status(200).send(event)
+            } catch (err){
+                res.json({error: err})
+            }
+            // eventController.addEvent(req)
+            // .then(event => {
+            //     res.status(200).json(event)
+            // })
+            // .catch(error => {
+            //     res.json({error: error})
+            // })
         }
     })
 })
 
-module.exports = router;
+module.exports = router
