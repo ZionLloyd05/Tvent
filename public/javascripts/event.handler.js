@@ -2,10 +2,11 @@
 $(document).ready(function(){
       
     let errorList = []
-    let totalFaculty = 0
-    let facultyContainerNum = 0
+    let totalInputBlock = 0
+    let inputContainerNum = 0
     let eventDay = {} //holds the amount of faculty for each day as an object
-    let facultyContainerNums = []
+    let inputContainerNums = []
+    let selectedCategory = ''
 
 
     //==========serving forms based on category selection=========================
@@ -13,16 +14,7 @@ $(document).ready(function(){
         let category = $('.category-dropdown').val()
         let catInp = document.getElementById('category')
         catInp.value = category
-
-        if (category === 'convocation'){
-            $('.category-conv-section').show('fadeIn')
-        }
-        else if (category === 'wedding'){
-
-        }
-        else if (category === 'dinner'){
-
-        }
+        selectedCategory = category
     })
 
     //=====Auto generating Day Handler===========================================
@@ -34,9 +26,9 @@ $(document).ready(function(){
     // lg(errorList)
     $('.dayGenerate').click( function() {
         eventDay = {}
-        facultyContainerNums = []
-        totalFaculty = 0
-        facultyContainerNum = 0
+        inputContainerNums = []
+        totalInputBlock = 0
+        inputContainerNum = 0
 
         var sectionAllocation = document.getElementById('allocation-section')
         while(sectionAllocation.firstChild)
@@ -124,6 +116,7 @@ $(document).ready(function(){
             }  
 
             if(newstDate < Date.now()){
+                console.log("yea")
                 let errorMsg = "Start date cannot be less than today."
                 if(!errorList.includes(errorMsg)){
                     errorList.push(errorMsg)
@@ -146,11 +139,32 @@ $(document).ready(function(){
             }else{
                 $('.day-allocation-section').empty()
                 for (let index = 0; index < amountOfDay; index++) {
-
-                    let dayDiv = '<div class="row day mt-3" id="day_'+(index+1)+'" style="width: 100%;">'
-                    dayDiv += '<div class="col-9" style="text-align:left;">'
-                    dayDiv += '<p class="lead"><a class="day-link" day='+(index+1)+' day-data="day_'+(index+1)+'" style="color:#007BFF;cursor:pointer;font-size:17px;text-decoration: none;border-bottom: 1px solid #ccc;"><i class="fas fa-plus"></i> Add Faculty</a> for Day '+(index + 1)+'</p>'
-                    dayDiv += '</div></div>'
+                    let dayDiv =  ''
+                    switch (selectedCategory) {
+                        case 'convocation':
+                            dayDiv = '<div class="row day mt-3" id="day_'+(index+1)+'" style="width: 100%;">'
+                            dayDiv += '<div class="col-9" style="text-align:left;">'
+                            dayDiv += '<p class="lead"><a class="day-link" day='+(index+1)+' day-data="day_'+(index+1)+'" style="color:#007BFF;cursor:pointer;font-size:15px;text-decoration: none;border-bottom: 1px solid #ccc;"><i class="fas fa-plus"></i> Add Faculty</a> for Day '+(index + 1)+'</p>'
+                            dayDiv += '</div></div>'
+                            break
+                        
+                        case 'ceremony':
+                            dayDiv = '<div class="row day mt-3" id="day_'+(index+1)+'" style="width: 100%;">'
+                            dayDiv += '<div class="col-9" style="text-align:left;">'
+                            dayDiv += '<p class="lead"><a class="day-link" day='+(index+1)+' day-data="day_'+(index+1)+'" style="color:#007BFF;cursor:pointer;font-size:15px;text-decoration: none;border-bottom: 1px solid #ccc;"><i class="fas fa-plus"></i> Add Event</a> for Day '+(index + 1)+'</p>'
+                            dayDiv += '</div></div>'
+                            break
+                        
+                        case 'seminar':
+                            dayDiv = '<div class="row day mt-3" id="day_'+(index+1)+'" style="width: 100%;">'
+                            dayDiv += '<div class="col-9" style="text-align:left;">'
+                            dayDiv += '<p class="lead"><a class="day-link" day='+(index+1)+' day-data="day_'+(index+1)+'" style="color:#007BFF;cursor:pointer;font-size:15px;text-decoration: none;border-bottom: 1px solid #ccc;"><i class="fas fa-plus"></i> Add Module</a> for Day '+(index + 1)+'</p>'
+                            dayDiv += '</div></div>'
+                            break
+                        default:
+                            swal("Oops", "No category was selcted!", "error") 
+                    }
+                    
 
                     
                     eventDayLabel.push("day_"+(index+1))
@@ -170,7 +184,7 @@ $(document).ready(function(){
         let linkAttr = link.attr('day-data')
         let linkId = '#'+link.attr('day-data')
         let dayNum = link.attr('day')
-        totalFaculty = totalFaculty + 1
+        totalInputBlock = totalInputBlock + 1
 
         //add day and added faculty value to eventDay object
         if(eventDay[linkAttr] === undefined){
@@ -182,32 +196,82 @@ $(document).ready(function(){
             eventDay[linkAttr] = initialFacAmount + 1
         }
         //populating facultyContainerNums
-        facultyContainerNum = facultyContainerNum + 1
-        facultyContainerNums.push(facultyContainerNum)
+        inputContainerNum = inputContainerNum + 1
+        inputContainerNums.push(inputContainerNum)
 
-        let facultyConatiner = '<div fac-day-data="'+linkAttr+'" fac-container-num="'+facultyContainerNum+'" class="row ml-2 mb-2 faculty-input">'
-        facultyConatiner += '<div class="col-5"><label for="event">Faculty Name *</label>'
-        facultyConatiner += '<div class="input-group"><input type="text" day-what="'+linkAttr+'" class="form-control fac-name" num-data="'+facultyContainerNum+'" id="fac-name-'+facultyContainerNum+'" placeholder="" value="" required="">'
-        facultyConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-poll-h"></i></div></div>'
-        facultyConatiner += '<div class="invalid-feedback" style="width: 100%;">Faculty '+(facultyContainerNum)+' name for day '+(dayNum)+' cannot be empty.</div>'
-        facultyConatiner += '</div></div>'
-        facultyConatiner += '<div class="col-3"><label for="event">Total Student Capacity *</label>'
-        facultyConatiner += '<div class="input-group"><input type="text" class="form-control std-cap" num-data="'+facultyContainerNum+'" id="std-capacity-'+facultyContainerNum+'" placeholder="" value="" required="">'
-        facultyConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-user-graduate"></i></div></div>'
-        facultyConatiner += '<div class="invalid-feedback" style="width: 100%;">Total student capacity '+(facultyContainerNum)+' cannot cannot be empty.</div>'
-        facultyConatiner += '</div></div>'
-        facultyConatiner += '<div class="col-3"><label for="event">Total Visitor Capacity *</label>'
-        facultyConatiner += '<div class="input-group"><input type="text" class="form-control vis-cap" num-data="'+facultyContainerNum+'" id="vis-capacity-'+facultyContainerNum+'" placeholder="" value="" required="">'
-        facultyConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-users"></i></div></div>'
-        facultyConatiner += '<div class="invalid-feedback" style="width: 100%;">Total visitor capacity '+(facultyContainerNum)+' cannot cannot be empty.</div>'
-        facultyConatiner += '</div></div>'
-        facultyConatiner += '<div class="col-1" style="color: red;padding-top: 40px;"><i class="fas fa-trash-alt" facblock-data="'+(facultyContainerNum)+'" id="trash-container" style="cursor:pointer"></i></div>'
-        facultyConatiner += '</div>'
+        let inpBlockConatiner = '' 
+        switch (selectedCategory) {
+            case 'convocation':
+                inpBlockConatiner = '<div fac-day-data="'+linkAttr+'" fac-container-num="'+inputContainerNum+'" class="row ml-2 mb-2 faculty-input">'
+                inpBlockConatiner += '<div class="col-5"><label for="event">Faculty Name *</label>'
+                inpBlockConatiner += '<div class="input-group"><input type="text" day-what="'+linkAttr+'" class="form-control fac-name" num-data="'+inputContainerNum+'" id="fac-name-'+inputContainerNum+'" placeholder="" value="" required="">'
+                inpBlockConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-poll-h"></i></div></div>'
+                inpBlockConatiner += '<div class="invalid-feedback" style="width: 100%;">Faculty '+(inputContainerNum)+' name for day '+(dayNum)+' cannot be empty.</div>'
+                inpBlockConatiner += '</div></div>'
+                inpBlockConatiner += '<div class="col-3"><label for="event">Total Student Capacity *</label>'
+                inpBlockConatiner += '<div class="input-group"><input type="text" class="form-control std-cap" num-data="'+inputContainerNum+'" id="std-capacity-'+inputContainerNum+'" placeholder="" value="" required="">'
+                inpBlockConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-user-graduate"></i></div></div>'
+                inpBlockConatiner += '<div class="invalid-feedback" style="width: 100%;">Total student capacity '+(inputContainerNum)+' cannot cannot be empty.</div>'
+                inpBlockConatiner += '</div></div>'
+                inpBlockConatiner += '<div class="col-3"><label for="event">Total Visitor Capacity *</label>'
+                inpBlockConatiner += '<div class="input-group"><input type="text" class="form-control vis-cap" num-data="'+inputContainerNum+'" id="vis-capacity-'+inputContainerNum+'" placeholder="" value="" required="">'
+                inpBlockConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-users"></i></div></div>'
+                inpBlockConatiner += '<div class="invalid-feedback" style="width: 100%;">Total visitor capacity '+(inputContainerNum)+' cannot cannot be empty.</div>'
+                inpBlockConatiner += '</div></div>'
+                inpBlockConatiner += '<div class="col-1" style="color: red;padding-top: 40px;"><i class="fas fa-trash-alt" facblock-data="'+(inputContainerNum)+'" id="trash-container" style="cursor:pointer"></i></div>'
+                inpBlockConatiner += '</div>'
+                break
+            
+            case 'ceremony':
+                inpBlockConatiner = '<div fac-day-data="'+linkAttr+'" fac-container-num="'+inputContainerNum+'" class="row ml-2 mb-2 faculty-input">'
+                inpBlockConatiner += '<div class="col-5"><label for="event">Event name *</label>'
+                inpBlockConatiner += '<div class="input-group"><input type="text" day-what="'+linkAttr+'" class="form-control fac-name" num-data="'+inputContainerNum+'" id="fac-name-'+inputContainerNum+'" placeholder="" value="" required="">'
+                inpBlockConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-poll-h"></i></div></div>'
+                inpBlockConatiner += '<div class="invalid-feedback" style="width: 100%;">Event '+(inputContainerNum)+' name for day '+(dayNum)+' cannot be empty.</div>'
+                inpBlockConatiner += '</div></div>'
+                inpBlockConatiner += '<div class="col-3"><label for="event">Total Capacity *</label>'
+                inpBlockConatiner += '<div class="input-group"><input type="text" class="form-control std-cap" num-data="'+inputContainerNum+'" id="std-capacity-'+inputContainerNum+'" placeholder="" value="" required="">'
+                inpBlockConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-user-graduate"></i></div></div>'
+                inpBlockConatiner += '<div class="invalid-feedback" style="width: 100%;">Total capacity '+(inputContainerNum)+' cannot cannot be empty.</div>'
+                inpBlockConatiner += '</div></div>'
+                inpBlockConatiner += '<div class="col-3"><label for="event">Extra Capacity *</label>'
+                inpBlockConatiner += '<div class="input-group"><input type="text" class="form-control vis-cap" num-data="'+inputContainerNum+'" id="vis-capacity-'+inputContainerNum+'" placeholder="" value="" required="">'
+                inpBlockConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-users"></i></div></div>'
+                inpBlockConatiner += '<div class="invalid-feedback" style="width: 100%;">Extra capacity '+(inputContainerNum)+' cannot cannot be empty.</div>'
+                inpBlockConatiner += '</div></div>'
+                inpBlockConatiner += '<div class="col-1" style="color: red;padding-top: 40px;"><i class="fas fa-trash-alt" facblock-data="'+(inputContainerNum)+'" id="trash-container" style="cursor:pointer"></i></div>'
+                inpBlockConatiner += '</div>'
+                break
+            
+            case 'seminar':
+                inpBlockConatiner = '<div fac-day-data="'+linkAttr+'" fac-container-num="'+inputContainerNum+'" class="row ml-2 mb-2 faculty-input">'
+                inpBlockConatiner += '<div class="col-5"><label for="event">Module Title *</label>'
+                inpBlockConatiner += '<div class="input-group"><input type="text" day-what="'+linkAttr+'" class="form-control fac-name" num-data="'+inputContainerNum+'" id="fac-name-'+inputContainerNum+'" placeholder="" value="" required="">'
+                inpBlockConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-poll-h"></i></div></div>'
+                inpBlockConatiner += '<div class="invalid-feedback" style="width: 100%;">Module '+(inputContainerNum)+' name for day '+(dayNum)+' cannot be empty.</div>'
+                inpBlockConatiner += '</div></div>'
+                inpBlockConatiner += '<div class="col-3"><label for="event">Total Capacity *</label>'
+                inpBlockConatiner += '<div class="input-group"><input type="text" class="form-control std-cap" num-data="'+inputContainerNum+'" id="std-capacity-'+inputContainerNum+'" placeholder="" value="" required="">'
+                inpBlockConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-user-graduate"></i></div></div>'
+                inpBlockConatiner += '<div class="invalid-feedback" style="width: 100%;">Total capacity '+(inputContainerNum)+' cannot cannot be empty.</div>'
+                inpBlockConatiner += '</div></div>'
+                inpBlockConatiner += '<div class="col-3"><label for="event">Extra Capacity *</label>'
+                inpBlockConatiner += '<div class="input-group"><input type="text" class="form-control vis-cap" num-data="'+inputContainerNum+'" id="vis-capacity-'+inputContainerNum+'" placeholder="" value="" required="">'
+                inpBlockConatiner += '<div class="input-group-append"><div class="input-group-text"><i class="fas fa-users"></i></div></div>'
+                inpBlockConatiner += '<div class="invalid-feedback" style="width: 100%;">Extra capacity '+(inputContainerNum)+' cannot cannot be empty.</div>'
+                inpBlockConatiner += '</div></div>'
+                inpBlockConatiner += '<div class="col-1" style="color: red;padding-top: 40px;"><i class="fas fa-trash-alt" facblock-data="'+(inputContainerNum)+'" id="trash-container" style="cursor:pointer"></i></div>'
+                inpBlockConatiner += '</div>'
+                break
+            default:
+                swal("Oops", "No category was selcted!", "error") 
+        }
+                
 
         // console.log(facultyConatiner)
-        $(linkId).append(facultyConatiner)
+        $(linkId).append(inpBlockConatiner)
         console.log(eventDay)
-        console.log(facultyContainerNums)
+        console.log(inputContainerNums)
         //  
     })
 
@@ -311,7 +375,7 @@ $(document).ready(function(){
     //=======trash faculty functionality===================================
     $(document).on('click', '#trash-container', function(){
         let facContNum = $(this).parent().parent().attr("fac-container-num")
-        let idx = facultyContainerNums.indexOf(parseInt(facContNum))
+        let idx = inputContainerNums.indexOf(parseInt(facContNum))
         let facBlockNum = $(this).attr('facblock-data')
 
         errorList = errorList.filter(error => {
@@ -319,10 +383,10 @@ $(document).ready(function(){
         })
         
         //removing fac-container-num from store
-        facultyContainerNums.splice(idx, 1)
+        inputContainerNums.splice(idx, 1)
         //  
 
-        totalFaculty = totalFaculty - 1
+        totalInputBlock = totalInputBlock - 1
 
         //deduct from object in eventDay
         let containerId = $(this).parent().parent().attr("fac-day-data")
@@ -332,7 +396,7 @@ $(document).ready(function(){
         $(this).parent().parent().remove()
         
         console.log(eventDay)
-        console.log(facultyContainerNums)
+        console.log(inputContainerNums)
     })
     
     //=======event visibility setting================================
@@ -534,11 +598,13 @@ async function createEvent() {
             const newEvent = await response_event.json()
             console.log(newEvent)
 
-            if(newEvent.error){
+            if(newEvent.error || newEvent.message){
+                newEvent.message = "Event poster too large"
+                let err = newEvent.error || newEvent.message
                 toastr.options.timeOut = 0
                 toastr.options.extendedTimeOut = 0
                 toastr.options.positionClass = "toast-bottom-right"
-                toastr.info(newEvent.error)
+                toastr.info(err)
             }else{
 
                 allocation = []
@@ -546,9 +612,9 @@ async function createEvent() {
                 Object.keys(eventDay).map(key => {
                     
                     for (let x = 0; x < eventDay[key]; x++) {
-                        fac_input_id = "fac-name-"+facultyContainerNums[containerNum]
-                        std_capacity_id = "std-capacity-"+facultyContainerNums[containerNum]
-                        vis_capacity_id = "vis-capacity-"+facultyContainerNums[containerNum]
+                        fac_input_id = "fac-name-"+inputContainerNums[containerNum]
+                        std_capacity_id = "std-capacity-"+inputContainerNums[containerNum]
+                        vis_capacity_id = "vis-capacity-"+inputContainerNums[containerNum]
 
                         individual_allocation = []
                         individual_allocation.push(document.getElementById(fac_input_id).getAttribute('day-what'))
@@ -686,11 +752,13 @@ function lg(message){
 function checkError(){
     // lg("checking")
     let publishBtn = document.getElementById('btnPublish')
-    if(errorList.length > 0){
-        publishBtn.disabled = true
-    }else{
-        if(publishBtn.disabled)
-            publishBtn.disabled = false
+    if(publishBtn){
+        if(errorList.length > 0){
+            publishBtn.disabled = true
+        }else{
+            if(publishBtn.disabled)
+                publishBtn.disabled = false
+        }
     }
 }
 

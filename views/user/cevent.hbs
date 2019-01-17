@@ -34,19 +34,19 @@
                             <select class="custom-select category-dropdown">
                                 <option value="null" selected>Select category that best explain your event</option>
                                 <option value="convocation">Convocation</option>
-                                {{!-- <option value="wedding">Wedding Ceremony</option>
-                                <option value="dinner">Dinner</option> --}}
+                                <option value="ceremony">Ceremony</option>
+                                <option value="seminar">Seminar</option>
                             </select>
                         </div>
                     </div>
-                    <div class="category-conv-section" style="display:none">
+                    <div class="category-conv-section">
                         <form id="eventForm" enctype="multipart/form-data">
                         <div class="row mb-3">
                             <div class="col-6">
                                 <label for="event">Event Title *</label>
 
                                 <div class="input-group" id="eventtitle">
-                                    <input type="text" class="form-control" name="title" value="70th UI Convocation" id="event" placeholder="">
+                                    <input type="text" class="form-control" name="title" value="" id="event" placeholder="">
                                     <div class="input-group-append">
                                         <div class="input-group-text"><i class="fas fa-poll-h"></i></div>
                                     </div>
@@ -59,7 +59,7 @@
                                 <label for="event">Location *</label>
 
                                 <div class="input-group" id="location">
-                                    <input type="text" class="form-control" value="ICC Center" name="location" id="loc" placeholder="">
+                                    <input type="text" class="form-control" value="" name="location" id="loc" placeholder="">
                                     <div class="input-group-append">
                                         <div class="input-group-text"><i class="fas fa-map-marked-alt"></i></div>
                                     </div>
@@ -74,7 +74,7 @@
                             <div class="col-6">
                                 <label for="event">Event Description *</label>
                                 <div id="desc">
-                                    <textarea class="form-control description" rows="3" name="description">Student Convocation ceremony</textarea>
+                                    <textarea class="form-control description" rows="3" name="description"></textarea>
                                 </div>
                                 <div class="invalid-feedback">
                                     A brief description of event is required

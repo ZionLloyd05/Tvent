@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
 //Init multer varaible
 const upload = multer({
     storage: storage,
-    limits:{fileSize: 100000}
+    limits:{fileSize: 1000000}
 }).single('poster')
 
 
