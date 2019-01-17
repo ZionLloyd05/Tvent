@@ -3,6 +3,10 @@ const router = express.Router()
 const eventController = require('../controllers/event.ctrl')
 const multer = require('multer')
 const path = require('path')
+const csrf = require('csurf');
+
+const csrfProtection = csrf();
+router.use(csrfProtection);
 
 //=====================================================
 //  Multer Storage Engine Configuration for user image

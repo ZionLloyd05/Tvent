@@ -1,9 +1,9 @@
-var express = require('express');
-var router = express.Router();
-var csrf = require('csurf');
-var passport = require('passport');
+const express = require('express');
+const router = express.Router();
+const csrf = require('csurf');
+const passport = require('passport');
 
-var csrfProtection = csrf();
+const csrfProtection = csrf();
 router.use(csrfProtection);
 
 //============================================
@@ -11,8 +11,10 @@ router.use(csrfProtection);
 //============================================
 
 router.get('/create-event', isLoggedIn, function (req, res, next) {
-  res.render('user/cevent');
+  res.render('user/cevent', {csrfToken: req.csrfToken()});
 })
+
+
 
 router.get('/logout', isLoggedIn, function (req, res, next) {
   req.session.destroy(function (err) {

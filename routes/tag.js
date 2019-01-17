@@ -1,6 +1,10 @@
 const express = require('express')
 const router = express.Router()
 const tagController = require('../controllers/tag.ctrl')
+const csrf = require('csurf');
+
+const csrfProtection = csrf();
+router.use(csrfProtection);
 
 router
 .post('/save', async (req, res) => {

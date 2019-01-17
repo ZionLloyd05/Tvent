@@ -578,6 +578,9 @@ async function createEvent() {
 
     if(errorList.length ==  0){
 
+        //get csrftoken
+        let csrfToken = document.getElementById('_csrf').value
+
         clearInterval(intervalId)
 
         publishBtn.textContent = ''
@@ -594,7 +597,13 @@ async function createEvent() {
         try {
            
             //saving event
-            const response_event = await fetch('/events/create', {method: 'Post', body: formData})
+            const response_event = await fetch('/events/create', {
+                method: 'Post', 
+                body: formData,
+                headers : {
+                    "X-CSRF-TOKEN": csrfToken
+                }
+            })
             const newEvent = await response_event.json()
             console.log(newEvent)
 
@@ -625,7 +634,7 @@ async function createEvent() {
                         containerNum = containerNum + 1
                     }
                 })
-                console.log(allocation)
+                // console.log(allocation)
 
                 let obj = {}
                 obj[0] = newEvent._id
@@ -636,10 +645,17 @@ async function createEvent() {
                     })
                     obj[x+1] = sobj
                 })
-                console.log(obj)
+                // console.log(obj)
 
                 //save allocation
-                const save_allocation_response = await fetch('/allocations/save', {method: 'POST', body: JSON.stringify(obj), headers : {"Content-Type": "application/json"}})
+                const save_allocation_response = await fetch('/allocations/save', {
+                    method: 'POST',
+                    body: JSON.stringify(obj),
+                    headers : {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": csrfToken
+                    }
+                })
                 const allocation_response = await save_allocation_response.json()
                 console.log(allocation_response)
                 console.log(allocation_response.status)
@@ -666,7 +682,14 @@ async function createEvent() {
                 })
 
                 //save tag
-                const save_tag_response = await fetch('/tags/save', {method: 'POST', body: JSON.stringify(tagObjs), headers : {"Content-Type": "application/json"}})
+                const save_tag_response = await fetch('/tags/save', {
+                    method: 'POST', 
+                    body: JSON.stringify(tagObjs), 
+                    headers : {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": csrfToken
+                    }
+                })
                 const tag_response = await save_tag_response.json()
                 console.log(tag_response)
                 console.log(tag_response.status)
@@ -686,6 +709,7 @@ async function createEvent() {
         }
         catch (error){
             console.log(error)
+            swal("Oops", "Something isn't right!", "error")
         }
 
     }

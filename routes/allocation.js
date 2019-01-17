@@ -2,6 +2,11 @@ const express = require('express')
 const router = express.Router()
 const allocationController = require('../controllers/allocation.ctrl')
 
+const csrf = require('csurf');
+
+const csrfProtection = csrf();
+router.use(csrfProtection);
+
 router
 .post('/save', async (req, res) => {
     try{
