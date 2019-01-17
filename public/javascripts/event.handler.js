@@ -122,6 +122,13 @@ $(document).ready(function(){
                     errorList.push(errorMsg)
                 }
             }  
+
+            if(newstDate < Date.now()){
+                let errorMsg = "Start date cannot be less than today."
+                if(!errorList.includes(errorMsg)){
+                    errorList.push(errorMsg)
+                }
+            }
             
             amountOfDay = days_between(newstDate, newedDate)
             
@@ -448,7 +455,7 @@ $(document).ready(function(){
 
 
         //  
-        let errDiv = $('.errorlist3')
+        let errDiv = $('#errlist3')
         if(errorList.length > 0){
             errDiv.empty()
             let error = ""
@@ -459,8 +466,11 @@ $(document).ready(function(){
             }
             errDiv.show('fadeIn')
         }else{
-            errDiv.append('<p class="display-4" style="font-size:30px;">Great! Go ahead and publish your event..</p>')
-            $('#btnPublish').removeAttr("disabled")
+                if(!$('.greatMessage')){
+                    errDiv.append('<p class="display-4 greatMessage" style="font-size:30px;">Great! Go ahead and publish your event..</p>')
+                }
+         
+            // $('#btnPublish').removeAttr("disabled")
         }
     })
     
@@ -503,6 +513,8 @@ function twoWayBinding(e) {
 async function createEvent() {
 
     if(errorList.length ==  0){
+
+        clearInterval(intervalId)
 
         publishBtn.textContent = ''
         let spin = document.createElement('i')
@@ -599,7 +611,10 @@ async function createEvent() {
                 toastr.info(tag_response.status)
                 
                 
-                swal("All Done", "Event saved successfully!", "success");
+                swal("All Done", "Event saved successfully!", "success")
+                    .then(val => {
+                        window.location.reload()
+                    })
             }
             
         }
@@ -669,7 +684,7 @@ function lg(message){
 }
 
 function checkError(){
-    lg("checking")
+    // lg("checking")
     let publishBtn = document.getElementById('btnPublish')
     if(errorList.length > 0){
         publishBtn.disabled = true
@@ -679,6 +694,6 @@ function checkError(){
     }
 }
 
-// setInterval(checkError, 3000);
+let intervalId = setInterval(checkError, 3000);
 
 })

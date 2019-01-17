@@ -32,7 +32,7 @@
                     <div class="row mb-3">
                         <div class="col-12">
                             <select class="custom-select category-dropdown">
-                                <option value="null" selected>Select Event Category</option>
+                                <option value="null" selected>Select category that best explain your event</option>
                                 <option value="convocation">Convocation</option>
                                 {{!-- <option value="wedding">Wedding Ceremony</option>
                                 <option value="dinner">Dinner</option> --}}
@@ -152,11 +152,11 @@
                         <div class="col-12">
                             <label for="" style="margin-right: 20px;">Make Event</label>
                             <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" checked value="open" id="customRadioInline1" name="customRadioInline1" class="custom-control-input">
+                                <input type="radio" checked value="public" id="customRadioInline1" name="customRadioInline1" class="custom-control-input">
                                 <label class="custom-control-label" for="customRadioInline1">Visible</label>
                             </div>
                             <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" value="closed" id="customRadioInline2" name="customRadioInline1" class="custom-control-input">
+                                <input type="radio" value="private" id="customRadioInline2" name="customRadioInline1" class="custom-control-input">
                                 <label class="custom-control-label" for="customRadioInline2">Not Visible</label>
                             </div>
                         </div>
@@ -170,7 +170,7 @@
                         </div>
                     </div>
                     
-                    <div class="errorlist3 mt-3">
+                    <div class="errorlist3 mt-3" id="errlist3">
                     </div>
                 </div>
             </div>

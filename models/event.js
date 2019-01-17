@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt-nodejs')
 const Schema = mongoose.Schema;
 
 var eventSchema = new Schema({
@@ -58,12 +59,16 @@ var eventSchema = new Schema({
     }
 });
 
-eventSchema.pre('save', next => {
-    //make unique reference for event
-    //generate event link
-    console.log(this)
-    // 
-    next()
-})
+eventSchema.methods.compareRef = (rf) => {
+    return (this.reference === rf)
+}
+
+eventSchema.methods.encryptRef = function(ref){
+    return bcrypt.hashSync(ref, bcrypt.genSaltSync(5), null);
+};
+
+eventSchema.methods.validRef = function(reference){
+    return bcrypt.compareSync(reference, this.reference);
+};
 
 module.exports = mongoose.model('Event', eventSchema);
