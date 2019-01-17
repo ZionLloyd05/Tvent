@@ -418,62 +418,66 @@ $(document).ready(function(){
                 errorMsg = "Incorrect date pattern for end date, kindly follow this pattern YYYY-MM-DD HH:SS"
             }
             let errorBlock = $(this).parent().parent().find('.invalid-feedback')
-            let errorText = errorBlock.html().trim()
-            if(value == "" && !errorList.includes(errorText)){
-                //check if match error exist
-                
-                if(errorList.includes(errorMsg)){
+            // console.log(errorBlock.length)
+            if(errorBlock.length !== 0){
+                let errorText = errorBlock.html().trim()
+                if(value == "" && !errorList.includes(errorText)){
+                    //check if match error exist
                     
-                    let errIdx = errorList.indexOf(errorMsg)
-                    errorList.splice(errIdx, 1)
-                }
-                errorBlock.show()
-                errorList.push(errorText)
-            }else{
-                if(errorList.includes(errorText) && value != ""){
-                    let errIdx = errorList.indexOf(errorText)
-                    errorList.splice(errIdx, 1)
-                    errorBlock.hide()               
-                }
-                if(value && (inputType === "startdate" || inputType === "enddate")){
-                
-                    const re = /^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})\s(?<hour>\d{2}):(?<minute>\d{2})$/
-
-                    if(re.test(value)){
+                    if(errorList.includes(errorMsg)){
                         
-                        //check if match error exist
-                        
-                        if(errorList.includes(errorMsg)){
-                            let errIdx = errorList.indexOf(errorMsg)
-                            errorList.splice(errIdx, 1)
-                        }
+                        let errIdx = errorList.indexOf(errorMsg)
+                        errorList.splice(errIdx, 1)
+                    }
+                    errorBlock.show()
+                    errorList.push(errorText)
+                }else{
+                    if(errorList.includes(errorText) && value != ""){
+                        let errIdx = errorList.indexOf(errorText)
+                        errorList.splice(errIdx, 1)
+                        errorBlock.hide()               
+                    }
+                    if(value && (inputType === "startdate" || inputType === "enddate")){
+                    
+                        const re = /^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})\s(?<hour>\d{2}):(?<minute>\d{2})$/
 
-                        const date_result = re.exec(value)
-
-                        //...validate month -- 01 = 12
-                        let startdate_month = date_result.groups.month
-                        var monthErrorMsg = "Incorrect month, kindly follow this pattern YYYY-MM-DD"
-
-                        if((startdate_month > 12 || startdate_month < 00 )){
-                            errorBlock.append('<p>Incorrect month, kindly follow this pattern YYYY-MM-DD</p>')
-                            if(!errorList.includes(monthErrorMsg)){
-                                errorList.push(monthErrorMsg)
-                            }
-                        }else{
-                            if(errorList.includes(monthErrorMsg)){
-                                let errIdx = errorList.indexOf(monthErrorMsg)
+                        if(re.test(value)){
+                            
+                            //check if match error exist
+                            
+                            if(errorList.includes(errorMsg)){
+                                let errIdx = errorList.indexOf(errorMsg)
                                 errorList.splice(errIdx, 1)
                             }
+
+                            const date_result = re.exec(value)
+
+                            //...validate month -- 01 = 12
+                            let startdate_month = date_result.groups.month
+                            var monthErrorMsg = "Incorrect month, kindly follow this pattern YYYY-MM-DD"
+
+                            if((startdate_month > 12 || startdate_month < 00 )){
+                                errorBlock.append('<p>Incorrect month, kindly follow this pattern YYYY-MM-DD</p>')
+                                if(!errorList.includes(monthErrorMsg)){
+                                    errorList.push(monthErrorMsg)
+                                }
+                            }else{
+                                if(errorList.includes(monthErrorMsg)){
+                                    let errIdx = errorList.indexOf(monthErrorMsg)
+                                    errorList.splice(errIdx, 1)
+                                }
+                            }
+                        }else{
+                            //errorBlock.empty()
+                            if(!errorList.includes(errorMsg)){
+                                errorList.push(errorMsg)
+                            }
+                        
                         }
-                    }else{
-                        //errorBlock.empty()
-                        if(!errorList.includes(errorMsg)){
-                            errorList.push(errorMsg)
-                        }
-                    
                     }
                 }
             }
+            
         }
     
     })
