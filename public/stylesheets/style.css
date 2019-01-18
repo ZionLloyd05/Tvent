@@ -239,3 +239,6 @@ div.event{
 .eventViewContainer p{
   font-size: 15px;
 }
+.capacity{
+  float:right
+}

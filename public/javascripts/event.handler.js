@@ -760,14 +760,14 @@ function removeTag(e){
 function days_between(date1, date2) {
 
     // The number of milliseconds in one day
-    var ONE_DAY = 1000 * 60 * 60 * 24
+    let ONE_DAY = 1000 * 60 * 60 * 24
 
     // Convert both dates to milliseconds
-    var date1_ms = date1.getTime()
-    var date2_ms = date2.getTime()
+    let date1_ms = date1.getTime()
+    let date2_ms = date2.getTime()
 
     // Calculate the difference in milliseconds
-    var difference_ms = Math.abs(date1_ms - date2_ms)
+    let difference_ms = Math.abs(date1_ms - date2_ms)
 
     // Convert back to days and return
     return (Math.floor(difference_ms/ONE_DAY) + 1)
@@ -777,9 +777,10 @@ function lg(message){
     console.log(message)
 }
 
+
+// let publishBtn = document.getElementById('btnPublish')
 function checkError(){
-    // lg("checking")
-    let publishBtn = document.getElementById('btnPublish')
+    lg("checking")
     if(publishBtn){
         if(errorList.length > 0){
             publishBtn.disabled = true
@@ -792,4 +793,6 @@ function checkError(){
 
 let intervalId = setInterval(checkError, 3000);
 
+if(!publishBtn)
+    clearInterval(intervalId)
 })

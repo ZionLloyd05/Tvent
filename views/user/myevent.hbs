@@ -3,17 +3,16 @@
         <h3 class="display-4" id="eventDisplay">Manage Events</h3>
     </div>
     <div class="col-5" style="text-align:right;padding: 2% 6% 0% 0%;">
-        {{!-- <button class="btn ceventBtn" style="margin-right:2%;"><i class="far fa-save"></i> Save</button> --}}
-        
+
     </div>
 
 </div>
 <hr style="padding: 5px;">
 <div class="container" style="margin-bottom:70px">
     <div class="row">
-        <div class="col-5 eventListContainer">
+        <div class="col-5 eventListContainer" id="eventListContainer">
             <div class="input-group mb-3">
-                <input type="text" style="border-radius: 5px 0px 0px 5px;" class="form-control searchInp" id="username" placeholder="search for events">
+                <input type="text" style="border-radius: 5px 0px 0px 5px;" class="form-control search" id="search" placeholder="search for events">
                 
                 <div class="input-group-append">
                     <span class="input-group-text">
@@ -24,38 +23,21 @@
             </div>
             <div>
                 <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" checked value="public" id="customRadioInline1" name="customRadioInline1" class="custom-control-input">
-                    <label class="custom-control-label" for="customRadioInline1">Public (10)</label>
+                    <input type="radio" checked value="all" id="radio1" name="radio" class="custom-control-input radio">
+                    <label class="custom-control-label" for="radio1">All (<span id="event_count">-</span>)</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" value="private" id="customRadioInline2" name="customRadioInline1" class="custom-control-input">
-                    <label class="custom-control-label" for="customRadioInline2">Private (0)</label>
+                    <input type="radio" value="public" id="radio2" name="radio" class="custom-control-input radio">
+                    <label class="custom-control-label" for="radio2">Public (<span id="public_count">-</span>)</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" value="private" id="radio3" name="radio" class="custom-control-input radio">
+                    <label class="custom-control-label" for="radio3">Private (<span id="private_count">-</span>)</label>
                 </div>
             </div>
             <hr/>
-            <div class="event" id="event">
-                <h6>Node.Js Conference</h6>
-                <span>Jan 1, 2019 7:00 PM</span><span style="float:right">25/200</span>
-            </div>
-            <div class="event" id="event">
-                <h6>Node.Js Conference</h6>
-                <span>Jan 1, 2019 7:00 PM</span><span style="float:right">25/200</span>
-            </div>
-            <div class="event" id="event">
-                <h6>70th UI Convocation</h6>
-                <span>Jan 1, 2019 9:00 AM - Jan 4, 2019 2:00 AM </span><span style="float:right">1050/5500</span>
-            </div>
-            <div class="event" id="event">
-                <h6>Node.Js Conference</h6>
-                <span>Jan 1, 2019 7:00 PM</span><span style="float:right">25/200</span>
-            </div>
-            <div class="event" id="event">
-                <h6>Node.Js Conference</h6>
-                <span>Jan 1, 2019 7:00 PM</span><span style="float:right">25/200</span>
-            </div>
-            <div class="event" id="event">
-                <h6>Node.Js Conference</h6>
-                <span>Jan 1, 2019 7:00 PM</span><span style="float:right">25/200</span>
+            <div id="evList">
+                <span>Loading your events  <i class="fa fa-spinner fa-spin" style="font-size:17px"></i></span>
             </div>
         </div>
         <div class="col-7 eventViewContainer">
@@ -91,4 +73,126 @@
             </div>
         </div>
     </div>
+    <input type="hidden" name="_csrf" id="_csrf" value="{{ csrfToken }}">
 </div>
+
+<script>
+    let search = document.getElementById('search')
+    
+    window.addEventListener('load', prepareEventListContainer)
+    search.addEventListener('keyup', performSeach)
+
+
+    async function prepareEventListContainer(){
+        let event_count = document.getElementById('event_count')
+        let public_count = document.getElementById('public_count')
+        let private_count = document.getElementById('private_count')
+
+        let csrfToken = document.getElementById('_csrf').value
+        
+        
+        const get_events = await fetch('/events/', {
+            method: 'GET', 
+            headers : {
+                "X-CSRF-TOKEN": csrfToken
+            }
+        })
+
+        const eventStore = await get_events.json()
+        const publicEventStore = eventStore.filter(obj => {
+            return obj.status === 'public'
+        })
+        const privateEventStore = eventStore.filter(obj => {
+            return obj.status === 'private'
+        })
+
+        //insert event counts
+        event_count.textContent = eventStore.length
+        public_count.textContent = publicEventStore.length
+        private_count.textContent = privateEventStore.length
+
+        /*<div class="event" id="event">
+                <h6>Node.Js Conference</h6>
+                <span>Jan 1, 2019 7:00 PM</span><span style="float:right">25/200</span>
+            </div>*/
+        //load all events
+        
+        let evList = document.getElementById('evList')
+        while(evList.firstChild)
+            evList.removeChild(evList.firstChild)
+       
+        buildEvCards(eventStore)
+
+        
+        document.addEventListener('click', function(e){
+            if(e.target.classList.contains('radio')){
+                
+                while(evList.firstChild)
+                    evList.removeChild(evList.firstChild)
+                switch(e.target.value){
+            
+                    case ('all'):
+                        buildEvCards(eventStore)
+                        break
+                    case ('public'):
+                        buildEvCards(publicEventStore)
+                        break
+                    case ('private'):
+                        buildEvCards(privateEventStore)
+                        break
+                    default:
+                        break
+                }
+            }
+        })
+
+    }
+
+    function buildEvCards(evStore = []){
+        evStore.forEach(event => {
+            let evCard = document.createElement('div')
+            evCard.className = 'event'
+            evCard.id = 'event'
+            evCard.setAttribute('ev-ref', event.reference)
+            let title = document.createElement('h6')
+            title.append(document.createTextNode(event.title))
+            //console.log(event)
+            let startdate = new Date(event.start.substring(0, 10))
+            let enddate = new Date(event.end.substring(0, 10))
+
+            let date = document.createElement('span')
+            let dateTxt
+            if(event.start === event.end){
+                dateTxt = document.createTextNode(startdate.toString().substring(0,15))
+            }else{
+                dateTxt = document.createTextNode(startdate.toString().substring(0,15) + ' - ' + enddate.toString().substring(0,15))
+            }
+            date.append(dateTxt)
+
+            let capacity = document.createElement('span')
+            capacity.className = 'capacity'
+            capacity.append(document.createTextNode('0/200'))
+
+            evCard.append(title)
+            evCard.append(date)
+            evCard.append(capacity)
+
+            evList.append(evCard)
+        })
+    }
+
+    function performSeach(e){
+        let searchText = e.target.value
+        var eventList = document.getElementsByClassName('event')
+
+        Array.from(eventList).forEach(event => {
+            var eventName =  event.firstChild.textContent
+
+            if(eventName.toLowerCase().indexOf(searchText) != -1){
+                event.style.display = 'block'
+            }else{
+                event.style.display = 'none'
+            }
+        })
+    }
+</script>

@@ -16,7 +16,7 @@ router
 })
 
 .get('/myevent', isLoggedIn, (req, res) => {
-  res.render('user/myevent')
+  res.render('user/myevent', {csrfToken: req.csrfToken()})
 })
 
 .get('/logout', isLoggedIn, (req, res, next) => {

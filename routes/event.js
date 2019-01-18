@@ -39,15 +39,16 @@ router
             } catch (err){
                 res.json({error: err})
             }
-            // eventController.addEvent(req)
-            // .then(event => {
-            //     res.status(200).json(event)
-            // })
-            // .catch(error => {
-            //     res.json({error: error})
-            // })
         }
     })
 })
 
+.get('/', async (req, res) => {
+    try{
+        let events = await eventController.getEvents(req)
+        res.status(200).send(events)
+    } catch (err){
+        res.json({error: err})
+    }
+})
 module.exports = router
