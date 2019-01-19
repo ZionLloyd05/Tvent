@@ -42,8 +42,8 @@
         </div>
         <div class="col-7 eventViewContainer">
             <div class="row">
-                <div class="col-7" style="padding-left:5%;">
-                <h4 class="display-4" style="font-size:20px;">Node.Js Conference </h4>
+                <div class="col-7" style="padding-left:5%;" id="evTitle">
+                    <h4 class="display-4 evTitle">Click on event to view full details</h4>
                 </div>
                 <div class="col-5" style="text-align:right;">
                     <button class="btn"  data-toggle="modal" data-target="#itemModal" style="margin-right:2%;"><i class="fas fa-edit"></i>  Edit</button>
@@ -51,13 +51,16 @@
                 </div>
             </div>
             <hr>
-            <div class="row">
-                <div class="col-7">
+            <div id="loaderDiv" class="text-center" style="display:none;">
+                <img src="/images/evLoading.gif" style="max-width:70%" alt="Loader">
+            </div>
+            <div class="row" id="eventDiv" style="display:none;">
+                <div class="col-7" id="evPoster">
                     <img src="/uploads/poster_1547753994396.jpg" style="max-width:100%" alt="event poster">
                 </div>
-                <div class="col-5">
-                    <p>Jan 1, 2019 9:00 AM - Jan 4, 2019 2:00 AM </p>
-                    <p>A conference for Web developers from allover the world</p>
+                <div class="col-5" id="evMetadata">
+                    <p id="evDateTime">Jan 1, 2019 9:00 AM - Jan 4, 2019 2:00 AM </p>
+                    <p id="evDesc">A conference for Web developers from allover the world</p>
                     <a class="badge badge-light">Lagos show</a>
                     <a class="badge badge-light">Party</a>
                     <a class="badge badge-light">Convocation</a>
@@ -65,10 +68,19 @@
                 </div>
                 <div class="col-12 mt-3">
                     <p>Event Allocation</p>
-                    <ol style="list-style-type:none;font-size:15px;">
-                        <li>Day 1: Diving into REST Api Pattern designs <span style="float:right">Capacity: 200</span></li>
-                        <li>Day 2: Diving into REST Api Pattern designs <span style="float:right">Capacity: 200</span></li>
-                    </ol>
+                    <table class="table" style="font-size:13px">
+                        <thead>
+                            <tr>
+                                <th scope="col">Day</th>
+                                <th scope="col">Division</th>
+                                <th scope="col">Registered</th>
+                                <th scope="col">Capacity</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allocationBody">
+                           
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -77,10 +89,16 @@
 </div>
 
 <script>
+    let eventStore = []
+    let publicEventStore = []
+    let privateEventStore = []
+
     let search = document.getElementById('search')
+    let evList = document.getElementById('evList')
     
     window.addEventListener('load', prepareEventListContainer)
     search.addEventListener('keyup', performSeach)
+    document.addEventListener('click', showEventPreview)
 
 
     async function prepareEventListContainer(){
@@ -98,11 +116,11 @@
             }
         })
 
-        const eventStore = await get_events.json()
-        const publicEventStore = eventStore.filter(obj => {
+        eventStore = await get_events.json()
+        publicEventStore = eventStore.filter(obj => {
             return obj.status === 'public'
         })
-        const privateEventStore = eventStore.filter(obj => {
+        privateEventStore = eventStore.filter(obj => {
             return obj.status === 'private'
         })
 
@@ -153,7 +171,7 @@
             let evCard = document.createElement('div')
             evCard.className = 'event'
             evCard.id = 'event'
-            evCard.setAttribute('ev-ref', event.reference)
+            evCard.setAttribute('ev-id', event._id)
             let title = document.createElement('h6')
             title.append(document.createTextNode(event.title))
             //console.log(event)
@@ -195,4 +213,175 @@
             }
         })
     }
+
+    async function showEventPreview(e){
+       
+
+        if(e.target.classList.contains('event')){
+            let evCardId
+            let eventPayLoad
+            let evAllocationPayLoad
+            let evTagPayLoad
+            let evTitle = document.getElementById('evTitle')
+            let loader = document.getElementById('loaderDiv')
+            let eventDiv = document.getElementById('eventDiv')
+
+            if(loader)
+                loader.style.display = 'block'
+            if(eventDiv)
+                eventDiv.style.display = 'none'
+
+            while(evTitle.firstChild){
+                evTitle.removeChild(evTitle.firstChild)
+            }
+
+            let loadingSpan = document.createElement('span')
+            //let icon = document.createElement('i')
+            //icon.className = 'fa fa-spinner fa-spin'
+            loadingSpan.append(document.createTextNode('...Fetching event full details'))
+            //loadingSpan.append(icon)
+            evTitle.append(loadingSpan)
+
+            let evCard = e.target
+            evCardId = e.target.getAttribute('ev-id')
+            let rbtnVal = document.querySelector('input[name="radio"]:checked').value;
+
+            switch(rbtnVal){
+                case ('all'):
+                    eventPayLoad = eventStore.find(event => event._id == evCardId)
+                    break
+                case ('public'):
+                    eventPayLoad = publicEventStore.find(event => event._id == evCardId)
+                    break
+                case ('private'):
+                    eventPayLoad = privateEventStore.find(event => event._id == evCardId)
+                    break
+                default:
+                    break
+            }
+            //console.log(eventPayLoad)
+
+            //get event's allocation && event's tag
+            const get_allocations = await fetch('/allocations/'+evCardId, {
+                method: 'GET'
+            })
+
+            evAllocationPayLoad = await get_allocations.json()
+            //console.log(evAllocationPayLoad)
+
+            const get_tags = await fetch('/tags/'+evCardId, {
+                method: 'GET'
+            })
+
+            evTagPayLoad = await get_tags.json()
+            //console.log(evTagPayLoad)
+
+            buildEventView(eventPayLoad, evAllocationPayLoad, evTagPayLoad)
+
+            if(loader)
+                loader.style.display = 'none'
+            if(eventDiv)
+                eventDiv.style.display = 'inline-flex'
+
+        }
+
+
+    }
+
+    function buildEventView(eventPayload, allocationPayload, tagPayload){
+        let evTitle = document.getElementById('evTitle')
+        let evPoster = document.getElementById('evPoster')
+        let evMetadata = document.getElementById('evMetadata')
+                
+
+        //title
+        let title = document.createElement('h4')
+        //title.style.fontSize = 20
+        title.className = 'display-4 evTitle'
+        title.textContent = eventPayload.title
+        while(evTitle.firstChild){
+            evTitle.removeChild(evTitle.firstChild)
+        }
+        evTitle.append(title)
+
+        //poster
+        while(evPoster.firstChild){
+            evPoster.removeChild(evPoster.firstChild)
+        }
+        let img = document.createElement('img')
+        img.src = '/uploads/'+eventPayload.posterUrl
+        img.alt = 'Event Poster'
+        img.style.maxWidth = '100%'
+
+        evPoster.append(img)
+
+        //meta data
+        while(evMetadata.firstChild){
+            evMetadata.removeChild(evMetadata.firstChild)
+        }
+        let startdate = new Date(eventPayload.start.substring(0, 10))
+        let enddate = new Date(eventPayload.end.substring(0, 10))
+
+        let dateTxt
+        if(eventPayload.start === eventPayload.end){
+            dateTxt = document.createTextNode(startdate.toString().substring(0,15))
+        }else{
+            dateTxt = document.createTextNode(startdate.toString().substring(0,15) + ' - ' + enddate.toString().substring(0,15))
+        }
+        let datetime = document.createElement('p')
+        datetime.append(dateTxt)
+
+        let desc = document.createElement('p')
+        desc.textContent = eventPayload.description
+        
+        evMetadata.append(datetime)
+        evMetadata.append(desc)
+
+        //spawn tags
+        tagPayload.forEach(tag => {
+            let aTag = document.createElement('a')
+            aTag.className = 'badge badge-light'
+            aTag.textContent = tag.title
+            evMetadata.append(aTag)
+        })
+
+        //spaen allocation
+        let tblAllocation = document.getElementById('allocationBody')
+        //meta data
+        while(tblAllocation.firstChild){
+            tblAllocation.removeChild(tblAllocation.firstChild)
+        }
+
+        allocationPayload.forEach(allocation => {
+            let tblRow = document.createElement('tr')
+            
+                let day = document.createElement('th')
+                let division = document.createElement('td')
+                let registered = document.createElement('td')
+                let capacity = document.createElement('td')
+
+                day.textContent = allocation.day
+                day.setAttribute('scope', 'col')
+                division.textContent = allocation.division
+                registered.textContent = allocation.fill
+                capacity.textContent = (allocation.capacity+allocation.extra)
+
+                tblRow.append(day)
+                tblRow.append(division)
+                tblRow.append(registered)
+                tblRow.append(capacity)
+        
+            tblAllocation.append(tblRow)
+        })
+    }
+
+
+
+
+
+
+
+
+
+
 </script>

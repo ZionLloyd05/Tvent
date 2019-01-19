@@ -8,11 +8,21 @@ const csrfProtection = csrf();
 router.use(csrfProtection);
 
 router
-.post('/save', async (req, res) => {
+.post('/', async (req, res) => {
     try{
         let response = await allocationController.addAllocation(req)
         res.status(200).send(response)
     } catch (err){
+        res.json({status: err})
+    }
+})
+
+.get('/:evid', async (req, res) => {
+    try {
+        let eventId = req.params.evid
+        let allocations = await allocationController.getAllocationByEventId(eventId)
+        res.status(200).send(allocations)
+    } catch (err) {
         res.json({status: err})
     }
 })

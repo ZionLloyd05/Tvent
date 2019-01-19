@@ -22,6 +22,10 @@ var allocationSchema = new Schema({
     extra: {
         type: Number,
         default: 0
+    },
+    fill: {
+        type: Number,
+        default: 0
     }
 })
 

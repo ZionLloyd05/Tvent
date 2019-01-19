@@ -652,7 +652,7 @@ async function createEvent() {
                 // console.log(obj)
 
                 //save allocation
-                const save_allocation_response = await fetch('/allocations/save', {
+                const save_allocation_response = await fetch('/allocations/', {
                     method: 'POST',
                     body: JSON.stringify(obj),
                     headers : {
@@ -686,7 +686,7 @@ async function createEvent() {
                 })
 
                 //save tag
-                const save_tag_response = await fetch('/tags/save', {
+                const save_tag_response = await fetch('/tags/', {
                     method: 'POST', 
                     body: JSON.stringify(tagObjs), 
                     headers : {

@@ -227,6 +227,7 @@ div.event{
 }
 .event h6{
   margin-bottom: 10px;
+  width: 40%;
 }
 .event span{
   font-style: italic;
@@ -234,11 +235,20 @@ div.event{
 }
 .eventListContainer{
   overflow-y: scroll;
-  max-height: 380px;
+  max-height: 400px;
 }
 .eventViewContainer p{
   font-size: 15px;
 }
 .capacity{
   float:right
+}
+.evTitle{
+  font-size:20px !important;
+}
+.evPosterInner{
+  max-width: 100%;
+}
+.fa-spin{
+  font-size: 17px !important;
 }

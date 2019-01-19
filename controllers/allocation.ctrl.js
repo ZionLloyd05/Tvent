@@ -39,5 +39,16 @@ module.exports = {
             }
             
         })
+    },
+
+    getAllocationByEventId: (eventId) => {
+        return new Promise(async(resolve, reject) => {
+            try {
+                const allocation = await Allocation.find({event: eventId})
+                resolve(allocation)
+            } catch (error) {
+                reject(error)
+            }
+        })
     }
 }
