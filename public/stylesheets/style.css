@@ -235,7 +235,7 @@ div.event{
 }
 .eventListContainer{
   overflow-y: scroll;
-  max-height: 400px;
+  max-height: 420px;
 }
 .eventViewContainer p{
   font-size: 15px;

@@ -29,7 +29,7 @@ module.exports = {
                     obj.user = req.session._id
                     obj.reference = uuidv4()
                     // let hashedRef = Event.encryptRef(obj.reference)
-                    const hostUrl = "http://localhost:3000/"
+                    const hostUrl = "http://localhost:3000/events/evbyref/"
                     const eventLink = hostUrl+obj.reference
                     obj.link = eventLink
                  

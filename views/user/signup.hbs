@@ -1,0 +1,164 @@
+<div class="container signup" style="width:40%">
+        <h4 class="display-4"style="font-size:40px;margin-bottom:50px;">
+            <i class="far fa-user-circle"></i>  Create an account</h4>
+       {{#if hasErrors}}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{# each messages}}
+                        {{this}}<br/>
+                {{/each}}
+            </div>
+        {{/if}}
+        <form action="/user/signin" method="post">
+             <div class="row">
+                <div class="col-6 mb-4">
+                    <div class="form-group">
+                        <input type="text" placeholder="Firstname" class="form-control" name="firstname" id="firstName" placeholder="" value="" required>
+                        <div class="invalid-feedback">
+                            Valid first name is required.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 mb-4">
+                    <div class="form-group">
+                        <input type="text" placeholder="Lastname" class="form-control" name="lastname" id="lastname" placeholder="" value="" required>
+                        <div class="invalid-feedback">
+                            Valid first name is required.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 mb-4">
+                    <div class="form-group">
+                        <input type="email" placeholder="Email" class="form-control" name="username" id="username" placeholder="" value="" required>
+                        <div class="invalid-feedback funame">
+                            Username is already in use!
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 mb-4">
+                    <div class="form-group">
+                        <input type="password" placeholder="********" class="form-control" name="password" id="password" placeholder="" value="" required>
+                        <div class="invalid-feedback fpwd">
+                            Password must be greater that 5
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+            <button type="submit" class="btn signbtn mt-3">Sign Up</button>      
+        </form>
+  
+</div>
+
+
+{{!-- <div class="container" style="margin-top:2%;">
+    <form action="/user/signup" method="post">
+        <h4 class="display-4" style="font-size:40px;margin-bottom:5px;">
+            <i class="far fa-user-circle"></i>  Create an account</h4>
+        </h4>
+        <hr>
+        <div class="row">
+            
+            <div class="col-10">
+                <ul class="nav nav-tabs" style="margin-bottom:25px;">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#userinfo" role="tab" aria-controls="pills-home">Tell us a bit about you</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#contact" role="tab">Contact Information</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="userinfo" role="tabpanel">
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <div class="form-group">
+                                    <label for="firstName">First name</label>
+                                    <input type="text" class="form-control" name="firstname" id="firstName" placeholder="" value="" required>
+                                    <div class="invalid-feedback">
+                                        Valid first name is required.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="form-group">
+                                    <label for="lastname">Last name</label>
+                                    <input type="text" class="form-control" name="lastname" id="lastname" placeholder="" value="" required>
+                                    <div class="invalid-feedback">
+                                        Valid first name is required.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="form-group">
+                                    <label for="username">Username</label>
+                                    <input type="text" class="form-control" name="username" id="username" placeholder="" value="" required>
+                                    <div class="invalid-feedback funame">
+                                        Username is already in use!
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" class="form-control" name="password" id="password" placeholder="" value="" required>
+                                    <div class="invalid-feedback fpwd">
+                                        Password must be greater that 5
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="contact" role="tabpanel">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" name="email" id="email" placeholder="" value="" required>
+                                    <div class="invalid-feedback femail">
+                                        Email is already in use!
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label for="email">Phone</label>
+                                    <input type="text" class="form-control" name="phone" id="phone" placeholder="" value="" required>
+                                    <div class="invalid-feedback ftel">
+                                        Email is already in use!
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="location">Nearest Location</label>
+                                <select id="location" name="location" class="custom-select">
+                                    <option selected>-- Select --</option>
+                                    <option value="Awo Hall">Awo Hall</option>
+                                    <option value="Bello Hall">Bello Hall</option>
+                                    <option value="Indy Hall">Indy Hall</option>
+                                    <option value="Idia Hall">Idia Hall</option>
+                                    <option value="Kuti Hall">Kuti Hall</option>
+                                    <option value="Mellanby Hall">Mellanby Hall</option>
+                                    <option value="Saint Annes Hall">Saint Annes Hall</option>
+                                    <option value="Queens Hall">Queens Hall</option>
+                                    <option value="Zik Hall">Zik Hall</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label for="address">Address</label>
+                                    <textarea class="form-control" name="address" id="address" rows="2"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn signbtn signupBtn" style="margin:5px auto; width:30%;">Get Started</button>
+                    </div>
+                </div>
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+            </div>
+        </div>     
+    </form>
+</div> --}}

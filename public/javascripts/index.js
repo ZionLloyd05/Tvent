@@ -10,21 +10,4 @@ $(function(){
     //}
     
 })
-
-$(function () {
-    $('#datetimepicker1').datetimepicker({
-        icons: {
-            time: "far fa-clock"
-        }
-    });
-});
-
-$(function () {
-    $('#datetimepicker2').datetimepicker({
-        icons: {
-            time: "far fa-clock"
-        }
-    });
-});
-
 // 2019-01-13 09:00am
