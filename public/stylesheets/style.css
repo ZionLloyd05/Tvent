@@ -252,3 +252,6 @@ div.event{
 .fa-spin{
   font-size: 17px !important;
 }
+.invalid-feedback{
+  text-align: left;
+}

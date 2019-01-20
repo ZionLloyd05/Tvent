@@ -57,11 +57,19 @@ router
   });
 })
 
+.post('/signup', passport.authenticate('local.signup', {
+  successRedirect: '/user/logout',
+  failureRedirect: '/user/signup',
+  badRequestMessage: 'Bad Request',
+  failureFlash: true
+}))
+
 .post('/signin', passport.authenticate('local.signin', {
   successRedirect: '/',
   failureRedirect: '/user/signin',
   failureFlash: true
 }));
+
 
 module.exports = router;
 
