@@ -52,5 +52,8 @@ router
     }
 })
 
+.get('/evbyref', (req, res) => {
+    res.render('public/event')
+})
 
 module.exports = router

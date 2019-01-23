@@ -5,7 +5,11 @@ html {
 
 body {
   /* Margin bottom by footer height */
-  margin-bottom: 60px;
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  overflow-x: hidden; 
 }
 
 main {
@@ -254,4 +258,37 @@ div.event{
 }
 .invalid-feedback{
   text-align: left;
+}
+.ev-main{
+  background: linear-gradient(180deg, rgba(255, 0, 150, 0.3), rgba(255, 0, 150, 0.3)), url('../images/bg2.jpg');
+   /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: repeat;
+  background-size: cover;
+
+}
+.ev-container{
+  box-shadow: 1px 1px 1px 1px #ccc;
+  margin-bottom: 50px;
+  padding-top: 2%;
+}
+.ev-jumbo{
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+  width: auto;
+  height: 650px;
+}
+.ev-container h3{
+  font-size: 1.6rem;
+  font-weight: 300;
+}
+.ev-container h2{
+  font-size: 1.8rem;
+  font-weight: 400;
+}
+.ev-desc p{
+  /* text-align: justify; */
 }
