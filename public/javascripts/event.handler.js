@@ -661,8 +661,8 @@ async function createEvent() {
                     }
                 })
                 const allocation_response = await save_allocation_response.json()
-                console.log(allocation_response)
-                console.log(allocation_response.status)
+                //console.log(allocation_response)
+                //console.log(allocation_response.status)
 
                 toastr.options.timeOut = 1000
                 // toastr.options.extendedTimeOut = 0

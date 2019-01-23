@@ -29,7 +29,7 @@ module.exports = {
                     obj.user = req.session._id
                     obj.reference = uuidv4()
                     // let hashedRef = Event.encryptRef(obj.reference)
-                    const hostUrl = "http://localhost:3000/events/evbyref/"
+                    const hostUrl = "http://localhost:3000/events/r/"
                     const eventLink = hostUrl+obj.reference
                     obj.link = eventLink
                  
@@ -46,7 +46,18 @@ module.exports = {
         })
     },
 
-    getEvents: (req) => {
+    getEvents: () => {
+        return new Promise(async(resolve, reject) => {
+            try {
+                const events = await Event.find()
+                resolve(events)
+            } catch (error) {
+                reject(error)
+            }
+        })
+    },
+
+    getEventsForUser: (req) => {
         return new Promise(async(resolve, reject) => {
             try {
                 const events = await Event.find({user : req.session._id})

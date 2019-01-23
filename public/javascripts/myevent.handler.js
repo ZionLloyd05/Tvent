@@ -18,7 +18,7 @@ async function prepareEventListContainer(){
     let csrfToken = document.getElementById('_csrf').value
     
     
-    const get_events = await fetch('/events/', {
+    const get_events = await fetch('/events/u', {
         method: 'GET', 
         headers : {
             "X-CSRF-TOKEN": csrfToken

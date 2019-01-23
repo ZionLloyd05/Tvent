@@ -30,6 +30,17 @@ module.exports = {
         })
     },
 
+    getTags: () => {
+        return new Promise(async(resolve, reject) => {
+            try {
+                const tags = await Tag.find()
+                resolve(tags)
+            } catch (error) {
+                reject(error)
+            }
+        })
+    },
+
     getTagsByEventId: (eventId) => {
         return new Promise(async(resolve, reject) => {
             try {

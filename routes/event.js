@@ -45,14 +45,23 @@ router
 
 .get('/', async (req, res) => {
     try{
-        let events = await eventController.getEvents(req)
+        let events = await eventController.getEvents()
         res.status(200).send(events)
     } catch (err){
         res.json({error: err})
     }
 })
 
-.get('/evbyref', (req, res) => {
+.get('/u', async (req, res) => {
+    try{
+        let events = await eventController.getEventsForUser(req)
+        res.status(200).send(events)
+    } catch (err){
+        res.json({error: err})
+    }
+})
+
+.get('/r', (req, res) => {
     res.render('public/event')
 })
 

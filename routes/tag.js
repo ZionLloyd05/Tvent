@@ -17,6 +17,15 @@ router
     }
 })
 
+.get('/', async (req, res) => {
+    try {
+        let tags = await tagController.getTags()
+        res.status(200).send(tags)
+    } catch (err) {
+        res.json({status: err})
+    }
+})
+
 .get('/:evid', async (req, res) => {
     try {
         let eventId = req.params.evid

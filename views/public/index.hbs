@@ -30,56 +30,21 @@
       <div class="container">
           <h4 class="display-4 tagtxt">Checkout events by tags</h4>
           <div class="row">
-              <div class="col-md-12" style="padding: 20px 0px 0px 40px;">
-                  <a href="#" class="badge badge-light selected">All</a>
-                  <a href="#" class="badge badge-light">Lagos show</a>
-                  <a href="#" class="badge badge-light">Party</a>
-                  <a href="#" class="badge badge-light">Convocation</a>
-                  <a href="#" class="badge badge-light">Ibadan for show</a>
-                  <a href="#" class="badge badge-light">Experience</a>
-                  <a href="#" class="badge badge-light">Stand Up Naija</a>
-                  <a href="#" class="badge badge-light">Google Developer's Conference</a>
-                  <a href="#" class="badge badge-light">Lagos show</a>
-                  <a href="#" class="badge badge-light">Big Data</a>
-                  <a href="#" class="badge badge-light">Small Scale Business Automation</a>
-                  <a href="#" class="badge badge-light">Experience</a>
-                  <a href="#" class="badge badge-light">Stand Up Naija</a>
-
+              <div class="col-md-12" id="tagList" style="padding: 20px 0px 0px 40px;">
+                  {{!-- <a href="#" class="badge badge-light selected">All</a>
+                  <a href="#" class="badge badge-light">Lagos show</a> --}}
               </div>
           </div>
       </div>
       <div class="container">
         <!-- Example row of columns -->
-        <div class="row">
-          <div class="col-md-4">
-            <div class="card">
-                <img class="card-img-top" src="https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F53041691%2F238269161097%2F1%2Foriginal.jpg?h=512&w=512&auto=compress&rect=0%2C279%2C1078%2C539&s=ba130a85b90a2f5122b6fbf39045f275" alt="Card image cap">
-                <div class="card-body">
-                    <a class="card-title" href="#">Card title</a>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card">
-                <img class="card-img-top" src="https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F51853185%2F52642443556%2F1%2Foriginal.jpg?h=512&w=512&auto=compress&rect=1294%2C0%2C2842%2C1421&s=92ccf976bc6bcef604d7e32b93451ec2" alt="Card image cap">
-                <div class="card-body">
-                    <a class="card-title" href="#">Card title</a>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card">
-                <img class="card-img-top" src="https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F53041691%2F238269161097%2F1%2Foriginal.jpg?h=512&w=512&auto=compress&rect=0%2C279%2C1078%2C539&s=ba130a85b90a2f5122b6fbf39045f275" alt="Card image cap">
-                <div class="card-body">
-                    <a class="card-title" href="#">Card title</a>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </div>
-            </div>       
-          </div>
+        <div class="" id="loader" style="text-align: center; padding-top: 20px;display:none;">
+            <img src="/images/spinner.gif" alt="" style="width:10%">
         </div>
-
+        <div class="row" id="event-GeneralList">
+            
+        </div>
+        
         <hr>
         
     </div> <!-- /container -->
@@ -138,4 +103,102 @@
         </div>
 
         <hr>
+        
+    <input type="hidden" name="_csrf" id="_csrf" value="{{ csrfToken }}">
 </main>
+
+
+<script>
+    let eventStore = []
+    let tagStore = []
+
+    let eventGList = document.getElementById('event-GeneralList')
+    let tagList = document.getElementById('tagList')
+    let loader = document.getElementById('loader')
+    
+    let csrfToken = document.getElementById('_csrf').value
+
+    window.addEventListener('load', bootstrapPage)
+
+    async function bootstrapPage(){
+        loader.style.display = 'block'
+        const get_events = await fetch('/events/', {
+           method: 'GET', 
+            headers : {
+                "X-CSRF-TOKEN": csrfToken
+            } 
+        })
+
+        const get_tags = await fetch('/tags/', {
+           method: 'GET', 
+            headers : {
+                "X-CSRF-TOKEN": csrfToken
+            } 
+        })
+
+        eventStore = await get_events.json()
+        tagStore = await get_tags.json()
+       
+        buildTags(tagStore)
+        buildEventCards(eventStore)
+
+        loader.style.display = 'none'
+    }
+
+    function buildEventCards(eventStore){
+        //console.log(eventStore)
+        eventStore.forEach(event => {
+            let body = document.createElement('div')
+            body.className = 'col-4 mt-4 mb-4'
+                
+                let card = document.createElement('div')
+                card.className = 'card'
+
+                    let imgAnchor = document.createElement('a')
+                    imgAnchor.setAttribute('href', '/events/r/'+event.reference)
+                
+                        let cardImg = document.createElement('img')
+                        cardImg.className = 'card-img-top'
+                        cardImg.setAttribute('src', '/uploads/'+event.posterUrl)
+                        cardImg.setAttribute('alt', 'Event Poster')
+                        cardImg.style.width = '100%'
+                        cardImg.style.height = '170px'
+                    
+                    imgAnchor.append(cardImg)
+
+                    let cardBody = document.createElement('div')
+                    cardBody.className = 'card-body'
+
+                        let title = document.createElement('a')
+                        title.className = 'card-title'
+                        title.setAttribute('href', '/events/r/'+event.reference)
+                        title.textContent = event.title
+
+                        let desc = document.createElement('p')
+                        desc.className = 'card-text'
+                        desc.textContent = event.description
+
+                    cardBody.append(title)
+                    cardBody.append(desc)
+                
+                card.append(imgAnchor)
+                card.append(cardBody)
+
+            body.append(card)
+        
+        eventGList.append(body)
+        })
+    }
+
+    //<a href="#" class="badge badge-light">Party</a>
+    function buildTags(tagStore){
+        tagStore.forEach(tag => {
+            let badge = document.createElement('a')
+            badge.className = 'badge badge-light'
+            badge.textContent = tag.title
+            badge.setAttribute('href', '#')
+
+            tagList.append(badge)
+        })
+    }
+</script>

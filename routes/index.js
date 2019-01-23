@@ -4,11 +4,11 @@ var csrf = require('csurf');
 var passport = require('passport');
 
 var csrfProtection = csrf();
-// router.use(csrfProtection);
+router.use(csrfProtection);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('public/index', { title: 'Express' });
+  res.render('public/index', { title: 'Tvent' , csrfToken: req.csrfToken()});
 });
 
 // Signup page request
