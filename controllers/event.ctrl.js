@@ -11,13 +11,13 @@ module.exports = {
     addEvent: (req) => {
         return new Promise((resolve, reject)=> {
         
-            let { title, location, start, end, starttime, endtime, posterUrl, description, status, category } = req.body
+            let { title, location, start, end, starttime, endtime, posterUrl, description, status, category, organizer } = req.body
             
             if(req.file)
                 posterUrl = req.file.filename
 
                 
-            let {value, error} = Joi.validate({ title, location, start, end, starttime, endtime, posterUrl, description, status, category}, eventValidation.schema)
+            let {value, error} = Joi.validate({ title, location, start, end, starttime, endtime, posterUrl, description, status, category, organizer}, eventValidation.schema)
             
             if(error){
                 reject(error.message)

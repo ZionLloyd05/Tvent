@@ -12,5 +12,6 @@ exports.schema = joi.object().keys({
     end: joi.date().min(joi.ref('start')).required().format('YYYY-MM-DD').error(new Error("Invalid end date")),
     starttime: joi.string().regex(/^\d{2}:\d{2}/).required().error(new Error("Invalid start time")),
     endtime: joi.string().regex(/^\d{2}:\d{2}/).required().error(new Error("Invalid end time")),
-    category: joi.string().required().error(new Error("Invalid category"))
+    category: joi.string().required().error(new Error("Invalid category")),
+    organizer: joi.string().required()
 })

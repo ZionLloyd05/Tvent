@@ -51,6 +51,10 @@ var eventSchema = new Schema({
     status: {
         type: String,
         required: true
+    },
+    organizer: {
+        type: String,
+        required: true
     }
 }, {
     timestamps: {
