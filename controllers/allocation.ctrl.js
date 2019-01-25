@@ -56,7 +56,7 @@ module.exports = {
     updateAllocation: (allocation) => {
         return new Promise(async (resolve, reject) => {
             try {
-                let updatedAllocation = await Allocation.updateOne({},allocation)
+                let updatedAllocation = await Allocation.save(allocation)
                 resolve(updatedAllocation)
             } catch (error) {
                 reject(error)

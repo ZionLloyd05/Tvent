@@ -1,6 +1,6 @@
 
 </script>
-<script src="/javascripts/index.js"></script>
+{{!-- <script src="/javascripts/index.js"></script> --}}
 <main role="main">
     {{# each event}}
       <!-- Main jumbotron for a primary marketing message or call to action -->
@@ -10,10 +10,10 @@
     <div class="container ev-container" style="margin-bottom:60px">
         <div class="row">
             <div class="col-8">
-                <p class="display-4" style="font-size:2.7rem">{{this.title}}</p>
+                <p class="display-4" style="font-size:2.7rem" id="title">{{this.title}}</p>
             </div>
             <div class="col-4">
-                <button class="btn btn-lg" ev-id="{{this._id}}" ev-status="{{this.status}}" ev-cat="{{this.category}}" id="regBtn" data-toggle="modal" data-target="#exampleModal" style="width:100%">Register for Event</button>
+                <button class="btn btn-lg" ev-ref="{{this.reference}}" ev-id="{{this._id}}" ev-status="{{this.status}}" ev-cat="{{this.category}}" id="regBtn" data-toggle="modal" data-target="#exampleModal" style="width:100%">Register for Event</button>
             </div>
             <hr style="padding-bottom: 20px;width: 90%;">
             <div class="row ev-desc" style="width: 90%;margin: 0 auto;">
@@ -38,13 +38,8 @@
                 <div class="col-4 mb-3" id="tagBody">
                     <h3 class="display-4">Tags</h3>
                     <div class="" id="loader_tag" style="text-align: center; padding-top: 10px;">
-                        <img src="/images/spinner.gif" alt="" style="width:10%">
+                       <div class="loader"></div>
                     </div>
-                    {{!-- <a href="#" class="badge badge-light">Lagos show</a>
-                    <a href="#" class="badge badge-light">Big Data</a>
-                    <a href="#" class="badge badge-light">Small Scale Business Automation</a>
-                    <a href="#" class="badge badge-light">Experience</a>
-                    <a href="#" class="badge badge-light">Stand Up Naija</a> --}}
                 </div>  
                 <div class="col-12 mt-3" style="margin:0 auto;">
                     <h3 class="display-4">Allocation</h3>
@@ -59,7 +54,7 @@
                         </thead>
                         <tbody id="allocationBody">
                             <div class="" id="loader_allocation" style="text-align: center;">
-                                <img src="/images/spinner.gif" alt="" style="width:6%">
+                                <div class="loader"></div>
                             </div>
                         </tbody>
                     </table>
@@ -72,8 +67,6 @@
             </div>
         </div>
     </div>
-    {{/each}}
-    <input type="hidden" name="_csrf" id="_csrf" value="{{ csrfToken }}">
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModal"  data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -86,17 +79,12 @@
             </button>
         </div>
         <div class="modal-body">
-            {{!-- <div class="mb-4" id="loader_allocation" style="text-align: center;">
-                <img src="/images/spinner.gif" alt="" style="width:10%">
-            </div>
-            <div style="text-align:center">
-                <p id="statustext">Hello, i'm getting your ticket ready..</p>
-            </div> --}}
             <div class="row">
                 <div class="col-9" id="conv-form" style="display:none;margin:0 auto;">
                     <select id="faculty" class="custom-select custom-select-sm mb-3">
                         <option selected>Select Faculty</option>
                     </select>
+                    
                     <div class="input-group input-group-sm mb-3">
                         <input type="number" id="gno" placeholder="Enter number of gaurdian" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                         <div class="invalid-feedback" id="invalid-feedback" style="width: 100%;"></div>
@@ -105,16 +93,22 @@
 
                     </div>
                 </div>
+                <div class="col-12" style="display:none;" id="others">
+                    <p style="font-size:2.0rem" class="display-4">See you at {{this.title}}</p>
+                </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-sm" id="tickBtn" disabled style="width:95%; margin:0 auto">
-                 Get My Ticket
-            </button>
+            <button type="button" class="btn btn-sm" data-dismiss="modal"  style="width:50%;">Close</button>
+            <button class="btn btn-sm" id="tickBtn" disabled style="width:50%; margin:0 auto">Get My Ticket</button>
         </div>
         </div>
     </div>
     </div>
+    
+    {{/each}}
+    
+    <input type="hidden" name="_csrf" id="_csrf" value="{{ csrfToken }}">
 </main>
 
 <script>
@@ -130,13 +124,17 @@
     let faculty = document.getElementById('faculty')
     let category = button.getAttribute('ev-cat')
     let convFormDiv = document.getElementById('conv-form')
+    let otherDiv = document.getElementById('others')
     let statFeedback = document.getElementById('invalid-feedback')
     let gno = document.getElementById('gno')
     let gdiv = document.getElementById('gdiv')
     let tregBtn = document.getElementById('tickBtn')
+    let evTitle = document.getElementById('title').textContent
+    let evRef = button.getAttribute('ev-ref')
     
     let tagBody = document.getElementById('tagBody')
     let allocationBody = document.getElementById('allocationBody')
+    let csrfToken = document.getElementById('_csrf').value
 
     let evAllocationPayLoad
     let evTagPayLoad
@@ -149,6 +147,7 @@
     window.addEventListener('load', scaffoldPage)
     gno.addEventListener('keyup', buildForm)
     tregBtn.addEventListener('click', createTicket)
+    document.addEventListener('focusout', validateInput)
     //======================================================================
 
 
@@ -158,7 +157,11 @@
     async function scaffoldPage(){
         if(category == 'convocation'){
             convFormDiv.style.setProperty('display', 'block')
+        }else{
+            otherDiv.style.setProperty('display', 'block')
+            tregBtn.removeAttribute('disabled')
         }
+
         if (evStatus == 'private'){
             button.setAttribute('disabled', true)
             button.style.setProperty('cursor', 'not-allowed')
@@ -221,10 +224,6 @@
     })
     }
 
-    async function scaffoldTicket(){
-
-    }
-
     function buildForm(e){
         statFeedback.style.setProperty('display', 'none')
         
@@ -251,7 +250,11 @@
                     input.setAttribute('id', 'g'+(x+1))
                     input.setAttribute('name', 'gaurdianbox')
                     input.className = 'form-control'
+
+                    let invalidDiv = document.createElement('div')
+                    invalidDiv.className = 'invalid-feedback'
                 div.append(input)
+                div.append(invalidDiv)
                 
                 gdiv.append(div)
             }
@@ -262,31 +265,186 @@
     
     //<img src="/images/spinner.gif" alt="" style="width:6%;display:none;" id="tbtnloader">
     async function createTicket(){
+        startValidating = false
         let loader = document.createElement('img')
         loader.style.setProperty('width', '6%')
         loader.setAttribute('src', '/images/spinner.gif')
 
-        tregBtn.textContent = ''
-        tregBtn.append(loader)
-        tregBtn.setAttribute('disabled', true)
 
         let payload = {}
 
+        //==========> Category Payload <================================
         if (category == 'convocation'){
             let faculty = document.getElementById('faculty').value
-            let gaurdians = document.getElementsByName('gaurdianbox')
-            //console.log(gaurdians)
-            Array.from(gaurdians).forEach(input => {
-                console.log(input.value)
+            
+            //validate select
+            if(faculty != 'Select Faculty'){
+                tregBtn.textContent = ''
+                tregBtn.append(loader)
+                tregBtn.setAttribute('disabled', true)
+                
+                let gaurdians = document.getElementsByName('gaurdianbox')
+                let extra = ''
+                Array.from(gaurdians).forEach(input => {
+                    extra += input.value+','
+                })
+                
+                payload = {
+                    'event': evId,
+                    'category': category,
+                    'faculty': faculty,
+                    'extra': extra
+                }    
+
+                const save_ticket_response = await fetch('/tickets/', {
+                    method: 'POST',
+                    body: JSON.stringify(payload),
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": csrfToken
+                    }
+                })
+
+                const ticket_response = await save_ticket_response.json()
+                if(ticket_response.status == 'Ticket Saved')
+                    window.location.replace('/tickets/'+evTitle+'/'+evRef)
+                else
+                    swal("Oops!", ticket_response.status, "error")
+
+                tregBtn.removeChild(tregBtn.firstChild)
+                tregBtn.textContent = 'Get My Ticket'
+                tregBtn.removeAttribute('disabled')
+            }else{
+                swal("Oops", "Faculty cannot be empty", "error")
+            }
+        }else{
+            tregBtn.textContent = ''
+            tregBtn.append(loader)
+            tregBtn.setAttribute('disabled', true)
+
+            payload = {
+                "event": evId,
+                "category": category
+            }
+
+            const save_ticket_response = await fetch('/tickets/', {
+                method: 'POST',
+                body: JSON.stringify(payload),
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": csrfToken
+                }
             })
-            /*payload = {
-                'event': evId,
-                'category': category,
-                'faculty': faculty,
 
-            }*/
+            const ticket_response = await save_ticket_response.json()
+            if(ticket_response.status == 'Ticket Saved')
+                window.location.replace('/tickets/'+evTitle+'/'+evRef)
+            else
+                swal("Oops!", ticket_response.status, "error")
+
+            tregBtn.removeChild(tregBtn.firstChild)
+            tregBtn.textContent = 'Get My Ticket'
+            tregBtn.removeAttribute('disabled')
         }
-
+       //
     }
     //======================================================================
+
+//================================================================================================
+//      INPUTS VALIDATION
+//================================================================================================
+    let errorList = []
+    let startValidating = false
+    
+    function validateInput(e){
+        if(e.target.classList.contains('form-control')){
+            startValidating = true
+            let input = e.target
+            let errBlock = input.parentElement.children[1]
+            inputId = input.getAttribute('id')
+            switch (inputId){
+                case ('g1'):
+                    checkInputValidity('Gaurdian 1 fullname', input.value, 5, 30, errBlock)
+                    break
+                case ('g2'):
+                    checkInputValidity('Gaurdian 2 fullname', input.value, 5, 30, errBlock)
+                    break
+                default:
+                    break
+            }
+        }
+    }
+
+    function checkInputValidity(element='', value='', minlen=0, maxlen=0, errorBlockElement){
+       
+        if(value.length < minlen){
+            let err = element+' cannot be less than '+minlen
+            pushError(err, errorBlockElement)
+            if(errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
+                errorBlockElement.style.display = 'block'
+        }else{
+            let err = element+' cannot be less than '+minlen
+            removeError(err, errorBlockElement)
+
+            if(errorBlockElement.style.display == 'block' && errorList.length < 1)
+                errorBlockElement.style.display = 'none' 
+        }
+        
+        if(value.length > maxlen){
+            let err = element+' cannot be more than '+maxlen
+            pushError(err, errorBlockElement)
+            if(errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
+                errorBlockElement.style.display = 'block'
+        }else{
+            let err = element+' cannot be more than '+maxlen
+            removeError(err, errorBlockElement)
+
+            if(errorBlockElement.style.display == 'block' && errorList.length < 1)
+                errorBlockElement.style.display = 'none' 
+        }
+        
+    }
+
+    function pushError(errMsg='', errBlock){
+        let errtxt = document.createElement('p')
+        errtxt.textContent = errMsg
+        if(!errorList.includes(errMsg)){
+            errorList.push(errMsg)
+        }
+        //check err block child does not contain the content
+        let isContainErrorMsg = false
+        Array.from(errBlock.children).forEach(element => {
+            isContainErrorMsg = element.textContent == errMsg
+        })
+        
+        !isContainErrorMsg && errBlock.append(errtxt)
+    }
+
+    function removeError(errMsg='', errBlock){
+        if(errorList.includes(errMsg)){
+            let errIdx = errorList.indexOf(errMsg)
+            errorList.splice(errIdx, 1)
+        }
+        let isContainErrorMsg = true
+        Array.from(errBlock.children).forEach(element => {
+            isContainErrorMsg = element.textContent == errMsg
+            isContainErrorMsg && errBlock.removeChild(element)
+        })
+    }
+
+    function checkError(){
+        if(startValidating && tregBtn){
+            if(errorList.length > 0){
+                tregBtn.disabled = true
+            }else{
+                if(tregBtn.disabled)
+                    tregBtn.disabled = false
+            }
+        }
+    }
+
+    let intervalId = setInterval(checkError, 500);
+
+    if(!tregBtn)
+        clearInterval(intervalId)
 </script>

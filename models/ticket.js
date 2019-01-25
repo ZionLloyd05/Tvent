@@ -4,16 +4,16 @@ var Schema = mongoose.Schema;
 var ticketSchema = new Schema({
     event: {
         ref: 'Event',
-        title: mongoose.Schema.Types.ObjectId,
-        required: true
-    },
-    user: {
-        ref: 'User',
-        title: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         required: true
     },
     tref: {
         type: String,
+        required: true
+    },
+    user:  {
+        ref: 'User',
+        type: mongoose.Schema.Types.ObjectId,
         required: true
     },
     user_no: {
@@ -22,6 +22,10 @@ var ticketSchema = new Schema({
     },
     extra: {
         type: String
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
 });
 

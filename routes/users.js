@@ -88,7 +88,7 @@ router
 //   failureFlash: true
 // }))
 
-.post('/signin', passport.authenticate('local.signin', {failureFlash: true}), function(req, res){
+.post('/signin', passport.authenticate('local.signin', {failureFlash: true,  failureRedirect: '/user/signin'}), function(req, res){
   //console.log(req.user)
   if(req.user){
     let returnTo = '/'

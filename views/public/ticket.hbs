@@ -1,0 +1,17 @@
+<div class="row cevent" style="width:100%;">
+    <div class="col-8" style="padding-left: 5%;padding-top:30px">
+        <a href="{{window.location.origin}}/events/r/{{evref}}" class="display-4" style="font-size:1.7rem;color:black" id="eventDisplay"><- back to Node.Js Conference</a>
+    </div>
+    <div class="col-4" style="text-align:right;padding: 2% 6% 0% 0%;">
+        {{!-- <button class="btn ceventBtn" style="margin-right:2%;"><i class="far fa-save"></i> Save</button> --}}
+        <button class="btn ceventBtn" id="btnPublish"><i class="fas fa-ticket-alt"></i> Go to My Ticket</button>
+        {{!-- <button disabled class="btn ceventBtn" id="btnPublish"><i class="fas fa-spinner fa-spin"></i> Publishing event</button> --}}
+    </div>
+
+</div>
+<hr style="padding: 5px;">
+<div class="container text-center" style="margin-top:50px;margin-bottom:70px">
+   <p class="display-4" style="font-size:1.7rem;">Seat Reserved at</p>
+   <p class="display-4">{{evtitle}}</p>
+   <p class="display-4" style="font-size:1.3rem;">Your ticket has been saved to <a href="">My Ticket</a></p>
+</div>
