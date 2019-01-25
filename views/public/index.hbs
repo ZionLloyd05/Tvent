@@ -39,7 +39,7 @@
       <div class="container">
         <!-- Example row of columns -->
         <div class="" id="loader" style="text-align: center; padding-top: 20px;display:none;">
-            <img src="/images/spinner.gif" alt="" style="width:10%">
+            <img src="/images/spinner.gif" alt="" style="width:7%">
         </div>
         <div class="row" id="event-GeneralList">
             
@@ -77,7 +77,7 @@
             <div class="card">
                 <img class="card-img-top" src="https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F53041691%2F238269161097%2F1%2Foriginal.jpg?h=512&w=512&auto=compress&rect=0%2C279%2C1078%2C539&s=ba130a85b90a2f5122b6fbf39045f275" alt="Card image cap">
                 <div class="card-body">
-                    <a class="card-title" href="#">Card title</a>
+                    <a class="card-title" href="#">Card title <span class="status">Open</span></a>
                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                 </div>
             </div>
@@ -162,7 +162,7 @@
                         cardImg.setAttribute('src', '/uploads/'+event.posterUrl)
                         cardImg.setAttribute('alt', 'Event Poster')
                         cardImg.style.width = '100%'
-                        cardImg.style.height = '170px'
+                        cardImg.style.height = '190px'
                     
                     imgAnchor.append(cardImg)
 
@@ -174,9 +174,15 @@
                         title.setAttribute('href', '/events/r/'+event.reference)
                         title.textContent = event.title
 
+                            let status = document.createElement('span')
+                            status.className = 'status'
+                            status.textContent = event.status
+
+                        title.append(status)
+
                         let desc = document.createElement('p')
                         desc.className = 'card-text'
-                        desc.textContent = event.description
+                        desc.textContent = event.description.substring(0, 100)+'...'
 
                     cardBody.append(title)
                     cardBody.append(desc)

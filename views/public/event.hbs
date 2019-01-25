@@ -1,53 +1,292 @@
+
+</script>
 <script src="/javascripts/index.js"></script>
 <main role="main">
-
+    {{# each event}}
       <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron ev-jumbo" style="background-image:url('/images/poster.jpg'); border-radius:0;margin-bottom:0" id="overlay">
+    <div class="jumbotron ev-jumbo" style="background-image:url('/uploads/{{this.posterUrl}}'); border-radius:0;margin-bottom:0" id="overlay">
         
     </div>
     <div class="container ev-container" style="margin-bottom:60px">
         <div class="row">
             <div class="col-8">
-                <p class="display-4" style="font-size:2.7rem">Rest Pattern Conference</p>
+                <p class="display-4" style="font-size:2.7rem">{{this.title}}</p>
             </div>
             <div class="col-4">
-                <button class="btn btn-lg" style="width:100%">Register for Event</button>
+                <button class="btn btn-lg" ev-id="{{this._id}}" ev-status="{{this.status}}" ev-cat="{{this.category}}" id="regBtn" data-toggle="modal" data-target="#exampleModal" style="width:100%">Register for Event</button>
             </div>
             <hr style="padding-bottom: 20px;width: 90%;">
             <div class="row ev-desc" style="width: 90%;margin: 0 auto;">
                 <div class="col-6 mb-3">
                     <h3 class="display-4">Description</h3>
-                    <p style="text-align:justify">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+                    <p style="text-align:justify">{{this.description}}</p>
                 </div>
                 <div class=" mb-3 col-2">
                     
                 </div>
                 <div class="col-4 mb-3">
                     <h3 class="display-4">Date & Time</h3>
-                    <p>Sat, January 26, 2019</p>
-                    <p>10:00 AM – 3:00 PM WAT</p>
+                    <p style="font-size:15px">{{formatDate this.start}}, {{this.starttime}} - {{formatDate this.end}}, {{this.endtime}}</p>
                 </div>
                 <div class="col-5 mb-3">
                     <h3 class="display-4">Location</h3>
-                    <p style="text-align:justify">35b, Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.</p>
+                    <p style="text-align:justify">{{this.location}}</p>
                 </div>
                 <div class="col-3 mb-3">
                     
                 </div>
-                <div class="col-4 mb-3">
+                <div class="col-4 mb-3" id="tagBody">
                     <h3 class="display-4">Tags</h3>
-                    <a href="#" class="badge badge-light">Lagos show</a>
+                    <div class="" id="loader_tag" style="text-align: center; padding-top: 10px;">
+                        <img src="/images/spinner.gif" alt="" style="width:10%">
+                    </div>
+                    {{!-- <a href="#" class="badge badge-light">Lagos show</a>
                     <a href="#" class="badge badge-light">Big Data</a>
                     <a href="#" class="badge badge-light">Small Scale Business Automation</a>
                     <a href="#" class="badge badge-light">Experience</a>
-                    <a href="#" class="badge badge-light">Stand Up Naija</a>
+                    <a href="#" class="badge badge-light">Stand Up Naija</a> --}}
+                </div>  
+                <div class="col-12 mt-3" style="margin:0 auto;">
+                    <h3 class="display-4">Allocation</h3>
+                    <table class="table" style="font-size:13px">
+                        <thead>
+                            <tr>
+                                <th scope="col">Day</th>
+                                <th scope="col">Division</th>
+                                <th scope="col">Registered</th>
+                                <th scope="col">Capacity</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allocationBody">
+                            <div class="" id="loader_allocation" style="text-align: center;">
+                                <img src="/images/spinner.gif" alt="" style="width:6%">
+                            </div>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
+            </div>            
             <hr style="padding-bottom: 20px;width: 90%;">
             <div class="col-12 text-center">
                 <h2 class="display-4">Event Organizer</h2>
-                <p>LoopBack, IBM</p>
+                <p>{{this.organizer}}</p>
             </div>
         </div>
     </div>
+    {{/each}}
+    <input type="hidden" name="_csrf" id="_csrf" value="{{ csrfToken }}">
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal"  data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Setting up your ticket</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            {{!-- <div class="mb-4" id="loader_allocation" style="text-align: center;">
+                <img src="/images/spinner.gif" alt="" style="width:10%">
+            </div>
+            <div style="text-align:center">
+                <p id="statustext">Hello, i'm getting your ticket ready..</p>
+            </div> --}}
+            <div class="row">
+                <div class="col-9" id="conv-form" style="display:none;margin:0 auto;">
+                    <select id="faculty" class="custom-select custom-select-sm mb-3">
+                        <option selected>Select Faculty</option>
+                    </select>
+                    <div class="input-group input-group-sm mb-3">
+                        <input type="number" id="gno" placeholder="Enter number of gaurdian" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                        <div class="invalid-feedback" id="invalid-feedback" style="width: 100%;"></div>
+                    </div>
+                    <div id="gdiv">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-sm" id="tickBtn" disabled style="width:95%; margin:0 auto">
+                 Get My Ticket
+            </button>
+        </div>
+        </div>
+    </div>
+    </div>
 </main>
+
+<script>
+    //======================================================================
+    //  VARIABLE DECLARATIONS
+    //======================================================================
+    let button = document.getElementById('regBtn')
+    let evId = button.getAttribute('ev-id')
+    let evStatus = button.getAttribute('ev-status')
+    let loaderTag = document.getElementById('loader_tag')
+    let loaderAllocation = document.getElementById('loader_allocation')
+    let stText = document.getElementById('statustext')
+    let faculty = document.getElementById('faculty')
+    let category = button.getAttribute('ev-cat')
+    let convFormDiv = document.getElementById('conv-form')
+    let statFeedback = document.getElementById('invalid-feedback')
+    let gno = document.getElementById('gno')
+    let gdiv = document.getElementById('gdiv')
+    let tregBtn = document.getElementById('tickBtn')
+    
+    let tagBody = document.getElementById('tagBody')
+    let allocationBody = document.getElementById('allocationBody')
+
+    let evAllocationPayLoad
+    let evTagPayLoad
+    //========================================================================
+
+
+    //======================================================================
+    //  EVENT LISTENERS DECLARATIONS
+    //======================================================================
+    window.addEventListener('load', scaffoldPage)
+    gno.addEventListener('keyup', buildForm)
+    tregBtn.addEventListener('click', createTicket)
+    //======================================================================
+
+
+    //======================================================================
+    //  FUNCTION DEFINITION
+    //======================================================================
+    async function scaffoldPage(){
+        if(category == 'convocation'){
+            convFormDiv.style.setProperty('display', 'block')
+        }
+        if (evStatus == 'private'){
+            button.setAttribute('disabled', true)
+            button.style.setProperty('cursor', 'not-allowed')
+        }
+        const get_allocations = await fetch('/allocations/'+evId, {
+            method: 'GET'
+        })
+
+        evAllocationPayLoad = await get_allocations.json()
+       
+        const get_tags = await fetch('/tags/'+evId, {
+            method: 'GET'
+        })
+
+        evTagPayLoad = await get_tags.json()
+
+        buildPayloads(evAllocationPayLoad, evTagPayLoad)
+    }
+
+    function buildPayloads(allocationPayLoad, tagPayLoad){
+        
+        loaderTag.style.setProperty('display', 'none')
+        tagPayLoad.forEach(tag => {
+            let aTag = document.createElement('a')
+            aTag.className = 'badge badge-light'
+            aTag.textContent = tag.title
+            tagBody.append(aTag)
+        })
+
+        loaderAllocation.style.setProperty('display', 'none')
+        allocationPayLoad.forEach(allocation => {
+            if (category == 'convocation'){
+                //faculty scaffolding
+                let option = document.createElement('option')
+                option.setAttribute('value', allocation.division)
+                option.textContent = allocation.division
+
+                faculty.append(option)
+            }
+            //table scaffolding
+            let tblRow = document.createElement('tr')
+            
+                let day = document.createElement('th')
+                let division = document.createElement('td')
+                let registered = document.createElement('td')
+                let capacity = document.createElement('td')
+
+                day.textContent = allocation.day
+                day.setAttribute('scope', 'col')
+                division.textContent = allocation.division
+                registered.textContent = allocation.fill
+                capacity.textContent = (allocation.capacity+allocation.extra)
+
+                tblRow.append(day)
+                tblRow.append(division)
+                tblRow.append(registered)
+                tblRow.append(capacity)
+        
+            allocationBody.append(tblRow)
+    })
+    }
+
+    async function scaffoldTicket(){
+
+    }
+
+    function buildForm(e){
+        statFeedback.style.setProperty('display', 'none')
+        
+        while(gdiv.firstChild)
+            gdiv.removeChild(gdiv.firstChild)
+
+        let no = e.target.value
+        if (no < 0){
+            statFeedback.textContent = 'Gaurdian cannot be less than 0'
+            statFeedback.style.setProperty('display', 'block')
+        }
+        if (no > 2){
+            statFeedback.textContent = 'Gaurdian cannot be more than 2'
+            statFeedback.style.setProperty('display', 'block')
+        }
+        if (no > 0 && no < 3){
+                       
+            for(let x = 0; x < no; x++){
+                let div = document.createElement('div')
+                div.className = 'input-group input-group-sm mb-3'
+                    let input = document.createElement('input')
+                    input.setAttribute('type', 'text')
+                    input.setAttribute('placeholder', 'Enter guardian fullname')
+                    input.setAttribute('id', 'g'+(x+1))
+                    input.setAttribute('name', 'gaurdianbox')
+                    input.className = 'form-control'
+                div.append(input)
+                
+                gdiv.append(div)
+            }
+
+            tregBtn.removeAttribute('disabled')
+        }
+    }
+    
+    //<img src="/images/spinner.gif" alt="" style="width:6%;display:none;" id="tbtnloader">
+    async function createTicket(){
+        let loader = document.createElement('img')
+        loader.style.setProperty('width', '6%')
+        loader.setAttribute('src', '/images/spinner.gif')
+
+        tregBtn.textContent = ''
+        tregBtn.append(loader)
+        tregBtn.setAttribute('disabled', true)
+
+        let payload = {}
+
+        if (category == 'convocation'){
+            let faculty = document.getElementById('faculty').value
+            let gaurdians = document.getElementsByName('gaurdianbox')
+            //console.log(gaurdians)
+            Array.from(gaurdians).forEach(input => {
+                console.log(input.value)
+            })
+            /*payload = {
+                'event': evId,
+                'category': category,
+                'faculty': faculty,
+
+            }*/
+        }
+
+    }
+    //======================================================================
+</script>

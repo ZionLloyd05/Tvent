@@ -10,8 +10,7 @@ const passport = require('passport');
 const flash = require('connect-flash');
 const validator = require('express-validator');
 const MongoStore = require('connect-mongo')(session);
-
-
+const hbs = require('handlebars')
 
 const config = require('./config/database');
 //========================================
@@ -43,6 +42,16 @@ require('./config/passport');
 // view engine setup
 app.engine('.hbs', expressHbs({defaultLayout: 'layout', extname: '.hbs'}));
 app.set('view engine', '.hbs');
+
+// ===============================================================
+//     Handlebars Helper functions
+//=================================================================
+hbs.registerHelper('formatDate', function(date) {
+  let ndate = new Date(date)
+  let fsdate = ndate.toString().substring(0,15)
+  return fsdate
+});
+// ===================================================================
 
 app.use(logger('dev'));
 app.use(bodyparser.json());

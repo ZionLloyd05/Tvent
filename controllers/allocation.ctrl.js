@@ -44,8 +44,20 @@ module.exports = {
     getAllocationByEventId: (eventId) => {
         return new Promise(async(resolve, reject) => {
             try {
+                //console.log('here')
                 const allocation = await Allocation.find({event: eventId})
                 resolve(allocation)
+            } catch (error) {
+                reject(error)
+            }
+        })
+    },
+
+    updateAllocation: (allocation) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let updatedAllocation = await Allocation.updateOne({},allocation)
+                resolve(updatedAllocation)
             } catch (error) {
                 reject(error)
             }

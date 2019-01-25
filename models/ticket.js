@@ -7,10 +7,22 @@ var ticketSchema = new Schema({
         title: mongoose.Schema.Types.ObjectId,
         required: true
     },
-    status: {
+    user: {
+        ref: 'User',
+        title: mongoose.Schema.Types.ObjectId,
+        required: true
+    },
+    tref: {
         type: String,
         required: true
+    },
+    user_no: {
+        type: Number,
+        required: true
+    },
+    extra: {
+        type: String
     }
 });
 
-module.exports = mongoose.model('Tag', tagSchema);
+module.exports = mongoose.model('Ticket', ticketSchema);

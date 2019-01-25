@@ -1,9 +1,12 @@
 const express = require('express')
 const router = express.Router()
-const eventController = require('../controllers/event.ctrl')
 const multer = require('multer')
 const path = require('path')
 const csrf = require('csurf');
+
+const eventController = require('../controllers/event.ctrl')
+const allocationController = require('../controllers/allocation.ctrl')
+const tagController = require('../controllers/tag.ctrl')
 
 const csrfProtection = csrf();
 router.use(csrfProtection);
@@ -61,8 +64,13 @@ router
     }
 })
 
-.get('/r', (req, res) => {
-    res.render('public/event')
+.get('/r/:ref', async (req, res) => {
+    try {
+        let event = await eventController.getEventByRef(req)
+        res.render('public/event', {csrfToken: req.csrfToken(), event})
+    } catch (error) {
+        res.send(error)
+    }
 })
 
 module.exports = router

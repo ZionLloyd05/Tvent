@@ -9,7 +9,7 @@ router.use(csrfProtection);
 router
 .post('/', async (req, res) => {
     try{
-        console.log(req.body)
+        // console.log(req.body)
         let response = await tagController.addTag(req)
         res.status(200).send(response)
     } catch (err){

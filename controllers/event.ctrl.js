@@ -66,5 +66,17 @@ module.exports = {
                 reject(error)
             }
         })
+    },
+
+    getEventByRef: (req) => {
+        return new Promise(async(resolve, reject) => {
+            try {
+                let evRef = req.params.ref
+                const event = await Event.find({reference : evRef})
+                resolve(event)
+            } catch (error) {
+                reject(error)
+            }
+        })
     }
 }
