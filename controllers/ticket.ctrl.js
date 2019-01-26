@@ -70,7 +70,6 @@ module.exports = {
                             })
                             ticket.user_no = u_number
                             ticket.extra = ''
-                            console.log(ticket)
                             new Ticket(ticket).save()
                             resolve({status: "Ticket Saved"})
                         }

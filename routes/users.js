@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const csrf = require('csurf')
 const passport = require('passport')
+const UserController = require('../controllers/user.ctrl')
 
 const csrfProtection = csrf()
 router.use(csrfProtection)
@@ -82,11 +83,15 @@ router
   failureFlash: true
 }))
 
-// .post('/signin', passport.authenticate('local.signin', {
-//   successRedirect: '/',
-//   failureRedirect: '/user/signin',
-//   failureFlash: true
-// }))
+.post('/quickregister', passport.authenticate('local.signup'), (req, res) => {
+  if(req.user){
+    req.logOut()
+    res.json({status: 'User Created'})
+  }else{
+    res.json({status: 'Oops, something went wrong!'})
+  }
+})
+
 
 .post('/signin', passport.authenticate('local.signin', {failureFlash: true,  failureRedirect: '/user/signin'}), function(req, res){
   //console.log(req.user)
@@ -104,6 +109,16 @@ router
   
 
 })
+//===========================================================
+
+//============================================================
+//    FUNCTIONAL ROUTES
+//============================================================
+
+//Checks uniqueness of email
+.get('/check-email/:email', UserController.isEmailExist);
+
+//===========================================================
 
 module.exports = router
 
@@ -115,11 +130,6 @@ function isLoggedIn(req, res, next) {
   //console.log(req.originalUrl)
   res.redirect(`/user/signin?origin=${req.originalUrl}`)
 }
-
-// function saveSession(req, res, next){
-//   req.session.email = req.body.email
-//   next()
-// }
 
 function isNotLoggedIn(req, res, next) {
   if (!req.isAuthenticated()) {

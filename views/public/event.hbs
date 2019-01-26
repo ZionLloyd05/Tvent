@@ -13,7 +13,7 @@
                 <p class="display-4" style="font-size:2.7rem" id="title">{{this.title}}</p>
             </div>
             <div class="col-4">
-                <button class="btn btn-lg" ev-ref="{{this.reference}}" ev-id="{{this._id}}" ev-status="{{this.status}}" ev-cat="{{this.category}}" id="regBtn" data-toggle="modal" data-target="#exampleModal" style="width:100%">Register for Event</button>
+                <button class="btn btn-lg" ev-ref="{{this.reference}}" ev-id="{{this._id}}" ev-status="{{this.status}}" ev-cat="{{this.category}}" id="regBtn" style="width:100%">Register for Event</button>
             </div>
             <hr style="padding-bottom: 20px;width: 90%;">
             <div class="row ev-desc" style="width: 90%;margin: 0 auto;">
@@ -68,47 +68,78 @@
         </div>
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal"  data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Setting up your ticket</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <div class="row">
-                <div class="col-9" id="conv-form" style="display:none;margin:0 auto;">
-                    <select id="faculty" class="custom-select custom-select-sm mb-3">
-                        <option selected>Select Faculty</option>
-                    </select>
-                    
-                    <div class="input-group input-group-sm mb-3">
-                        <input type="number" id="gno" placeholder="Enter number of gaurdian" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
-                        <div class="invalid-feedback" id="invalid-feedback" style="width: 100%;"></div>
-                    </div>
-                    <div id="gdiv">
+    <!-- Ticket Modal -->
+    <div class="modal fade" id="ticketModal"  data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="ticketModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ticketModalLabel">Setting up your ticket</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-9" id="conv-form" style="display:none;margin:0 auto;">
+                        <select id="faculty" class="custom-select custom-select-sm mb-3">
+                            <option selected>Select Faculty</option>
+                        </select>
+                        
+                        <div class="input-group input-group-sm mb-3">
+                            <input type="number" id="gno" placeholder="Enter number of gaurdian" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                            <div class="invalid-feedback" id="invalid-feedback" style="width: 100%;"></div>
+                        </div>
+                        <div id="gdiv">
 
+                        </div>
                     </div>
-                </div>
-                <div class="col-12" style="display:none;" id="others">
-                    <p style="font-size:2.0rem" class="display-4">See you at {{this.title}}</p>
+                    <div class="col-12" style="display:none;" id="others">
+                        <p style="font-size:2.0rem" class="display-4">See you at {{this.title}}</p>
+                    </div>
                 </div>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm" data-dismiss="modal" id="modClose1"  style="width:50%;">Close</button>
+                <button class="btn btn-sm" id="tickBtn" disabled style="width:50%; margin:0 auto">Get My Ticket</button>
+            </div>
+            </div>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-sm" data-dismiss="modal"  style="width:50%;">Close</button>
-            <button class="btn btn-sm" id="tickBtn" disabled style="width:50%; margin:0 auto">Get My Ticket</button>
-        </div>
-        </div>
-    </div>
     </div>
     
     {{/each}}
     
     <input type="hidden" name="_csrf" id="_csrf" value="{{ csrfToken }}">
+    {{#if login}}
+        <input type="hidden" id="isLoggedIn" value='true'>
+    {{else}}
+        <input type="hidden" id="isLoggedIn" value='false'>
+    {{/if}}
+
+       <!-- Ticket Modal -->
+    <div class="modal fade" id="accountModal"  data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="accountModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="accountModalLabel">Quick Account Set Up</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-9" id="acc-form" style="margin:0 auto;">
+                       <div class="input-group input-group-sm mb-3">
+                            <input type="email" id="email" placeholder="Enter your email" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" value="">
+                            <div class="invalid-feedback" id="invalid-feedback" style="width: 100%;"></div>
+                        </div>
+                        <div class="input-group input-group-sm mb-3">
+                            <input type="password" id="password" placeholder="Enter your password" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" value="">
+                            <div class="invalid-feedback" id="invalid-feedback" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm" data-dismiss="modal" id="modClose2"  style="width:50%;">Close</button>
+                <button class="btn btn-sm" id="accBtn" disabled style="width:50%; margin:0 auto">Set Up Account</button>
+            </div>
+            </div>
+        </div>
+    </div>
 </main>
 
 <script>
@@ -129,8 +160,14 @@
     let gno = document.getElementById('gno')
     let gdiv = document.getElementById('gdiv')
     let tregBtn = document.getElementById('tickBtn')
+    let accBtn = document.getElementById('accBtn')
     let evTitle = document.getElementById('title').textContent
     let evRef = button.getAttribute('ev-ref')
+    let isLoggedIn = document.getElementById('isLoggedIn').value
+    let modCloseBtn1 = document.getElementById('modClose1')
+    let modCloseBtn2 = document.getElementById('modClose2')
+    let isModalShow = false
+    let intervalId
     
     let tagBody = document.getElementById('tagBody')
     let allocationBody = document.getElementById('allocationBody')
@@ -146,14 +183,67 @@
     //======================================================================
     window.addEventListener('load', scaffoldPage)
     gno.addEventListener('keyup', buildForm)
+    button.addEventListener('click', loadModal)
     tregBtn.addEventListener('click', createTicket)
     document.addEventListener('focusout', validateInput)
+    accBtn.addEventListener('click', setUpUserAccount)
+    modCloseBtn1.addEventListener('click', clearGabbage)
+    modCloseBtn2.addEventListener('click', clearGabbage)
     //======================================================================
 
 
     //======================================================================
     //  FUNCTION DEFINITION
     //======================================================================
+    async function setUpUserAccount(){
+        let loader = document.createElement('img')
+        loader.style.setProperty('width', '6%')
+        loader.setAttribute('src', '/images/spinner.gif')
+
+        accBtn.textContent = ''
+        accBtn.append(loader)
+        accBtn.setAttribute('disabled', true)
+
+        let email = document.getElementById('email').value
+        let password = document.getElementById('password').value
+
+        let userPayLoad = {
+            'email': email,
+            'password': password
+        }
+
+        const save_user_response = await fetch('/user/quickregister', {
+            method: 'POST',
+            body: JSON.stringify(userPayLoad),
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": csrfToken
+            }
+        })
+
+        const user_response = await save_user_response.json()
+        
+        if(user_response.status == 'User Created'){
+            swal('Yaay!', "We've got you set up", "success")
+            window.location.replace('/user/signin')
+        }else{
+            swal('Oops!', "Something went wrong", "error")
+        }
+
+        accBtn.removeChild(accBtn.firstChild)
+        accBtn.textContent = 'Set Up Account'
+        accBtn.removeAttribute('disabled')
+    }
+
+    function loadModal(){
+        intervalId = setInterval(checkError, 500)
+        if(isLoggedIn === 'true'){
+            $('#ticketModal').modal('show')
+        }else{
+            $('#accountModal').modal('show')
+        }
+    }
+
     async function scaffoldPage(){
         if(category == 'convocation'){
             convFormDiv.style.setProperty('display', 'block')
@@ -265,7 +355,6 @@
     
     //<img src="/images/spinner.gif" alt="" style="width:6%;display:none;" id="tbtnloader">
     async function createTicket(){
-        startValidating = false
         let loader = document.createElement('img')
         loader.style.setProperty('width', '6%')
         loader.setAttribute('src', '/images/spinner.gif')
@@ -346,7 +435,7 @@
             tregBtn.textContent = 'Get My Ticket'
             tregBtn.removeAttribute('disabled')
         }
-       //
+       
     }
     //======================================================================
 
@@ -369,40 +458,85 @@
                 case ('g2'):
                     checkInputValidity('Gaurdian 2 fullname', input.value, 5, 30, errBlock)
                     break
+                case ('email'):
+                    checkInputValidity('Email', input.value, 0, 0, errBlock, true)
+                    break
+                case ('password'):
+                    checkInputValidity('Password', input.value, 5, 30, errBlock)
+                    break
                 default:
                     break
             }
         }
     }
 
-    function checkInputValidity(element='', value='', minlen=0, maxlen=0, errorBlockElement){
+    async function checkInputValidity(element='', value='', minlen=0, maxlen=0, errorBlockElement, isEmail){
        
-        if(value.length < minlen){
-            let err = element+' cannot be less than '+minlen
-            pushError(err, errorBlockElement)
-            if(errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
-                errorBlockElement.style.display = 'block'
-        }else{
-            let err = element+' cannot be less than '+minlen
-            removeError(err, errorBlockElement)
+        if(isEmail){
+            var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            let isValid = re.test(value)
+            if(!isValid){
+                let err = 'Email is not valid'
+                pushError(err, errorBlockElement)
+                if(errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
+                    errorBlockElement.style.display = 'block' 
+            }else{
+                let err = 'Email is not valid'
+                removeError(err, errorBlockElement)
 
-            if(errorBlockElement.style.display == 'block' && errorList.length < 1)
-                errorBlockElement.style.display = 'none' 
-        }
-        
-        if(value.length > maxlen){
-            let err = element+' cannot be more than '+maxlen
-            pushError(err, errorBlockElement)
-            if(errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
-                errorBlockElement.style.display = 'block'
-        }else{
-            let err = element+' cannot be more than '+maxlen
-            removeError(err, errorBlockElement)
+                if(errorBlockElement.style.display == 'block' && errorList.length < 1)
+                    errorBlockElement.style.display = 'none'
+            }
 
-            if(errorBlockElement.style.display == 'block' && errorList.length < 1)
-                errorBlockElement.style.display = 'none' 
+            const check_email_response = await fetch('/user/check-email/'+value, {
+                method: 'GET', 
+                headers : {
+                    "X-CSRF-TOKEN": csrfToken
+                } 
+            })
+            
+            isEmailExist = await check_email_response.json()
+            
+            if(isEmailExist){
+                let err = 'Email already in use'
+                pushError(err, errorBlockElement)
+                if(errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
+                    errorBlockElement.style.display = 'block' 
+            }else{
+                let err = 'Email already in use'
+                removeError(err, errorBlockElement)
+
+                if(errorBlockElement.style.display == 'block' && errorList.length < 1)
+                    errorBlockElement.style.display = 'none'
+            }
         }
-        
+        else{    
+            if(value.length < minlen){
+                let err = element+' cannot be less than '+minlen
+                pushError(err, errorBlockElement)
+                if(errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
+                    errorBlockElement.style.display = 'block'
+            }else{
+                let err = element+' cannot be less than '+minlen
+                removeError(err, errorBlockElement)
+
+                if(errorBlockElement.style.display == 'block' && errorList.length < 1)
+                    errorBlockElement.style.display = 'none' 
+            }
+            
+            if(value.length > maxlen){
+                let err = element+' cannot be more than '+maxlen
+                pushError(err, errorBlockElement)
+                if(errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
+                    errorBlockElement.style.display = 'block'
+            }else{
+                let err = element+' cannot be more than '+maxlen
+                removeError(err, errorBlockElement)
+
+                if(errorBlockElement.style.display == 'block' && errorList.length < 1)
+                    errorBlockElement.style.display = 'none' 
+            }
+        }
     }
 
     function pushError(errMsg='', errBlock){
@@ -433,7 +567,8 @@
     }
 
     function checkError(){
-        if(startValidating && tregBtn){
+        console.log('ckecking')
+        if(startValidating && tregBtn ){
             if(errorList.length > 0){
                 tregBtn.disabled = true
             }else{
@@ -441,10 +576,19 @@
                     tregBtn.disabled = false
             }
         }
+
+        if(startValidating && accBtn){
+            if(errorList.length > 0){
+                accBtn.disabled = true
+            }else{
+                if(accBtn.disabled)
+                    accBtn.disabled = false
+            }
+        }
     }
 
-    let intervalId = setInterval(checkError, 500);
-
-    if(!tregBtn)
+    function clearGabbage(){
         clearInterval(intervalId)
+    }
+
 </script>
