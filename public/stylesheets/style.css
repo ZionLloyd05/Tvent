@@ -9,7 +9,7 @@ body {
   height: 100%;
   margin: 0px;
   padding: 0px;
-  overflow-x: hidden; 
+  overflow-x: hidden;
 }
 
 main {
@@ -172,7 +172,12 @@ main {
 
 /* signup and signin button */
 .signbtn {
-  width: 40%;
+  width: 25%;
+  margin: 0 auto;
+}
+
+.signupbtn {
+  width: 95%;
   margin: 0 auto;
 }
 
@@ -205,75 +210,91 @@ main {
   font-size: 27px;
 }
 
-.faculty-input label{
+.faculty-input label {
   font-size: 13px;
 }
 
-.btCancel{
+.btCancel {
   margin-left: 10px;
   color: #E4C181;
   cursor: pointer;
 }
+
 .toast-bottom-right {
   margin-bottom: 40px;
 }
+
 .toast-info {
   background-color: #783B5A !important;
 }
-h5.display-4{
+
+h5.display-4 {
   font-size: 20px;
 }
-div.event{
+
+div.event {
   box-shadow: 1px 1px 1px 1px #ccc;
   padding: 10px 10px 10px 10px;
   cursor: pointer;
   margin-bottom: 20px;
 }
-.event h6{
+
+.event h6 {
   margin-bottom: 10px;
   width: 40%;
 }
-.event span{
+
+.event span {
   font-style: italic;
   font-size: 14px;
 }
-.eventListContainer{
+
+.eventListContainer {
   overflow-y: scroll;
   max-height: 420px;
 }
-.eventViewContainer p{
+
+.eventViewContainer p {
   font-size: 15px;
 }
-.capacity{
-  float:right
+
+.capacity {
+  float: right
 }
-.evTitle{
-  font-size:20px !important;
+
+.evTitle {
+  font-size: 20px !important;
 }
-.evPosterInner{
+
+.evPosterInner {
   max-width: 100%;
 }
-.fa-spin{
+
+.fa-spin {
   font-size: 17px !important;
 }
-.invalid-feedback{
+
+.invalid-feedback {
   text-align: left;
 }
-.ev-main{
+
+.ev-main {
   background: linear-gradient(180deg, rgba(255, 0, 150, 0.3), rgba(255, 0, 150, 0.3)), url('../images/bg2.jpg');
-   /* Create the parallax scrolling effect */
+  /* Create the parallax scrolling effect */
   background-attachment: fixed;
   background-position: center;
   background-repeat: repeat;
   background-size: cover;
 
 }
-.ev-container{
+
+.ev-container {
   box-shadow: 1px 1px 1px 1px #ccc;
   margin-bottom: 50px;
   padding-top: 2%;
 }
-.ev-jumbo{
+
+.ev-jumbo {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -281,18 +302,22 @@ div.event{
   width: auto;
   height: 650px;
 }
-.ev-container h3{
+
+.ev-container h3 {
   font-size: 1.6rem;
   font-weight: 300;
 }
-.ev-container h2{
+
+.ev-container h2 {
   font-size: 1.8rem;
   font-weight: 400;
 }
-.ev-desc p{
+
+.ev-desc p {
   /* text-align: justify; */
 }
-.status{
+
+.status {
   background: #783B5A;
   color: white;
   font-size: 15px;
@@ -303,17 +328,138 @@ div.event{
   border-radius: 0;
   float: right;
 }
+
+/* ========================================= */
+/* ============= CSS LOADER ================ */
+/* ========================================= */
 .loader {
-  border: 10px solid #f3f3f3; /* Light grey */
-  border-top: 10px solid #452134; /* Blue */
+  border: 8px solid #f3f3f3;
+  /* Light grey */
+  border-top: 8px solid #452134;
+  /* Blue */
   border-radius: 50%;
   width: 100px;
   height: 100px;
-  animation: spin 2s linear infinite;
+  animation: spin 1.5s linear infinite;
   margin: 0 auto;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
+
+div.ticket {
+  box-shadow: 1px 1px 1px 1px #ccc;
+  padding: 10px 10px 10px 10px;
+  margin-bottom: 20px;
+  width: 100%;
+  height: 140px;
+  border: 1px solid #ccc;
+}
+
+.ticket h6 {
+  margin-bottom: 10px;
+  width: 80%;
+  font-size: 20px;
+}
+
+.ticket span {
+  font-style: italic;
+  font-size: 14px;
+}
+
+.ticketListContainer {
+
+  overflow-y: scroll;
+  max-height: 420px;
+}
+
+.ticketViewContainer p {
+  font-size: 15px;
+}
+
+#ticketDiv {
+  box-shadow: 0px 0px 1px 1px #e6e6e6;
+  height: 300px;
+  padding: 10px
+}
+
+.svgg {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 40%;
+  margin-bottom: 10%;
+  width: 160px;
+  height: 160px;
+  box-shadow: 1px 1px 1px 1px #ccc;
+  border-radius: 50%;
+  padding: 20%;
+}
+
+.fa-print {
+  float: right;
+  color: #783B5A;
+  cursor: pointer;
+}
+
+/* ==========GPI======================= */
+
+
+#size {
+  min-width: 300px;
+}
+
+#grids {
+  box-shadow: 0 0 25px 9px #ccc, 0 1px 5px 0 rgba(0, 0, 0, .1), 0 0 0 0 transparent;
+  margin: 4px auto;
+  padding: 30px;
+  /* background: url('background.jpg'); */
+  /* border: 2px solid black; */
+  background-position: center;
+  background-size: contain;
+  display: none;
+  height: 300px;
+  width: 350px;
+  border-radius: 2px;
+  transition: border 0.2s ease-out;
+  transition: display 1.3s ease-in-out;
+  position: fixed;
+  top: 80px;
+  left: 10px;
+  z-index: 1024;
+}
+
+.highlight {
+  border: 5px dashed pink;
+}
+
+#grids .row {
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.grid {
+  background: #0a0a0a49;
+  color: #FFFFFF;
+  border: 2px solid #ccccff;
+  flex: 1;
+  height: 40px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.grid:hover {
+  border-color: #E68B8B;
+  color: #E68B8B;
+  cursor: pointer;
+}
+
+/* ==================================== */

@@ -17,7 +17,6 @@ async function prepareEventListContainer(){
 
     let csrfToken = document.getElementById('_csrf').value
     
-    
     const get_events = await fetch('/events/u', {
         method: 'GET', 
         headers : {
@@ -147,7 +146,7 @@ async function showEventPreview(e){
         let loadingSpan = document.createElement('span')
         //let icon = document.createElement('i')
         //icon.className = 'fa fa-spinner fa-spin'
-        loadingSpan.append(document.createTextNode('...Fetching event full details'))
+        loadingSpan.append(document.createTextNode('Loading event details ...'))
         //loadingSpan.append(icon)
         evTitle.append(loadingSpan)
 

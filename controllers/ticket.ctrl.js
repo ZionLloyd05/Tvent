@@ -81,6 +81,18 @@ module.exports = {
             }
             
         })
+    },
+
+    getTicketsForUser: (req) => {
+        return new Promise(async(resolve, reject) => {
+            try {
+                const tickets = await Ticket.find({user : req.session._id})
+                    .populate({path: 'event', select: ['posterUrl', 'title', 'start', 'end', 'category']})
+                resolve(tickets)
+            } catch (error) {
+                reject(error)
+            }
+        })
     }
 }
 

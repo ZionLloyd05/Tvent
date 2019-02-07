@@ -1,0 +1,212 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
+<script src="/javascripts/libs/html2canvas.min.js"></script>
+<div class="row cevent" style="width:100%;">
+    <div class="col-7" style="padding-left: 5%;">
+        <h3 class="display-4" id="eventDisplay" style="font-size: 2.4rem;margin-left: 10%;">Tickets</h3>
+    </div>
+</div>
+<hr style="padding: 5px; margin:0;">
+<div class="container mt-4" style="margin-bottom:70px">
+    <div class="row">
+        <div class="col-7 ticketListContainer" id="ticketListContainer">
+            <div class="input-group mb-3" style="width:80%">
+                <input type="text" style="border-radius: 5px 0px 0px 5px;" class="form-control search" id="search" placeholder="search for tickets">
+                
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i class="fas fa-search" style="font-size:18px"></i>
+                    </span>
+                </div> 
+            </div>
+            <div class="mb-4">
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" checked value="all" id="radio1" name="radio" class="custom-control-input radio">
+                    <label class="custom-control-label" for="radio1">Upcoming (<span id="upcoming_ticket_count">-</span>)</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" value="public" id="radio2" name="radio" class="custom-control-input radio">
+                    <label class="custom-control-label" for="radio2">Ongoing (<span id="ongoing_ticket_count">-</span>)</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" value="public" id="radio2" name="radio" class="custom-control-input radio">
+                    <label class="custom-control-label" for="radio2">Past (<span id="past_ticket_count">-</span>)</label>
+                </div>
+                <div class="custom-control-inline loader" id="printLoader" style="display:none;width:30px;height: 30px;float: right;"></div>
+            </div>
+            {{!-- <hr/ style="width:70%"> --}}
+
+            {{!-- Tickets --}}
+             <div id="ticketList">
+                <div class="loader"></div>
+            </div>
+        </div>
+        <div class="col-5 ticketViewContainer">
+            <div class="row">
+                <div class="col-7" style="text-align: center;margin: 0 auto;">
+                    {{!-- <div><i class="fas fa-user-tag"></i></div> --}}
+                    <div class="svgg">
+                        <svg viewBox="0 0 24 24" data-reactid="124"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.2 19.1c1-2.8 3.7-4.7 6.7-4.7s5.7 1.9 6.7 4.7c-4.1 2.5-9.3 2.5-13.4 0zm16.1-1.9c-.5.5-1.1 1-1.7 1.5a8.15 8.15 0 0 0-7.6-5.2c-3.3 0-6.3 2.1-7.6 5.1-.6-.4-1.1-.9-1.6-1.4l-.8.7C4.8 20.6 8.4 22 12 22s7.2-1.4 10-4.1l-.7-.7zM12 2C9.2 2 7 4.2 7 7s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 9c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z" data-reactid="125"></path></svg>
+                    </div>
+                    <h4>Alagbala Damilola</h4>
+                </div>
+            </div>
+        </div>
+        
+        {{!-- <div class="col-5"></div> --}}
+    </div>
+    <input type="hidden" name="_csrf" id="_csrf" value="{{ csrfToken }}">
+</div>
+
+{{!-- <script src="/javascripts/myevent.handler.js"></script> --}}
+<script>
+
+    let ticketStore = []
+    let upcomingTicketStore = []
+    let ongoingTicketStore = []
+    let pastTicketStore = []
+
+    let ticketListContainer = document.getElementById('ticketListContainer')
+    let ticketList = document.getElementById('ticketList')
+    let printLoader = document.getElementById('printLoader')
+
+    window.addEventListener('load', prepareTicketContainer)
+    document.addEventListener('click', printTicket)
+
+    async function prepareTicketContainer(){
+        let upcoming_ticket_count = document.getElementById('upcoming_ticket_count')
+        let past_ticket_count = document.getElementById('past_ticket_count')
+        let ongoing_ticket_count = document.getElementById('ongoing_ticket_count')
+        
+        let csrfToken = document.getElementById('_csrf').value
+
+        const get_tickets = await fetch('/tickets/u', {
+            method: 'GET', 
+            headers : {
+                "X-CSRF-TOKEN": csrfToken
+            }
+        })
+
+        ticketStore = await get_tickets.json()
+        
+        ticketStore.forEach(ticket => {
+            let start_date = ticket.event.start
+            let end_date = ticket.event.end
+
+            let fstart_date = new Date(start_date.substring(0, 10))
+            let fend_date = new Date(end_date.substring(0, 10))
+
+            if (fstart_date > Date.now()){
+                upcomingTicketStore.push(ticket)
+            }
+            if (fend_date < Date.now()){
+                pastTicketStore.push(ticket)
+            }
+            if (fstart_date < Date.now() && Date.now() < fend_date){
+                ongoingTicketStore.push(ticket)
+            }
+            
+        })
+
+        buildTicketCard(upcomingTicketStore)
+    }
+
+    function buildTicketCard(store = []){
+        store.forEach(ticket => {
+            let { event } = ticket
+            
+            switch(event.category){
+                case ('convocation'):
+                    let ticketCard = document.createElement('div')
+                    ticketCard.className = 'row ticket'
+                    ticketCard.style.setProperty('height', '160px')
+                    ticketCard.style.setProperty('padding', '0')
+                    ticketCard.setAttribute('id', ticket.tref)
+                        
+                        let imgSection = document.createElement('div')
+                        imgSection.className = 'col-5'
+                        imgSection.style.setProperty('padding', '0')
+                            
+                            let img = document.createElement('img')
+                            img.setAttribute('src', '/uploads/'+event.posterUrl)
+                            img.style.setProperty('width', '100%')
+                            img.style.setProperty('height', '100%')
+                        
+                        imgSection.append(img)
+
+                        let ticketBody = document.createElement('div')
+                        ticketBody.className = 'col-7'
+                        ticketBody.style.setProperty('padding-top', '15px')
+                            
+                            let printIcon = document.createElement('i')
+                            printIcon.className = 'fas fa-print printBtn'
+                            printIcon.style.setProperty('float', 'right')
+                            printIcon.setAttribute('id', 'printBtn')
+                            printIcon.setAttribute('parent-id', ticket.tref)
+
+                            let title = document.createElement('h6')
+                            title.textContent = event.title
+
+                            let p1 = document.createElement('p')
+                            p1.style.setProperty('margin-bottom', '5px')
+                            let startdate = new Date(event.start.substring(0, 10))
+                            let enddate = new Date(event.end.substring(0, 10))
+                            p1.textContent = startdate.toString().substring(0,15)+ ' - ' +enddate.toString().substring(0,15)
+
+                            let p2 = document.createElement('p')
+                            p2.style.setProperty('margin-bottom', '5px')
+                            p2.style.setProperty('font-size', '13px')
+                            p2.textContent = 'User No: '+ticket.user_no
+
+                            let p3 = document.createElement('p')
+                            p3.style.setProperty('font-style', 'italic')
+                            p3.style.setProperty('font-size', '13px')
+                            p3.textContent = 'G1 & G2: '+ticket.extra
+                           /* let gaurdians = ticket.extra.split(,)
+                            guards = ''
+                            gaurdians.forEach((guard, idx) => {
+                                if(idx+1) != gaurdians.length){
+                                    guards += guard'
+                                }
+                            })*/
+
+                            let ref = document.createElement('span')
+                            ref.style.setProperty('float', 'right')
+                            ref.textContent = '#'+ticket.tref.toString().substring(0, 21)
+                        
+                        ticketBody.append(printIcon)
+                        ticketBody.append(title)
+                        ticketBody.append(p1)
+                        ticketBody.append(p2)
+                        ticketBody.append(p3)
+                        ticketBody.append(ref)
+                    
+                    ticketCard.append(imgSection)
+                    ticketCard.append(ticketBody)
+
+                    ticketList.append(ticketCard)
+                break
+            }
+        })
+    }
+
+    function printTicket(e) {
+        if(e.target.classList.contains('printBtn')){
+            let printBtn = e.target
+            //console.log(printBtn)
+            printLoader.style.setProperty('display', 'inline-flex')
+            let divToPrintId = printBtn.getAttribute('parent-id')
+            //console.log(divToPrintId)
+            const input = document.getElementById(divToPrintId);
+            html2canvas(input)
+            .then((canvas) => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF();
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                printLoader.style.setProperty('display', 'none')
+                pdf.save("ticket.pdf");
+            })
+        }
+       
+
+    }
+</script>

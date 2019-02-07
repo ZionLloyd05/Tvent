@@ -37,18 +37,21 @@
                         <div class="invalid-feedback"></div>
                     </div>
                 </div>
+                
+            <div class="col-6"><button class="btn signupbtn mt-3" id="gpwd">Initiate Graphical Password</button> </div>
+            <div class="col-6"><button type="submit" class="btn signupbtn mt-3" id="signupbtn">Sign Up</button> </div>
             </div>
-            <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-            <button type="submit" class="btn signbtn mt-3" id="signupbtn">Sign Up</button>      
+            <input type="hidden" name="_csrf" id="_csrf" value="{{ csrfToken }}">
+                 
         </form>
-  
 </div>
+<div id="grids"><p><b>Graphical Password Modal</b><br/>1. Drag and Drop your preferd image into me <br/> 2. Clik on your secured spot <br/> 3. Order of clicks is important</br> 4. Click the close modal button on completion and Sign up!</p></p></div>
 
 <script>
     //let inputs = document.getElementsByTagName('input')
 
     let errorList = []
-
+    let csrfToken = document.getElementById('_csrf').value
     document.addEventListener('focusout', validateInput)
     let submitBtn = document.getElementById('signupbtn')
 
@@ -59,13 +62,16 @@
             inputId = input.getAttribute('id')
             switch (inputId){
                 case ('firstName'):
-                    checkInputValidity('firstname', input.value, 3, 20, errBlock)
+                    checkInputValidity('Firstname', input.value, 3, 20, errBlock)
                     break
                 case ('lastname'):
-                    checkInputValidity('lastname', input.value, 3, 20, errBlock)
+                    checkInputValidity('Lastname', input.value, 3, 20, errBlock)
                     break
                 case ('password'):
-                    checkInputValidity('lastname', input.value, 8, 20, errBlock)
+                    checkInputValidity('Password', input.value, 8, 50000, errBlock)
+                    break
+                case ('email'):
+                    checkInputValidity('Email', input.value, 0, 0, errBlock, true)
                     break
                 default:
                     break
@@ -73,34 +79,73 @@
         }
     }
 
-    function checkInputValidity(element='', value='', minlen=0, maxlen=0, errorBlockElement){
-       
-        if(value.length < minlen){
-            let err = element+' cannot be less than '+minlen
-            pushError(err, errorBlockElement)
-            if(errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
-                errorBlockElement.style.display = 'block'
-        }else{
-            let err = element+' cannot be less than '+minlen
-            removeError(err, errorBlockElement)
+    async function checkInputValidity(element='', value='', minlen=0, maxlen=0, errorBlockElement, isEmail){
+        if(isEmail){
+            var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            let isValid = re.test(value)
+            if(!isValid){
+                let err = 'Email is not valid'
+                pushError(err, errorBlockElement)
+                if(errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
+                    errorBlockElement.style.display = 'block' 
+            }else{
+                let err = 'Email is not valid'
+                removeError(err, errorBlockElement)
 
-            if(errorBlockElement.style.display == 'block' && errorList.length < 1)
-                errorBlockElement.style.display = 'none' 
-        }
-        
-        if(value.length > maxlen){
-            let err = element+' cannot be more than '+maxlen
-            pushError(err, errorBlockElement)
-            if(errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
-                errorBlockElement.style.display = 'block'
-        }else{
-            let err = element+' cannot be more than '+maxlen
-            removeError(err, errorBlockElement)
+                if(errorBlockElement.style.display == 'block' && errorList.length < 1)
+                    errorBlockElement.style.display = 'none'
+            }
 
-            if(errorBlockElement.style.display == 'block' && errorList.length < 1)
-                errorBlockElement.style.display = 'none' 
+            const check_email_response = await fetch('/user/check-email/'+value, {
+                method: 'GET', 
+                headers : {
+                    "X-CSRF-TOKEN": csrfToken
+                } 
+            })
+            
+            isEmailExist = await check_email_response.json()
+            
+            if(isEmailExist){
+                let err = 'Email already in use'
+                pushError(err, errorBlockElement)
+                if(errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
+                    errorBlockElement.style.display = 'block' 
+            }else{
+                let err = 'Email already in use'
+                removeError(err, errorBlockElement)
+
+                if(errorBlockElement.style.display == 'block' && errorList.length < 1)
+                    errorBlockElement.style.display = 'none'
+            }
+        }else{
+             if(value.length < minlen){
+                let err = element+' cannot be less than '+minlen
+                pushError(err, errorBlockElement)
+                if(errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
+                    errorBlockElement.style.display = 'block'
+            }else{
+                let err = element+' cannot be less than '+minlen
+                removeError(err, errorBlockElement)
+
+                if(errorBlockElement.style.display == 'block' && errorList.length < 1)
+                    errorBlockElement.style.display = 'none' 
+            }
+            
+            if(value.length > maxlen){
+                let err = element+' cannot be more than '+maxlen
+                pushError(err, errorBlockElement)
+                if(errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
+                    errorBlockElement.style.display = 'block'
+            }else{
+                let err = element+' cannot be more than '+maxlen
+                removeError(err, errorBlockElement)
+
+                if(errorBlockElement.style.display == 'block' && errorList.length < 1)
+                    errorBlockElement.style.display = 'none' 
+            }
+
         }
-        
+               
     }
 
     function pushError(errMsg='', errBlock){
@@ -145,4 +190,143 @@
 
     if(!submitBtn)
         clearInterval(intervalId)
+
+    let dropArea = document.getElementById('grids')
+    let pointsArr = []
+
+    window.addEventListener('load', function () {
+
+        let initializerBtn = document.getElementById('gpwd')
+
+        initializerBtn.addEventListener('click', function(e){
+            e.preventDefault()
+            let txt = initializerBtn.textContent
+
+            if(txt == 'Initiate Graphical Password'){
+                dropArea.style.setProperty('display', 'block')
+                initializerBtn.textContent = 'Save Pattern'
+            }
+
+            if(txt == 'Save Pattern'){
+                let typedPassword = document.getElementById('password').value
+                if(typedPassword == ''){
+                    alert("Kindly fill out your text based password")
+                }else{
+                    pointsArr.unshift(typedPassword)
+                    let combinedPassword = pointsArr.join('')
+                    document.getElementById('password').value = combinedPassword
+                    dropArea.style.setProperty('display', 'none')
+                    console.log(combinedPassword)
+                }
+                
+            }
+        })
+
+        $("#clearButton").on("click", function () {
+            $("#grids").html(" ")
+        })
+
+        // preventing default  behaviours and stopping the events from bubbling up
+        ;
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false)
+        })
+
+        // adding highlight class on dragenter and dropover
+        ;
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false)
+        })
+
+        // removing highlight class on dragenter and dropover
+        ;
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false)
+        })
+
+    })
+
+    // kicks off when user drops the file
+    dropArea.addEventListener('drop', handleDrop, false)
+
+    // getting clicked points
+    document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('grid')) {
+            let btnId = e.target.getAttribute('id')
+
+            let grid = document.getElementById(btnId)
+            grid.style.transform = 'scale(0.85)'
+            grid.style.background = '#18862178'
+
+            // points.push(e.target.x, e.target.y)
+            pointsArr.push(grid.offsetTop + '' + grid.offsetLeft)
+        }
+    })
+
+    function generate() {
+        let value = 10
+
+        let content = ""
+        let num = 1
+        for (let i = 1; i <= value; i++) {
+            for (let j = 1; j <= 5; j++) {
+                if (j === 1) {
+                    content += "<div class='row'><div class='grid' id='grid" + num + "'></div>"
+                } else if (j === 5) {
+                    content += "<div class='grid' id='grid" + num + "'></div></div>"
+                } else {
+                    content += "<div class='grid' id='grid" + num + "'></div>"
+                }
+                num++
+            }
+        }
+        $("#grids").html(content)
+    }
+
+    function preventDefaults(e) {
+        e.preventDefault()
+        e.stopPropagation()
+    }
+
+
+    function highlight(e) {
+        dropArea.classList.add('highlight')
+    }
+
+    function unhighlight(e) {
+        dropArea.classList.remove('highlight')
+    }
+
+    function handleDrop(e) {
+        let dt = e.dataTransfer
+        let files = dt.files
+
+        handleFiles(files)
+    }
+
+    function handleFiles(files) {
+        ([...files]).forEach(file => {
+            // console.log(file)
+            loadFile(file)
+        })
+    }
+
+    function loadFile(file) {
+        
+        if(file.type == 'image/jpeg' || file.type == 'image/png'){
+            dropArea.textContent = ''
+            dropArea.textContent = 'Loading your image...'
+            let reader = new FileReader()
+            reader.readAsDataURL(file)
+            reader.onloadend = function () {
+                dropArea.style.backgroundImage = "url(" + reader.result + ")"
+                generate()
+                dropArea.style.height = 'auto'
+                dropArea.style.padding = '0'
+            }
+        }else{
+            dropArea.textContent = ''
+            dropArea.textContent = 'File type is not supported; Sorry -_^'
+        }
+    }
 </script>
