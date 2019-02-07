@@ -95,6 +95,7 @@
                             <input type="hidden" name="category" id="category" value="">
                             <input type="hidden" name="starttime" id="starttime" value="">
                             <input type="hidden" name="endtime" id="endtime" value="">
+                            <input type="hidden" name="organizer" id="evorganizer" value="">
                             <input type="hidden" id="_csrf" name="_csrf" value="{{ csrfToken }}">
                         </div>
                         </form>
@@ -167,6 +168,11 @@
                             </div>
                             <div class="" id="taglist" style="padding: 20px 0px 0px 40px;">
                                 
+                            </div>
+                        </div>
+                        <div class="col-12 mt-3">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="organizer" placeholder="Event organizer name" value="">
                             </div>
                         </div>
                     </div>

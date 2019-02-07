@@ -10,16 +10,16 @@ search.addEventListener('keyup', performSeach)
 document.addEventListener('click', showEventPreview)
 
 
-async function prepareEventListContainer(){
+async function prepareEventListContainer() {
     let event_count = document.getElementById('event_count')
     let public_count = document.getElementById('public_count')
     let private_count = document.getElementById('private_count')
 
     let csrfToken = document.getElementById('_csrf').value
-    
+
     const get_events = await fetch('/events/u', {
-        method: 'GET', 
-        headers : {
+        method: 'GET',
+        headers: {
             "X-CSRF-TOKEN": csrfToken
         }
     })
@@ -37,26 +37,21 @@ async function prepareEventListContainer(){
     public_count.textContent = publicEventStore.length
     private_count.textContent = privateEventStore.length
 
-    /*<div class="event" id="event">
-            <h6>Node.Js Conference</h6>
-            <span>Jan 1, 2019 7:00 PM</span><span style="float:right">25/200</span>
-        </div>*/
-    //load all events
-    
+
     let evList = document.getElementById('evList')
-    while(evList.firstChild)
+    while (evList.firstChild)
         evList.removeChild(evList.firstChild)
-    
+
     buildEvCards(eventStore)
 
-    
-    document.addEventListener('click', function(e){
-        if(e.target.classList.contains('radio')){
-            
-            while(evList.firstChild)
+
+    document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('radio')) {
+
+            while (evList.firstChild)
                 evList.removeChild(evList.firstChild)
-            switch(e.target.value){
-        
+            switch (e.target.value) {
+
                 case ('all'):
                     buildEvCards(eventStore)
                     break
@@ -74,7 +69,7 @@ async function prepareEventListContainer(){
 
 }
 
-function buildEvCards(evStore = []){
+function buildEvCards(evStore = []) {
     evStore.forEach(event => {
         let evCard = document.createElement('div')
         evCard.className = 'event'
@@ -88,10 +83,10 @@ function buildEvCards(evStore = []){
 
         let date = document.createElement('span')
         let dateTxt
-        if(event.start === event.end){
-            dateTxt = document.createTextNode(startdate.toString().substring(0,15))
-        }else{
-            dateTxt = document.createTextNode(startdate.toString().substring(0,15) + ' - ' + enddate.toString().substring(0,15))
+        if (event.start === event.end) {
+            dateTxt = document.createTextNode(startdate.toString().substring(0, 15))
+        } else {
+            dateTxt = document.createTextNode(startdate.toString().substring(0, 15) + ' - ' + enddate.toString().substring(0, 15))
         }
         date.append(dateTxt)
 
@@ -107,25 +102,25 @@ function buildEvCards(evStore = []){
     })
 }
 
-function performSeach(e){
+function performSeach(e) {
     let searchText = e.target.value
     var eventList = document.getElementsByClassName('event')
 
     Array.from(eventList).forEach(event => {
-        var eventName =  event.firstChild.textContent
+        var eventName = event.firstChild.textContent
 
-        if(eventName.toLowerCase().indexOf(searchText) != -1){
+        if (eventName.toLowerCase().indexOf(searchText) != -1) {
             event.style.display = 'block'
-        }else{
+        } else {
             event.style.display = 'none'
         }
     })
 }
 
-async function showEventPreview(e){
-    
+async function showEventPreview(e) {
 
-    if(e.target.classList.contains('event')){
+
+    if (e.target.classList.contains('event')) {
         let evCardId
         let eventPayLoad
         let evAllocationPayLoad
@@ -134,12 +129,12 @@ async function showEventPreview(e){
         let loader = document.getElementById('loaderDiv')
         let eventDiv = document.getElementById('eventDiv')
 
-        if(loader)
+        if (loader)
             loader.style.display = 'block'
-        if(eventDiv)
+        if (eventDiv)
             eventDiv.style.display = 'none'
 
-        while(evTitle.firstChild){
+        while (evTitle.firstChild) {
             evTitle.removeChild(evTitle.firstChild)
         }
 
@@ -154,7 +149,7 @@ async function showEventPreview(e){
         evCardId = e.target.getAttribute('ev-id')
         let rbtnVal = document.querySelector('input[name="radio"]:checked').value;
 
-        switch(rbtnVal){
+        switch (rbtnVal) {
             case ('all'):
                 eventPayLoad = eventStore.find(event => event._id == evCardId)
                 break
@@ -170,14 +165,14 @@ async function showEventPreview(e){
         //console.log(eventPayLoad)
 
         //get event's allocation && event's tag
-        const get_allocations = await fetch('/allocations/'+evCardId, {
+        const get_allocations = await fetch('/allocations/' + evCardId, {
             method: 'GET'
         })
 
         evAllocationPayLoad = await get_allocations.json()
         //console.log(evAllocationPayLoad)
 
-        const get_tags = await fetch('/tags/'+evCardId, {
+        const get_tags = await fetch('/tags/' + evCardId, {
             method: 'GET'
         })
 
@@ -186,9 +181,9 @@ async function showEventPreview(e){
 
         buildEventView(eventPayLoad, evAllocationPayLoad, evTagPayLoad)
 
-        if(loader)
+        if (loader)
             loader.style.display = 'none'
-        if(eventDiv)
+        if (eventDiv)
             eventDiv.style.display = 'inline-flex'
 
     }
@@ -196,56 +191,64 @@ async function showEventPreview(e){
 
 }
 
-function buildEventView(eventPayload, allocationPayload, tagPayload){
+function buildEventView(eventPayload, allocationPayload, tagPayload) {
     let evTitle = document.getElementById('evTitle')
     let evPoster = document.getElementById('evPoster')
     let evMetadata = document.getElementById('evMetadata')
     let evLink = document.getElementById('evLink')
 
+    let btnEdit = document.getElementById('btn_edit')
+    let btnDelete = document.getElementById('btn_delete')
+    let btnPreview = document.getElementById('btn_preview')
+
     evLink.textContent = ''
-    evLink.textContent = eventPayload.link.substring(0, 45)+'...'
+    evLink.textContent = eventPayload.link.substring(0, 45) + '...'
     evLink.href = eventPayload.link
+
+    btnEdit.setAttribute('data-id', eventPayload._id)
+    btnDelete.setAttribute('data-id', eventPayload._id)
+    btnPreview.setAttribute('data-id', eventPayload._id)
 
     //title
     let title = document.createElement('h4')
     //title.style.fontSize = 20
     title.className = 'display-4 evTitle'
     title.textContent = eventPayload.title
-    while(evTitle.firstChild){
+    while (evTitle.firstChild) {
         evTitle.removeChild(evTitle.firstChild)
     }
     evTitle.append(title)
 
     //poster
-    while(evPoster.firstChild){
+    while (evPoster.firstChild) {
         evPoster.removeChild(evPoster.firstChild)
     }
     let img = document.createElement('img')
-    img.src = '/uploads/'+eventPayload.posterUrl
+    img.src = '/uploads/' + eventPayload.posterUrl
     img.alt = 'Event Poster'
     img.style.maxWidth = '100%'
 
     evPoster.append(img)
 
     //meta data
-    while(evMetadata.firstChild){
+    while (evMetadata.firstChild) {
         evMetadata.removeChild(evMetadata.firstChild)
     }
     let startdate = new Date(eventPayload.start.substring(0, 10))
     let enddate = new Date(eventPayload.end.substring(0, 10))
 
     let dateTxt
-    if(eventPayload.start === eventPayload.end){
-        dateTxt = document.createTextNode(startdate.toString().substring(0,15))
-    }else{
-        dateTxt = document.createTextNode(startdate.toString().substring(0,15) + ' - ' + enddate.toString().substring(0,15))
+    if (eventPayload.start === eventPayload.end) {
+        dateTxt = document.createTextNode(startdate.toString().substring(0, 15))
+    } else {
+        dateTxt = document.createTextNode(startdate.toString().substring(0, 15) + ' - ' + enddate.toString().substring(0, 15))
     }
     let datetime = document.createElement('p')
     datetime.append(dateTxt)
 
     let desc = document.createElement('p')
     desc.textContent = eventPayload.description
-    
+
     evMetadata.append(datetime)
     evMetadata.append(desc)
 
@@ -260,29 +263,29 @@ function buildEventView(eventPayload, allocationPayload, tagPayload){
     //spaen allocation
     let tblAllocation = document.getElementById('allocationBody')
     //meta data
-    while(tblAllocation.firstChild){
+    while (tblAllocation.firstChild) {
         tblAllocation.removeChild(tblAllocation.firstChild)
     }
 
     allocationPayload.forEach(allocation => {
         let tblRow = document.createElement('tr')
-        
-            let day = document.createElement('th')
-            let division = document.createElement('td')
-            let registered = document.createElement('td')
-            let capacity = document.createElement('td')
 
-            day.textContent = allocation.day
-            day.setAttribute('scope', 'col')
-            division.textContent = allocation.division
-            registered.textContent = allocation.fill
-            capacity.textContent = (allocation.capacity+allocation.extra)
+        let day = document.createElement('th')
+        let division = document.createElement('td')
+        let registered = document.createElement('td')
+        let capacity = document.createElement('td')
 
-            tblRow.append(day)
-            tblRow.append(division)
-            tblRow.append(registered)
-            tblRow.append(capacity)
-    
+        day.textContent = allocation.day
+        day.setAttribute('scope', 'col')
+        division.textContent = allocation.division
+        registered.textContent = allocation.fill
+        capacity.textContent = (allocation.capacity + allocation.extra)
+
+        tblRow.append(day)
+        tblRow.append(division)
+        tblRow.append(registered)
+        tblRow.append(capacity)
+
         tblAllocation.append(tblRow)
     })
 }
