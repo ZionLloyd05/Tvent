@@ -29,19 +29,18 @@ $(document).ready(function () {
         totalInputBlock = 0
         inputContainerNum = 0
 
+        errorList = []
+
         var sectionAllocation = document.getElementById('allocation-section')
         while (sectionAllocation.firstChild)
             sectionAllocation.removeChild(sectionAllocation.firstChild)
 
-        let evTitle = $('#event').val()
-        let evLoc = $('#loc').val()
-        let evDesc = $('.description').val()
         let startdate = $('#startdate').val()
         let enddate = $('#enddate').val()
 
         //pushing error meesage for empty input
-        let errorMsg = "Either of event title, location, description, dates cannot be empty"
-        if (evTitle == "" || evLoc == "" || evDesc == "" || startdate == "" || enddate == "") {
+        let errorMsg = "Either of event dates or time cannot be empty"
+        if (startdate == "" || enddate == "") {
             if (!errorList.includes(errorMsg)) {
                 errorList.push(errorMsg)
                 // lg("1")

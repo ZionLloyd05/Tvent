@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt-nodejs')
 const Schema = mongoose.Schema;
 
 var eventSchema = new Schema({
-    user:  {
+    user: {
         ref: 'User',
         type: mongoose.Schema.Types.ObjectId,
         required: true
@@ -42,7 +42,7 @@ var eventSchema = new Schema({
     },
     posterUrl: {
         type: String,
-        default: 'event.png'
+        default: 'event.jpg'
     },
     description: {
         type: String,
@@ -67,11 +67,11 @@ eventSchema.methods.compareRef = (rf) => {
     return (this.reference === rf)
 }
 
-eventSchema.methods.encryptRef = function(ref){
+eventSchema.methods.encryptRef = function (ref) {
     return bcrypt.hashSync(ref, bcrypt.genSaltSync(5), null);
 };
 
-eventSchema.methods.validRef = function(reference){
+eventSchema.methods.validRef = function (reference) {
     return bcrypt.compareSync(reference, this.reference);
 };
 
