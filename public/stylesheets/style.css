@@ -56,7 +56,7 @@ main {
 }
 
 .jumbotron {
-  background: linear-gradient(0deg, rgba(255, 0, 150, 0.3), rgba(255, 0, 150, 0.3)), url('../images/bg2.jpg');
+  background: linear-gradient(0deg, rgba(255, 0, 150, 0.3), rgba(255, 0, 150, 0.3)), url('../uploads/event.jpg');
   color: white;
   /* Set a specific height */
   min-height: 300px;
