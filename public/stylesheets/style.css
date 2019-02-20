@@ -164,6 +164,10 @@ main {
   width: 100%;
 }
 
+.btn-icn {
+  padding: 5px 9px !important;
+}
+
 .signup {
   margin-top: 10%;
   width: 50%;
@@ -344,6 +348,17 @@ div.event {
   margin: 0 auto;
 }
 
+.loader-btn {
+  border: 8px solid #f3f3f3;
+  /* Light grey */
+  border-top: 8px solid #452134;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
@@ -463,3 +478,12 @@ div.ticket {
 }
 
 /* ==================================== */
+
+input[type=file] {
+  font-size: 14px;
+}
+
+#tagList .badge {
+  font-size: 15px !important;
+  font-weight: normal !important;
+}

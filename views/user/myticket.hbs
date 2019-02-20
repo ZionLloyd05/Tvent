@@ -20,16 +20,16 @@
             </div>
             <div class="mb-4">
                 <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" checked value="all" id="radio1" name="radio" class="custom-control-input radio">
+                    <input type="radio" checked value="upcoming" id="radio1" name="radio" class="custom-control-input radio">
                     <label class="custom-control-label" for="radio1">Upcoming (<span id="upcoming_ticket_count">-</span>)</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" value="public" id="radio2" name="radio" class="custom-control-input radio">
+                    <input type="radio" value="ongoing" id="radio2" name="radio" class="custom-control-input radio">
                     <label class="custom-control-label" for="radio2">Ongoing (<span id="ongoing_ticket_count">-</span>)</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" value="public" id="radio2" name="radio" class="custom-control-input radio">
-                    <label class="custom-control-label" for="radio2">Past (<span id="past_ticket_count">-</span>)</label>
+                    <input type="radio" value="past" id="radio3" name="radio" class="custom-control-input radio">
+                    <label class="custom-control-label" for="radio3">Past (<span id="past_ticket_count">-</span>)</label>
                 </div>
                 <div class="custom-control-inline loader" id="printLoader" style="display:none;width:30px;height: 30px;float: right;"></div>
             </div>
@@ -47,7 +47,7 @@
                     <div class="svgg">
                         <svg viewBox="0 0 24 24" data-reactid="124"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.2 19.1c1-2.8 3.7-4.7 6.7-4.7s5.7 1.9 6.7 4.7c-4.1 2.5-9.3 2.5-13.4 0zm16.1-1.9c-.5.5-1.1 1-1.7 1.5a8.15 8.15 0 0 0-7.6-5.2c-3.3 0-6.3 2.1-7.6 5.1-.6-.4-1.1-.9-1.6-1.4l-.8.7C4.8 20.6 8.4 22 12 22s7.2-1.4 10-4.1l-.7-.7zM12 2C9.2 2 7 4.2 7 7s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 9c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z" data-reactid="125"></path></svg>
                     </div>
-                    <h4>Alagbala Damilola</h4>
+                    <h4>{{session.email}}</h4>
                 </div>
             </div>
         </div>
@@ -87,106 +87,195 @@
         })
 
         ticketStore = await get_tickets.json()
-        
-        ticketStore.forEach(ticket => {
-            let start_date = ticket.event.start
-            let end_date = ticket.event.end
+        //console.log(ticketStore.length)
+        if(ticketStore.length > 0){
+            ticketStore.forEach(ticket => {
+                console.log(ticket)
+                let start_date = ticket.event.start
+                let end_date = ticket.event.end
 
-            let fstart_date = new Date(start_date.substring(0, 10))
-            let fend_date = new Date(end_date.substring(0, 10))
+                let fstart_date = new Date(start_date.substring(0, 10))
+                let fend_date = new Date(end_date.substring(0, 10))
 
-            if (fstart_date > Date.now()){
-                upcomingTicketStore.push(ticket)
-            }
-            if (fend_date < Date.now()){
-                pastTicketStore.push(ticket)
-            }
-            if (fstart_date < Date.now() && Date.now() < fend_date){
-                ongoingTicketStore.push(ticket)
-            }
-            
-        })
+                if (fstart_date > Date.now()){
+                    upcomingTicketStore.push(ticket)
+                }
+                if (fend_date < Date.now()){
+                    pastTicketStore.push(ticket)
+                }
+                if (fstart_date < Date.now() && Date.now() < fend_date){
+                    ongoingTicketStore.push(ticket)
+                }
 
-        buildTicketCard(upcomingTicketStore)
+                upcoming_ticket_count.textContent = upcomingTicketStore.length
+                ongoing_ticket_count.textContent = ongoingTicketStore.length
+                past_ticket_count.textContent = pastTicketStore.length
+                
+            })
+            buildTicketCard(upcomingTicketStore)
+        }else{
+            while(ticketList.firstChild)
+                ticketList.removeChild(ticketList.firstChild)
+            let text = document.createElement('h4')
+            text.textContent = 'No ticket yet!'
+            text.style.setProperty('text-align', 'center')
+            text.style.setProperty('margin-top', '50px')
+            ticketList.append(text)
+        }
     }
 
-    function buildTicketCard(store = []){
-        store.forEach(ticket => {
-            let { event } = ticket
-            
-            switch(event.category){
-                case ('convocation'):
-                    let ticketCard = document.createElement('div')
-                    ticketCard.className = 'row ticket'
-                    ticketCard.style.setProperty('height', '160px')
-                    ticketCard.style.setProperty('padding', '0')
-                    ticketCard.setAttribute('id', ticket.tref)
-                        
-                        let imgSection = document.createElement('div')
-                        imgSection.className = 'col-5'
-                        imgSection.style.setProperty('padding', '0')
-                            
-                            let img = document.createElement('img')
-                            img.setAttribute('src', '/uploads/'+event.posterUrl)
-                            img.style.setProperty('width', '100%')
-                            img.style.setProperty('height', '100%')
-                        
-                        imgSection.append(img)
-
-                        let ticketBody = document.createElement('div')
-                        ticketBody.className = 'col-7'
-                        ticketBody.style.setProperty('padding-top', '15px')
-                            
-                            let printIcon = document.createElement('i')
-                            printIcon.className = 'fas fa-print printBtn'
-                            printIcon.style.setProperty('float', 'right')
-                            printIcon.setAttribute('id', 'printBtn')
-                            printIcon.setAttribute('parent-id', ticket.tref)
-
-                            let title = document.createElement('h6')
-                            title.textContent = event.title
-
-                            let p1 = document.createElement('p')
-                            p1.style.setProperty('margin-bottom', '5px')
-                            let startdate = new Date(event.start.substring(0, 10))
-                            let enddate = new Date(event.end.substring(0, 10))
-                            p1.textContent = startdate.toString().substring(0,15)+ ' - ' +enddate.toString().substring(0,15)
-
-                            let p2 = document.createElement('p')
-                            p2.style.setProperty('margin-bottom', '5px')
-                            p2.style.setProperty('font-size', '13px')
-                            p2.textContent = 'User No: '+ticket.user_no
-
-                            let p3 = document.createElement('p')
-                            p3.style.setProperty('font-style', 'italic')
-                            p3.style.setProperty('font-size', '13px')
-                            p3.textContent = 'G1 & G2: '+ticket.extra
-                           /* let gaurdians = ticket.extra.split(,)
-                            guards = ''
-                            gaurdians.forEach((guard, idx) => {
-                                if(idx+1) != gaurdians.length){
-                                    guards += guard'
-                                }
-                            })*/
-
-                            let ref = document.createElement('span')
-                            ref.style.setProperty('float', 'right')
-                            ref.textContent = '#'+ticket.tref.toString().substring(0, 21)
-                        
-                        ticketBody.append(printIcon)
-                        ticketBody.append(title)
-                        ticketBody.append(p1)
-                        ticketBody.append(p2)
-                        ticketBody.append(p3)
-                        ticketBody.append(ref)
-                    
-                    ticketCard.append(imgSection)
-                    ticketCard.append(ticketBody)
-
-                    ticketList.append(ticketCard)
-                break
+    document.addEventListener('click', function(e){
+        if(e.target.classList.contains('radio')){
+            let val = e.target.value;
+            if(val == 'upcoming'){
+                buildTicketCard(upcomingTicketStore)
+            }else if(val == 'ongoing'){
+                buildTicketCard(ongoingTicketStore)
+            }else if(val == 'past'){
+                buildTicketCard(pastTicketStore)
             }
-        })
+        }
+    })
+
+    function buildTicketCard(store = []){
+        while(ticketList.firstChild)
+            ticketList.removeChild(ticketList.firstChild)
+        if(store.length > 0){
+            store.forEach(ticket => {
+                let { event } = ticket
+                console.log(event.category)
+                switch(event.category){
+                    case ('convocation'):
+                        var ticketCard = document.createElement('div')
+                        ticketCard.className = 'row ticket'
+                        ticketCard.style.setProperty('height', '160px')
+                        ticketCard.style.setProperty('padding', '0')
+                        ticketCard.setAttribute('id', ticket.tref)
+                            
+                            var imgSection = document.createElement('div')
+                            imgSection.className = 'col-5'
+                            imgSection.style.setProperty('padding', '0')
+                                
+                                var img = document.createElement('img')
+                                img.setAttribute('src', '/uploads/'+event.posterUrl)
+                                img.style.setProperty('width', '100%')
+                                img.style.setProperty('height', '100%')
+                            
+                            imgSection.append(img)
+
+                            var ticketBody = document.createElement('div')
+                            ticketBody.className = 'col-7'
+                            ticketBody.style.setProperty('padding-top', '15px')
+                                
+                                var printIcon = document.createElement('i')
+                                printIcon.className = 'fas fa-print printBtn'
+                                printIcon.style.setProperty('float', 'right')
+                                printIcon.setAttribute('id', 'printBtn')
+                                printIcon.setAttribute('parent-id', ticket.tref)
+
+                                var title = document.createElement('h6')
+                                title.textContent = event.title
+
+                                var p1 = document.createElement('p')
+                                p1.style.setProperty('margin-bottom', '5px')
+                                var startdate = new Date(event.start.substring(0, 10))
+                                var enddate = new Date(event.end.substring(0, 10))
+                                p1.textContent = startdate.toString().substring(0,15)+ ' - ' +enddate.toString().substring(0,15)
+
+                                var p2 = document.createElement('p')
+                                p2.style.setProperty('margin-bottom', '5px')
+                                p2.style.setProperty('font-size', '13px')
+                                p2.textContent = 'User No: '+ticket.user_no
+
+                                var p3 = document.createElement('p')
+                                p3.style.setProperty('font-style', 'italic')
+                                p3.style.setProperty('font-size', '13px')
+                                p3.textContent = 'G1 & G2: '+ticket.extra
+                            
+                                var ref = document.createElement('span')
+                                ref.style.setProperty('float', 'right')
+                                ref.textContent = '#'+ticket.tref.toString().substring(0, 21)
+                            
+                            ticketBody.append(printIcon)
+                            ticketBody.append(title)
+                            ticketBody.append(p1)
+                            ticketBody.append(p2)
+                            ticketBody.append(p3)
+                            ticketBody.append(ref)
+                        
+                        ticketCard.append(imgSection)
+                        ticketCard.append(ticketBody)
+
+                        ticketList.append(ticketCard)
+                    break
+                    case ('seminar'):
+                    console.log('seminatr')
+                        var ticketCard = document.createElement('div')
+                        ticketCard.className = 'row ticket'
+                        ticketCard.style.setProperty('height', '160px')
+                        ticketCard.style.setProperty('padding', '0')
+                        ticketCard.setAttribute('id', ticket.tref)
+                            
+                            var imgSection = document.createElement('div')
+                            imgSection.className = 'col-5'
+                            imgSection.style.setProperty('padding', '0')
+                                
+                                var img = document.createElement('img')
+                                img.setAttribute('src', '/uploads/'+event.posterUrl)
+                                img.style.setProperty('width', '100%')
+                                img.style.setProperty('height', '100%')
+                            
+                            imgSection.append(img)
+
+                            var ticketBody = document.createElement('div')
+                            ticketBody.className = 'col-7'
+                            ticketBody.style.setProperty('padding-top', '15px')
+                                
+                                var printIcon = document.createElement('i')
+                                printIcon.className = 'fas fa-print printBtn'
+                                printIcon.style.setProperty('float', 'right')
+                                printIcon.setAttribute('id', 'printBtn')
+                                printIcon.setAttribute('parent-id', ticket.tref)
+
+                                var title = document.createElement('h6')
+                                title.textContent = event.title
+
+                                var p1 = document.createElement('p')
+                                p1.style.setProperty('margin-bottom', '5px')
+                                var startdate = new Date(event.start.substring(0, 10))
+                                var enddate = new Date(event.end.substring(0, 10))
+                                p1.textContent = startdate.toString().substring(0,15)+ ' - ' +enddate.toString().substring(0,15)
+
+                                var p2 = document.createElement('p')
+                                p2.style.setProperty('margin-bottom', '5px')
+                                p2.style.setProperty('font-size', '13px')
+                                p2.textContent = 'User No: '+ticket.user_no
+                            
+                                var ref = document.createElement('span')
+                                ref.style.setProperty('float', 'right')
+                                ref.textContent = '#'+ticket.tref.toString().substring(0, 21)
+                            
+                            ticketBody.append(printIcon)
+                            ticketBody.append(title)
+                            ticketBody.append(p1)
+                            ticketBody.append(p2)
+                            ticketBody.append(ref)
+                        
+                        ticketCard.append(imgSection)
+                        ticketCard.append(ticketBody)
+
+                        ticketList.append(ticketCard)
+                    break
+                }
+            })
+        }else{
+            
+            let text = document.createElement('h4')
+            text.textContent = 'No ticket yet!'
+            text.style.setProperty('text-align', 'center')
+            text.style.setProperty('margin-top', '50px')
+            ticketList.append(text)
+        }
     }
 
     function printTicket(e) {

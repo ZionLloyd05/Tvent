@@ -95,4 +95,23 @@ router
         }
     })
 
+    .post('/update', async (req, res) => {
+        upload(req, res, async (err) => {
+            if (err)
+                return res.send({
+                    status: err
+                })
+            else {
+                try {
+                    let response = await eventController.updateEvent(req)
+                    res.send({
+                        status: response
+                    })
+                } catch (error) {
+                    res.send(error)
+                }
+            }
+        })
+    })
+
 module.exports = router

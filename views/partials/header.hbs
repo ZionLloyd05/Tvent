@@ -1,7 +1,7 @@
 <div style="background-color: #452134 !important;" class="headerDiv d-flex flex-column fixed-top flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white shadow-sm">
     <a href="/" class="htxt my-0 mr-md-auto font-weight-normal">Tvent</a>
     <nav class="my-2 my-md-0 mr-md-3">
-    <a class="p-2 header-text" href="#">Events Feed</a>
+    <a class="p-2 header-text" href="/feeds">Events Feed</a>
     <a class="p-2 header-text" href="/user/create-event">Create Event</a>
     </nav>
     {{# if login}}
@@ -10,7 +10,7 @@
           <i class="far fa-user-circle"></i> {{ session.email }}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Event Feeds</a>
+          <a class="dropdown-item" href="/feeds">Event Feeds</a>
           <hr/>
           <a class="dropdown-item" href="/user/myevent">My Events</a>
           <a class="dropdown-item" href="/tickets/">My Tickets</a>

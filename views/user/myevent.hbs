@@ -46,9 +46,9 @@
                     <h4 class="display-4 evTitle">Click on event to view full details</h4>
                 </div>
                 <div class="col-6" style="text-align:right;">
-                    <button class="btn" id="btn_edit"  disabled style="margin-right:2%;"><i class="fas fa-edit"></i>  Edit</button>
-                    <button class="btn" id="btn_delete"  disabled style="margin-right:2%;"><i class="fas fa-trash"></i>  Delete</button>
-                    <button class="btn" id="btn_preview" disabled style="margin-right:2%;"><i class="far fa-eye"></i>  Preview</button>
+                    <button class="btn btn-sm" id="btn_edit"  disabled style="margin-right:2%;">Edit</button>
+                    <button class="btn btn-sm" id="btn_delete"  disabled style="margin-right:2%;">Delete</button>
+                    <button class="btn btn-sm" id="btn_preview" disabled style="margin-right:2%;">Preview</button>
                 </div>
             </div>
             <hr>
@@ -62,14 +62,25 @@
                 <div class="col-5" id="evMetadata">
                     <p id="evDateTime">Jan 1, 2019 9:00 AM - Jan 4, 2019 2:00 AM </p>
                     <p id="evDesc">A conference for Web developers from allover the world</p>
-                    <a class="badge badge-light">Lagos show</a>
-                    <a class="badge badge-light">Party</a>
-                    <a class="badge badge-light">Convocation</a>
-                    <a class="badge badge-light">Ibadan for sho</a>
+                    
                 </div>
                 <div class="col-12 mt-3">
+                    <table class="table" id="editTbl" style="font-size:13px;">
+                        <thead>
+                            <tr>
+                                <th scope="col">Day</th>
+                                <th scope="col">Division</th>
+                                <th scope="col">Registered</th>
+                                <th scope="col">Capacity</th>
+                                <th scope="col" style="width:20%">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="editAllocationBody">
+
+                        </tbody>
+                    </table>
                     <p>Event Allocation <a href='' id="evLink" style="float:right">Link</a></p>
-                    <table class="table" style="font-size:13px">
+                    <table class="table" id="livetbl" style="font-size:13px">
                         <thead>
                             <tr>
                                 <th scope="col">Day</th>
@@ -82,7 +93,7 @@
                            
                         </tbody>
                     </table>
-                </div>*
+                </div>
             </div>
         </div>
     </div>
@@ -90,41 +101,3 @@
 </div>
 
 <script src="/javascripts/myevent.handler.js"></script>
-<script>
-    
-    let btnEdit = document.getElementById('btn_edit')
-    let btnDelete = document.getElementById('btn_delete')
-    let btnPreview = document.getElementById('btn_preview')
-    let csrfToken = document.getElementById('_csrf').value
-
-    window.addEventListener('load', function(){
-
-        document.addEventListener('click', function(e){
-            if (e.target.classList.contains('event')) {
-                btnEdit.removeAttribute('disabled')
-                btnDelete.removeAttribute('disabled')
-                btnPreview.removeAttribute('disabled')
-            }
-        })
-
-        //delete event event
-        btnDelete.addEventListener('click', async function(){
-            let event_id = btnDelete.getAttribute('data-id')
-            //console.log(event_id)
-
-             const delete_event_response = await fetch('/events/delete/'+event_id, {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": csrfToken
-                }
-            })
-
-            let result = await delete_event_response.json()
-            if(result){
-                window.location.reload()
-            }
-
-        })
-    })
-</script>

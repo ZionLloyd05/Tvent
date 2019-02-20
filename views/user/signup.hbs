@@ -54,6 +54,8 @@
     let csrfToken = document.getElementById('_csrf').value
     document.addEventListener('focusout', validateInput)
     let submitBtn = document.getElementById('signupbtn')
+    
+    let pointsArr = []
 
     function validateInput(e){
         if(e.target.classList.contains('form-control')){
@@ -155,12 +157,14 @@
             errorList.push(errMsg)
         }
         //check err block child does not contain the content
-        let isContainErrorMsg = false
-        Array.from(errBlock.children).forEach(element => {
-            isContainErrorMsg = element.textContent == errMsg
-        })
-        
-        !isContainErrorMsg && errBlock.append(errtxt)
+        if(errBlock != null){
+            let isContainErrorMsg = false
+            Array.from(errBlock.children).forEach(element => {
+                isContainErrorMsg = element.textContent == errMsg
+            })
+            
+            !isContainErrorMsg && errBlock.append(errtxt)
+        }
     }
 
     function removeError(errMsg='', errBlock){
@@ -168,11 +172,13 @@
             let errIdx = errorList.indexOf(errMsg)
             errorList.splice(errIdx, 1)
         }
-        let isContainErrorMsg = true
-        Array.from(errBlock.children).forEach(element => {
-            isContainErrorMsg = element.textContent == errMsg
-            isContainErrorMsg && errBlock.removeChild(element)
-        })
+        if(errBlock != null){
+            let isContainErrorMsg = true
+            Array.from(errBlock.children).forEach(element => {
+                isContainErrorMsg = element.textContent == errMsg
+                isContainErrorMsg && errBlock.removeChild(element)
+            })
+        }
     }
 
     function checkError(){
@@ -192,9 +198,12 @@
         clearInterval(intervalId)
 
     let dropArea = document.getElementById('grids')
-    let pointsArr = []
 
     window.addEventListener('load', function () {
+
+        let err = 'Graphical password must be initialized'
+        let errorBlockElement = null
+        pushError(err, errorBlockElement)
 
         let initializerBtn = document.getElementById('gpwd')
 
@@ -212,11 +221,13 @@
                 if(typedPassword == ''){
                     alert("Kindly fill out your text based password")
                 }else{
+                    let err = 'Graphical password must be initialized'
+                    let errorBlockElement = null
+                    removeError(err, errorBlockElement)
                     pointsArr.unshift(typedPassword)
                     let combinedPassword = pointsArr.join('')
                     document.getElementById('password').value = combinedPassword
                     dropArea.style.setProperty('display', 'none')
-                    console.log(combinedPassword)
                 }
                 
             }

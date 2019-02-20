@@ -695,8 +695,8 @@ $(document).ready(function () {
                         }
                     })
                     const tag_response = await save_tag_response.json()
-                    console.log(tag_response)
-                    console.log(tag_response.status)
+                    // console.log(tag_response)
+                    // console.log(tag_response.status)
 
                     toastr.options.timeOut = 1000
                     // toastr.options.extendedTimeOut = 0

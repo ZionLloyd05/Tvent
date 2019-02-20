@@ -1,6 +1,7 @@
 const Event = require('../models/event')
 const Allocation = require('../models/allocation')
 const Tag = require('../models/tag')
+const fs = require('fs')
 
 const Joi = require('joi')
 const uuidv4 = require('uuid/v4')
@@ -128,6 +129,32 @@ module.exports = {
                     reference: evRef
                 })
                 resolve(event)
+            } catch (error) {
+                reject(error)
+            }
+        })
+    },
+
+    updateEvent: (req) => {
+        return new Promise(async (resolve, reject) => {
+            let {
+                id,
+                title,
+                description
+            } = req.body
+            try {
+                let eventInDb = await Event.findOne({
+                    _id: id
+                })
+                if (req.file) {
+                    const path = `./public/uploads/${eventInDb.posterUrl}`
+                    fs.unlinkSync(path)
+                    eventInDb.posterUrl = req.file.filename
+                }
+                eventInDb.title = title
+                eventInDb.description = description
+                await eventInDb.save()
+                resolve('Done')
             } catch (error) {
                 reject(error)
             }

@@ -1,0 +1,45 @@
+<div class="container" style="margin-top: 7%;margin-bottom: 4%;">   
+    <div class="row mt-4 mb-4">
+        <div class="col-7 searchItem" style="margin:0px auto;">
+            <div class="input-group input-group">
+                <input type="text" style="border-radius: 5px 0px 0px 5px;" class="form-control searchInp" id="username" placeholder="Search store for ...." required="">
+                <div class="invalid-feedback" style="width: 100%;">
+                  Your username is required.
+                </div>
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                      <i class="fa fa-spinner fa-spin" style="display:none;font-size:24px"></i>
+                      <i class="fas fa-search" style="font-size:24px"></i>
+                  </span>
+                </div> 
+            </div>
+        </div>
+    </div> 
+  
+    <h4 class="noItem display-4" style="font-size:25px;">
+        Event Feeds
+    </h4>
+    <div class="row mt-4">
+        {{#if hasEvent}}
+            {{#each events}}
+                <div class="col-4 mt-4 mb-4">
+                    <div class="card">
+                        <a href="/events/r/{{this.reference}}">
+                            <img class="card-img-top" src="/uploads/{{this.posterUrl}}" alt="Event Poster" style="width: 100%; height: 190px;">
+                        </a>
+                        <div class="card-body">
+                            <a class="card-title" href="/events/r/0f35bf31-6991-428e-ad21-6cb00c585f47">
+                               {{this.title}}<span class="status">{{this.status}}</span>
+                            </a>
+                            <p class="card-text">{{this.description}}</p>
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+        {{else}}
+            <h4 class="noItem display-4" style="font-size:25px;margin:5% auto;">
+                <i class="fas fa-box-open"></i>   Look's like there are no events in town currently..
+            </h4>
+        {{/if}}
+    </div>
+</div>
