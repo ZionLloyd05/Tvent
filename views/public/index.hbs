@@ -1,15 +1,16 @@
 <script src="/javascripts/index.js"></script>
 <main role="main">
 
-      <!-- Main jumbotron for a primary marketing message or call to action -->
+    <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron" id="overlay">
         <div class="container">
-          <h3 class="display-4 jumbtext">.<span class="write display-4"></span></h3>
-          <p>And allow Tvent do the hardwork for you, afterall the glamorous Event is all that matters to us.</p>
+            <h3 class="display-4 jumbtext">.<span class="write display-4"></span></h3>
+            <p>And allow Tvent do the hardwork for you, afterall the glamorous Event is all that matters to us.</p>
             <div class="row searchRow">
                 <div class="col-md-4">
                     <label for="event">Looking for ?</label>
-                    <input type="text" class="form-control" id="event" placeholder="UI Convocation" value="" required="">
+                    <input type="text" class="form-control" id="event" placeholder="UI Convocation" value=""
+                        required="">
                 </div>
                 <div class="col-md-4">
                     <label for="location">Location</label>
@@ -26,29 +27,29 @@
         </div>
     </div>
 
-      {{!-- events by tag --}}
-      <div class="container">
-          <h4 class="display-4 tagtxt">Checkout events by tags</h4>
-          <div class="row">
-              <div class="col-md-12" id="tagList" style="padding: 20px 0px 0px 40px;">
-                  {{!-- <a href="#" class="badge badge-light selected">All</a>
+    {{!-- events by tag --}}
+    <div class="container">
+        <h4 class="display-4 tagtxt">Checkout events by tags</h4>
+        <div class="row">
+            <div class="col-md-12" id="tagList" style="padding: 20px 0px 0px 40px;">
+                {{!-- <a href="#" class="badge badge-light selected">All</a>
                   <a href="#" class="badge badge-light">Lagos show</a> --}}
-              </div>
-          </div>
-      </div>
-      <div class="container">
+            </div>
+        </div>
+    </div>
+    <div class="container">
         <!-- Example row of columns -->
         <div class="" id="loader" style="text-align: center; padding-top: 20px;display:none;">
             <div class="loader"></div>
         </div>
         <div class="row" id="event-GeneralList">
-            
+
         </div>
-        
+
         <hr>
-        
+
     </div> <!-- /container -->
-    
+
     <div class="row bridge1" style="margin-bottom:4%">
         <div class="col-md-12">
             <p class="display-4">Give your <a href="#">Event</a> a trial with Tvent</p>
@@ -65,89 +66,97 @@
     let eventGList = document.getElementById('event-GeneralList')
     let tagList = document.getElementById('tagList')
     let loader = document.getElementById('loader')
-    
+
     let csrfToken = document.getElementById('_csrf').value
 
     window.addEventListener('load', bootstrapPage)
 
-    async function bootstrapPage(){
+    async function bootstrapPage() {
         loader.style.display = 'block'
         const get_events = await fetch('/events/', {
-           method: 'GET', 
-            headers : {
+            method: 'GET',
+            headers: {
                 "X-CSRF-TOKEN": csrfToken
-            } 
+            }
         })
 
         const get_tags = await fetch('/tags/', {
-           method: 'GET', 
-            headers : {
+            method: 'GET',
+            headers: {
                 "X-CSRF-TOKEN": csrfToken
-            } 
+            }
         })
 
         eventStore = await get_events.json()
         tagStore = await get_tags.json()
-       
+
         buildTags(tagStore)
         buildEventCards(eventStore)
 
         loader.style.display = 'none'
     }
 
-    function buildEventCards(eventStore){
+    function buildEventCards(eventStore) {
         //console.log(eventStore)
         eventStore.forEach(event => {
             let body = document.createElement('div')
             body.className = 'col-4 mt-4 mb-4'
-                
-                let card = document.createElement('div')
-                card.className = 'card'
 
-                    let imgAnchor = document.createElement('a')
-                    imgAnchor.setAttribute('href', '/events/r/'+event.reference)
-                
-                        let cardImg = document.createElement('img')
-                        cardImg.className = 'card-img-top'
-                        cardImg.setAttribute('src', '/uploads/'+event.posterUrl)
-                        cardImg.setAttribute('alt', 'Event Poster')
-                        cardImg.style.width = '100%'
-                        cardImg.style.height = '190px'
-                    
-                    imgAnchor.append(cardImg)
+            let card = document.createElement('div')
+            card.className = 'card'
 
-                    let cardBody = document.createElement('div')
-                    cardBody.className = 'card-body'
+            let imgAnchor = document.createElement('a')
+            imgAnchor.setAttribute('href', '/events/r/' + event.reference)
 
-                        let title = document.createElement('a')
-                        title.className = 'card-title'
-                        title.setAttribute('href', '/events/r/'+event.reference)
-                        title.textContent = event.title
+            let cardImg = document.createElement('img')
+            cardImg.className = 'card-img-top'
+            cardImg.setAttribute('src', '/uploads/' + event.posterUrl)
+            cardImg.setAttribute('alt', 'Event Poster')
+            cardImg.style.width = '100%'
+            cardImg.style.height = '190px'
 
-                            let status = document.createElement('span')
-                            status.className = 'status'
-                            status.textContent = event.status
+            imgAnchor.append(cardImg)
 
-                        title.append(status)
+            let cardBody = document.createElement('div')
+            cardBody.className = 'card-body'
 
-                        let desc = document.createElement('p')
-                        desc.className = 'card-text'
-                        desc.textContent = event.description.substring(0, 100)+'...'
+            let title = document.createElement('a')
+            title.className = 'card-title'
+            title.setAttribute('href', '/events/r/' + event.reference)
+            title.textContent = event.title
 
-                    cardBody.append(title)
-                    cardBody.append(desc)
-                
-                card.append(imgAnchor)
-                card.append(cardBody)
+            let status = document.createElement('span')
+            status.className = 'status'
+            status.textContent = event.status
+
+            title.append(status)
+
+            let desc = document.createElement('p')
+            desc.className = 'card-text'
+            let descriptionArr = event.description.split(' ')
+            let descToBeShownArr = []
+            for (let wrd in descriptionArr) {
+                if (wrd < 9) {
+                    descToBeShownArr.push(descriptionArr[wrd])
+                }
+            }
+            let descToBeShown = descToBeShownArr.join(' ')
+            desc.textContent = descToBeShown + '..'
+
+            cardBody.append(title)
+            cardBody.append(desc)
+
+            card.append(imgAnchor)
+            card.append(cardBody)
 
             body.append(card)
-        
-        eventGList.append(body)
+
+            eventGList.append(body)
         })
     }
 
     //<a href="#" class="badge badge-light">Party</a>
-    function buildTags(tagStore){
+    function buildTags(tagStore) {
         tagStore.forEach(tag => {
             let badge = document.createElement('a')
             badge.className = 'badge badge-light'
