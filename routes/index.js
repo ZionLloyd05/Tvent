@@ -44,4 +44,11 @@ router.get('/feeds', async function (req, res) {
     hasEvent
   })
 })
+
+// ABout
+router.get('/about', function (req, res) {
+  res.render('public/about', {
+    title: 'About Tvent'
+  })
+})
 module.exports = router;
