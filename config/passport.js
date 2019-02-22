@@ -47,11 +47,11 @@ passport.use('local.signup', new LocalStrategy({
         var newUser = new User()
         newUser.email = email
         newUser.password = newUser.encryptPassword(password)
-        if(req.body.firstname)
+        if (req.body.firstname)
             newUser.firstname = req.body.firstname
-        if(req.body.lastname)
+        if (req.body.lastname)
             newUser.lastname = req.body.lastname
-        
+
         newUser.save(function (err, user) {
             if (err) {
                 return done(err)
@@ -77,26 +77,31 @@ passport.use('local.signin', new LocalStrategy({
         })
         return done(null, false, req.flash('error', messages))
     }
-    User.findOne({
-        'email': email
-    }, function (err, user) {
-        if (err) {
-            return done(err)
-        }
-        if (!user) {
-            return done(null, false, {
-                message: 'Oops, Your account cannot be found.'
-            })
-        }
-        if (!user.validPassword(password)) {
-            return done(null, false, {
-                message: 'Incorrect Password'
-            })
-        }
-        // console.log(user)
-        req.session._id = user._id
-        req.session.email = user.email
-        // console.log(req.session)
-        return done(null, user)
-    })
+    try {
+        User.findOne({
+            'email': email
+        }, function (err, user) {
+            if (err) {
+                return done(err)
+            }
+            if (!user) {
+                return done(null, false, {
+                    message: 'Incorrect Credential.'
+                })
+            }
+            if (!user.validPassword(password)) {
+                return done(null, false, {
+                    message: 'Incorrect Password'
+                })
+            }
+            // console.log(user)
+            req.session._id = user._id
+            req.session.email = user.email
+            // console.log(req.session)
+            return done(null, user)
+        })
+    } catch (error) {
+        console.log(error)
+    }
+
 }))

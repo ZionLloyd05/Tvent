@@ -1,48 +1,53 @@
 <div class="container signup">
     <h4 class="display-4" style="font-size:40px;margin-bottom:50px;">
-       Welcome Back.</h4>
-       {{#if hasErrors}}
-            <div class="alert alert-danger alert-dismissible fade show" role="alert"  style="width: 30%;margin: 20px auto !important;">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                {{# each messages}}
-                        {{this}}<br/>
-                {{/each}}
-            </div>
-        {{/if}}
-        <form action="/user/signin" method="post">
-            <div class="row mb-2">
-                <div class="col-4 mb-3" style="margin:0 auto;">
-                    <div class="form-group">
-                        {{!-- <label for="email" style="text-left">Email</label> --}}
-                        <input type="email" class="form-control" name="email" id="email" placeholder="Email Address" value="" required>
-                        <div class="invalid-feedback">
-                            Valid first name is required.
-                        </div>
+        Welcome Back.</h4>
+    {{#if hasErrors}}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert"
+        style="width: 30%;margin: 20px auto !important;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{# each messages}}
+        {{this}}<br />
+        {{/each}}
+    </div>
+    {{/if}}
+    <form action="/user/signin" method="post">
+        <div class="row mb-2">
+            <div class="col-4 mb-3" style="margin:0 auto;">
+                <div class="form-group">
+                    {{!-- <label for="email" style="text-left">Email</label> --}}
+                    <input type="email" class="form-control" name="email" id="email" placeholder="Email Address"
+                        value="" required>
+                    <div class="invalid-feedback">
+                        Valid first name is required.
                     </div>
+                </div>
 
-                    <div class="form-group">
-                        {{!-- <label for="lastName" style="text-left">Password</label> --}}
-                        <input type="password" class="form-control" name="password" id="password" placeholder="Password" value="" required>
-                        <div class="invalid-feedback">
-                            Valid last name is required.
-                        </div>
-                    </div> 
-                    <div style="font-size:13px;">Still under construction<br/>Why not try it out with the following info<br/><span>Email: testme@gmail.com</span><br/><span>Password: testme</span></div> 
-                    
+                <div class="form-group">
+                    {{!-- <label for="lastName" style="text-left">Password</label> --}}
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Password"
+                        value="" required>
+                    <div class="invalid-feedback">
+                        Valid last name is required.
+                    </div>
                 </div>
             </div>
-            <div class="row" style="width: 50%; margin:0 auto;">
-                <div class="col-6"><button class="btn signupbtn mt-3" id="gpwd">Initiate Graphical Password</button> </div>
-                <div class="col-6"><button type="submit" class="btn signupbtn mt-3" id="signupbtn">Log in</button> </div>
-            </div>
-            <input type="hidden" name="_csrf" value="{{ csrfToken }}">     
-        </form>
+        </div>
+        <div class="row" style="width: 50%; margin:0 auto;">
+            <div class="col-6"><button class="btn signupbtn mt-3" id="gpwd">Initiate Graphical Password</button> </div>
+            <div class="col-6"><button type="submit" class="btn signupbtn mt-3" id="signupbtn">Log in</button> </div>
+        </div>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    </form>
     {{!-- <span class="text-muted mb-4">Enter your credentials</span> --}}
-  
+
 </div>
-<div id="grids"><p><b>Graphical Password Modal</b><br/>1. Drag and Drop your preferd image into me <br/> 2. Clik on your secured spot <br/> 3. Order of clicks is important</br> 4. Click the close modal button on completion and Sign up!</p></p></div>
+<div id="grids">
+    <p><b>Graphical Password Modal</b><br />1. Drag and Drop your preferd image into me <br /> 2. Clik on your secured
+        spot <br /> 3. Order of clicks is important</br> 4. Click the close modal button on completion and Sign up!</p>
+    </p>
+</div>
 
 
 <script>
@@ -53,27 +58,27 @@
 
         let initializerBtn = document.getElementById('gpwd')
 
-        initializerBtn.addEventListener('click', function(e){
+        initializerBtn.addEventListener('click', function (e) {
             e.preventDefault()
             let txt = initializerBtn.textContent
 
-            if(txt == 'Initiate Graphical Password'){
+            if (txt == 'Initiate Graphical Password') {
                 dropArea.style.setProperty('display', 'block')
                 initializerBtn.textContent = 'Save Pattern'
             }
 
-            if(txt == 'Save Pattern'){
+            if (txt == 'Save Pattern') {
                 let typedPassword = document.getElementById('password').value
-                if(typedPassword == ''){
+                if (typedPassword == '') {
                     alert("Kindly fill out your text based password")
-                }else{
+                } else {
                     pointsArr.unshift(typedPassword)
                     let combinedPassword = pointsArr.join('')
                     document.getElementById('password').value = combinedPassword
                     dropArea.style.setProperty('display', 'none')
-                    console.log(combinedPassword)
+                    //alert(combinedPassword)
                 }
-                
+
             }
         })
 
@@ -81,20 +86,20 @@
             $("#grids").html(" ")
         })
 
-        // preventing default  behaviours and stopping the events from bubbling up
-        ;
+            // preventing default  behaviours and stopping the events from bubbling up
+            ;
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             dropArea.addEventListener(eventName, preventDefaults, false)
         })
 
-        // adding highlight class on dragenter and dropover
-        ;
+            // adding highlight class on dragenter and dropover
+            ;
         ['dragenter', 'dragover'].forEach(eventName => {
             dropArea.addEventListener(eventName, highlight, false)
         })
 
-        // removing highlight class on dragenter and dropover
-        ;
+            // removing highlight class on dragenter and dropover
+            ;
         ['dragleave', 'drop'].forEach(eventName => {
             dropArea.addEventListener(eventName, unhighlight, false)
         })
@@ -114,7 +119,8 @@
             grid.style.background = '#18862178'
 
             // points.push(e.target.x, e.target.y)
-            pointsArr.push(grid.offsetTop + '' + grid.offsetLeft)
+            //pointsArr.push(grid.offsetTop + '' + grid.offsetLeft)
+            pointsArr.push(e.target.getAttribute('data'))
         }
     })
 
@@ -126,11 +132,11 @@
         for (let i = 1; i <= value; i++) {
             for (let j = 1; j <= 5; j++) {
                 if (j === 1) {
-                    content += "<div class='row'><div class='grid' id='grid" + num + "'></div>"
+                    content += "<div class='row'><div class='grid' data='" + num + "' id='grid" + num + "'></div>"
                 } else if (j === 5) {
-                    content += "<div class='grid' id='grid" + num + "'></div></div>"
+                    content += "<div class='grid' data='" + num + "' id='grid" + num + "'></div></div>"
                 } else {
-                    content += "<div class='grid' id='grid" + num + "'></div>"
+                    content += "<div class='grid' data='" + num + "' id='grid" + num + "'></div>"
                 }
                 num++
             }
@@ -167,8 +173,8 @@
     }
 
     function loadFile(file) {
-        
-        if(file.type == 'image/jpeg' || file.type == 'image/png'){
+
+        if (file.type == 'image/jpeg' || file.type == 'image/png') {
             dropArea.textContent = ''
             dropArea.textContent = 'Loading your image...'
             let reader = new FileReader()
@@ -179,7 +185,7 @@
                 dropArea.style.height = 'auto'
                 dropArea.style.padding = '0'
             }
-        }else{
+        } else {
             dropArea.textContent = ''
             dropArea.textContent = 'File type is not supported; Sorry -_^'
         }

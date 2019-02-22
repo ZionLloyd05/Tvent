@@ -3,6 +3,7 @@ const router = express.Router()
 const csrf = require('csurf')
 const passport = require('passport')
 const UserController = require('../controllers/user.ctrl')
+const User = require('../models/user')
 
 const csrfProtection = csrf()
 router.use(csrfProtection)
@@ -35,6 +36,12 @@ router
     })
   })
 
+  .get('/profile', isLoggedIn, (req, res) => {
+    res.render('user/profile', {
+      csrfToken: req.csrfToken()
+    })
+  })
+
   .get('/logout', (req, res, next) => {
     req.session.destroy(function (err) {
       if (err)
@@ -58,10 +65,6 @@ router
   })
 
   .get('/signin', function (req, res) {
-    if (req.query.origin)
-      req.session.returnTo = req.query.origin
-    else
-      req.session.returnTo = req.header('Referer')
 
     var messages = req.flash('error')
     res.render('user/signin', {
@@ -80,12 +83,27 @@ router
     })
   })
 
-  .post('/signup', passport.authenticate('local.signup', {
+  .post('/', passport.authenticate('local.signup', {
     successRedirect: '/user/logout',
     failureRedirect: '/user/signup',
     badRequestMessage: 'Bad Request',
     failureFlash: true
   }))
+
+  .post('/update', function (req, res) {
+    if (req.body.password != '')
+      req.body.password = User.encryptPassword(req.body.password)
+    User.findByIdAndUpdate({
+      _id: req.body.id
+    }, req.body, {
+      new: true
+    }, (err, user) => {
+      if (err)
+        console.log(err)
+      if (user)
+        res.redirect('/user/logout')
+    })
+  })
 
   .post('/quickregister', passport.authenticate('local.signup'), (req, res) => {
     if (req.user) {
@@ -106,18 +124,27 @@ router
     failureRedirect: '/user/signin'
   }), function (req, res) {
     //console.log(req.user)
-    if (req.user) {
-      let returnTo = '/'
-      if (req.session.returnTo) {
-        returnTo = req.session.returnTo
-        delete req.session.returnTo
+    try {
+      if (req.user) {
+        console.log('here')
+        let returnTo = '/'
+        if (req.session.returnTo) {
+          console.log('here 2')
+          returnTo = req.session.returnTo
+          delete req.session.returnTo
+        }
+        if (returnTo == 'http://' + req.headers.host + '/user/signup') {
+          console.log('here 3')
+          return res.redirect('/')
+        }
+        res.redirect(returnTo)
+      } else {
+        console.log('here 5')
+        res.redirect('user/signin')
       }
-      if (returnTo == 'http://' + req.headers.host + '/user/signup') {
-        return res.redirect('/')
-      }
-      res.redirect(returnTo)
-    } else {
-      res.redirect('user/signin')
+
+    } catch (error) {
+      console.log(error)
     }
 
 

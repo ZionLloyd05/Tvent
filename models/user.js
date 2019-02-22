@@ -25,11 +25,11 @@ userSchema.methods.comparePassword = (pw) => {
     return (this.hash === pw)
 }
 
-userSchema.methods.encryptPassword = function(password){
+userSchema.statics.encryptPassword = function (password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(5), null);
 };
 
-userSchema.methods.validPassword = function(password){
+userSchema.methods.validPassword = function (password) {
     return bcrypt.compareSync(password, this.password);
 };
 
