@@ -228,6 +228,7 @@
                     let combinedPassword = pointsArr.join('')
                     document.getElementById('password').value = combinedPassword
                     dropArea.style.setProperty('display', 'none')
+                    //console.log(combinedPassword)
                 }
                 
             }
@@ -261,7 +262,7 @@
     dropArea.addEventListener('drop', handleDrop, false)
 
     // getting clicked points
-    document.addEventListener('click', function (e) {
+     document.addEventListener('click', function (e) {
         if (e.target.classList.contains('grid')) {
             let btnId = e.target.getAttribute('id')
 
@@ -270,7 +271,8 @@
             grid.style.background = '#18862178'
 
             // points.push(e.target.x, e.target.y)
-            pointsArr.push(grid.offsetTop + '' + grid.offsetLeft)
+            //pointsArr.push(grid.offsetTop + '' + grid.offsetLeft)
+            pointsArr.push(e.target.getAttribute('data'))
         }
     })
 
@@ -282,11 +284,11 @@
         for (let i = 1; i <= value; i++) {
             for (let j = 1; j <= 5; j++) {
                 if (j === 1) {
-                    content += "<div class='row'><div class='grid' id='grid" + num + "'></div>"
+                    content += "<div class='row'><div class='grid' data='" + num + "' id='grid" + num + "'></div>"
                 } else if (j === 5) {
-                    content += "<div class='grid' id='grid" + num + "'></div></div>"
+                    content += "<div class='grid' data='" + num + "' id='grid" + num + "'></div></div>"
                 } else {
-                    content += "<div class='grid' id='grid" + num + "'></div>"
+                    content += "<div class='grid' data='" + num + "' id='grid" + num + "'></div>"
                 }
                 num++
             }
