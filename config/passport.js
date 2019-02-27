@@ -46,7 +46,7 @@ passport.use('local.signup', new LocalStrategy({
         }
         var newUser = new User()
         newUser.email = email
-        newUser.password = newUser.encryptPassword(password)
+        newUser.password = User.encryptPassword(password)
         if (req.body.firstname)
             newUser.firstname = req.body.firstname
         if (req.body.lastname)
