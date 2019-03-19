@@ -15,17 +15,8 @@ module.exports = {
         return new Promise((resolve, reject) => {
 
             let {
-                title,
-                location,
-                start,
-                end,
-                starttime,
-                endtime,
-                posterUrl,
-                description,
-                status,
-                category,
-                organizer
+                title, location, start, end, starttime, endtime,
+                posterUrl, description, status, category, organizer
             } = req.body
 
             if (req.file)
@@ -36,17 +27,8 @@ module.exports = {
                 value,
                 error
             } = Joi.validate({
-                title,
-                location,
-                start,
-                end,
-                starttime,
-                endtime,
-                posterUrl,
-                description,
-                status,
-                category,
-                organizer
+                title, location, start, end, starttime, endtime,
+                posterUrl, description, status, category, organizer
             }, eventValidation.schema)
 
             if (error) {
@@ -55,9 +37,7 @@ module.exports = {
 
                 try {
                     let obj = new Event()
-                    obj = {
-                        ...value
-                    }
+                    obj = { ...value  }
                     obj.user = req.session._id
                     obj.reference = uuidv4()
                     // let hashedRef = Event.encryptRef(obj.reference)
@@ -71,10 +51,7 @@ module.exports = {
                 } catch (error) {
                     reject(error)
                 }
-
             }
-
-
         })
     },
 

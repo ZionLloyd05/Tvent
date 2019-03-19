@@ -60,55 +60,62 @@
 
 
 <script>
-    let eventStore = []
-    let tagStore = []
+    'use strict'
+    var eventStore = []
+    var tagStore = []
 
-    let eventGList = document.getElementById('event-GeneralList')
-    let tagList = document.getElementById('tagList')
-    let loader = document.getElementById('loader')
+    var eventGList = document.getElementById('event-GeneralList')
+    var tagList = document.getElementById('tagList')
+    var loader = document.getElementById('loader')
 
-    let csrfToken = document.getElementById('_csrf').value
+    var csrfToken = document.getElementById('_csrf').value
 
     window.addEventListener('load', bootstrapPage)
 
-    async function bootstrapPage() {
+    function bootstrapPage() {
         loader.style.display = 'block'
-        const get_events = await fetch('/events/', {
+
+        fetch('/events/', {
             method: 'GET',
             headers: {
                 "X-CSRF-TOKEN": csrfToken
             }
-        })
+        }).then(res => res.json())
+            .then(response => {
+                eventStore = response
+                buildEventCards(eventStore)
+            })
+            .catch(error => console.error('Error:', error))
 
-        const get_tags = await fetch('/tags/', {
+        fetch('/tags/', {
             method: 'GET',
             headers: {
                 "X-CSRF-TOKEN": csrfToken
             }
-        })
+        }).then(res => res.json())
+            .then(response => {
+                tagStore = response
+                buildTags(tagStore)
+            })
+            .catch(error => console.error('Error:', error))
 
-        eventStore = await get_events.json()
-        tagStore = await get_tags.json()
-
-        buildTags(tagStore)
-        buildEventCards(eventStore)
 
         loader.style.display = 'none'
     }
 
     function buildEventCards(eventStore) {
-        //console.log(eventStore)
+        console.log(eventStore)
         eventStore.forEach(event => {
-            let body = document.createElement('div')
+            var body = document.createElement('div')
             body.className = 'col-4 mt-4 mb-4'
 
-            let card = document.createElement('div')
+            var card = document.createElement('div')
             card.className = 'card'
 
-            let imgAnchor = document.createElement('a')
+            var imgAnchor = document.createElement('a')
             imgAnchor.setAttribute('href', '/events/r/' + event.reference)
 
-            let cardImg = document.createElement('img')
+            var cardImg = document.createElement('img')
             cardImg.className = 'card-img-top'
             cardImg.setAttribute('src', '/uploads/' + event.posterUrl)
             cardImg.setAttribute('alt', 'Event Poster')
@@ -117,30 +124,30 @@
 
             imgAnchor.append(cardImg)
 
-            let cardBody = document.createElement('div')
+            var cardBody = document.createElement('div')
             cardBody.className = 'card-body'
 
-            let title = document.createElement('a')
+            var title = document.createElement('a')
             title.className = 'card-title'
             title.setAttribute('href', '/events/r/' + event.reference)
             title.textContent = event.title
 
-            let status = document.createElement('span')
+            var status = document.createElement('span')
             status.className = 'status'
             status.textContent = event.status
 
             title.append(status)
 
-            let desc = document.createElement('p')
+            var desc = document.createElement('p')
             desc.className = 'card-text'
-            let descriptionArr = event.description.split(' ')
-            let descToBeShownArr = []
-            for (let wrd in descriptionArr) {
+            var descriptionArr = event.description.split(' ')
+            var descToBeShownArr = []
+            for (var wrd in descriptionArr) {
                 if (wrd < 9) {
                     descToBeShownArr.push(descriptionArr[wrd])
                 }
             }
-            let descToBeShown = descToBeShownArr.join(' ')
+            var descToBeShown = descToBeShownArr.join(' ')
             desc.textContent = descToBeShown + '..'
 
             cardBody.append(title)
@@ -158,7 +165,7 @@
     //<a href="#" class="badge badge-light">Party</a>
     function buildTags(tagStore) {
         tagStore.forEach(tag => {
-            let badge = document.createElement('a')
+            var badge = document.createElement('a')
             badge.className = 'badge badge-light'
             badge.textContent = tag.title
             badge.setAttribute('href', '#')

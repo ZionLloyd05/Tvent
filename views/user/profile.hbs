@@ -94,6 +94,7 @@
 </div>
 
 <script>
+    'use strict'
     let errorList = []
     let csrfToken = document.getElementById('_csrf').value
     document.addEventListener('focusout', validateInput)
@@ -125,7 +126,7 @@
         }
     }
 
-    async function checkInputValidity(element = '', value = '', minlen = 0, maxlen = 0, errorBlockElement, isEmail) {
+    function checkInputValidity(element = '', value = '', minlen = 0, maxlen = 0, errorBlockElement, isEmail) {
         if (isEmail) {
             var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             let isValid = re.test(value)
@@ -149,27 +150,28 @@
                 if (errorBlockElement.style.display == 'block' && errorList.length < 1)
                     errorBlockElement.style.display = 'none'
 
-                const check_email_response = await fetch('/user/check-email/' + value, {
+                fetch('/user/check-email/' + value, {
                     method: 'GET',
                     headers: {
                         "X-CSRF-TOKEN": csrfToken
                     }
-                })
+                }).then(res => res.json())
+                    .then(response => {
+                        if (response) {
+                            let err = 'Email already in use'
+                            pushError(err, errorBlockElement)
+                            if (errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
+                                errorBlockElement.style.display = 'block'
+                        } else {
+                            let err = 'Email already in use'
+                            removeError(err, errorBlockElement)
 
-                isEmailExist = await check_email_response.json()
+                            if (errorBlockElement.style.display == 'block' && errorList.length < 1)
+                                errorBlockElement.style.display = 'none'
+                        }
+                    })
+                    .catch(error => console.error('Error:', error))
 
-                if (isEmailExist) {
-                    let err = 'Email already in use'
-                    pushError(err, errorBlockElement)
-                    if (errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
-                        errorBlockElement.style.display = 'block'
-                } else {
-                    let err = 'Email already in use'
-                    removeError(err, errorBlockElement)
-
-                    if (errorBlockElement.style.display == 'block' && errorList.length < 1)
-                        errorBlockElement.style.display = 'none'
-                }
             } else if (value == '') {
                 let err = 'Email cannot be empty'
                 pushError(err, errorBlockElement)

@@ -1,51 +1,59 @@
 <div class="container signup" style="width:40%">
-        <h4 class="display-4"style="font-size:40px;margin-bottom:50px;">
-            <i class="far fa-user-circle"></i>  Create an account</h4>
-       {{#if hasErrors}}
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                {{# each messages}}
-                        {{this}}<br/>
-                {{/each}}
+    <h4 class="display-4" style="font-size:40px;margin-bottom:50px;">
+        <i class="far fa-user-circle"></i> Create an account</h4>
+    {{#if hasErrors}}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{# each messages}}
+        {{this}}<br />
+        {{/each}}
+    </div>
+    {{/if}}
+    <form action="/user" method="post">
+        <div class="row">
+            <div class="col-6 mb-4">
+                <div class="form-group">
+                    <input type="text" placeholder="Firstname" class="form-control" name="firstname" id="firstName"
+                        placeholder="" value="" required>
+                    <div class="invalid-feedback"></div>
+                </div>
             </div>
-        {{/if}}
-        <form action="/user" method="post">
-             <div class="row">
-                <div class="col-6 mb-4">
-                    <div class="form-group">
-                        <input type="text" placeholder="Firstname" class="form-control" name="firstname" id="firstName" placeholder="" value="" required>
-                        <div class="invalid-feedback"></div>
-                    </div>
+            <div class="col-6 mb-4">
+                <div class="form-group">
+                    <input type="text" placeholder="Lastname" class="form-control" name="lastname" id="lastname"
+                        placeholder="" value="" required>
+                    <div class="invalid-feedback"></div>
                 </div>
-                <div class="col-6 mb-4">
-                    <div class="form-group">
-                        <input type="text" placeholder="Lastname" class="form-control" name="lastname" id="lastname" placeholder="" value="" required>
-                        <div class="invalid-feedback"></div>
-                    </div>
+            </div>
+            <div class="col-6 mb-4">
+                <div class="form-group">
+                    <input type="email" placeholder="Email" class="form-control" name="email" id="email" placeholder=""
+                        value="" required>
+                    <div class="invalid-feedback"></div>
                 </div>
-                <div class="col-6 mb-4">
-                    <div class="form-group">
-                        <input type="email" placeholder="Email" class="form-control" name="email" id="email" placeholder="" value="" required>
-                        <div class="invalid-feedback"></div>
-                    </div>
+            </div>
+            <div class="col-6 mb-4">
+                <div class="form-group">
+                    <input type="password" placeholder="********" class="form-control" name="password" id="password"
+                        placeholder="" value="" required>
+                    <div class="invalid-feedback"></div>
                 </div>
-                <div class="col-6 mb-4">
-                    <div class="form-group">
-                        <input type="password" placeholder="********" class="form-control" name="password" id="password" placeholder="" value="" required>
-                        <div class="invalid-feedback"></div>
-                    </div>
-                </div>
-                
+            </div>
+
             <div class="col-6"><button class="btn signupbtn mt-3" id="gpwd">Initiate Graphical Password</button> </div>
             <div class="col-6"><button type="submit" class="btn signupbtn mt-3" id="signupbtn">Sign Up</button> </div>
-            </div>
-            <input type="hidden" name="_csrf" id="_csrf" value="{{ csrfToken }}">
-                 
-        </form>
+        </div>
+        <input type="hidden" name="_csrf" id="_csrf" value="{{ csrfToken }}">
+
+    </form>
 </div>
-<div id="grids"><p><b>Graphical Password Modal</b><br/>1. Drag and Drop your preferd image into me <br/> 2. Clik on your secured spot <br/> 3. Order of clicks is important</br> 4. Click the close modal button on completion and Sign up!</p></p></div>
+<div id="grids">
+    <p><b>Graphical Password Modal</b><br />1. Drag and Drop your preferd image into me <br /> 2. Clik on your secured
+        spot <br /> 3. Order of clicks is important</br> 4. Click the close modal button on completion and Sign up!</p>
+    </p>
+</div>
 
 <script>
     //let inputs = document.getElementsByTagName('input')
@@ -54,15 +62,15 @@
     let csrfToken = document.getElementById('_csrf').value
     document.addEventListener('focusout', validateInput)
     let submitBtn = document.getElementById('signupbtn')
-    
+
     let pointsArr = []
 
-    function validateInput(e){
-        if(e.target.classList.contains('form-control')){
+    function validateInput(e) {
+        if (e.target.classList.contains('form-control')) {
             let input = e.target
             let errBlock = input.parentElement.children[1]
-            inputId = input.getAttribute('id')
-            switch (inputId){
+            let inputId = input.getAttribute('id')
+            switch (inputId) {
                 case ('firstName'):
                     checkInputValidity('Firstname', input.value, 3, 20, errBlock)
                     break
@@ -81,98 +89,99 @@
         }
     }
 
-    async function checkInputValidity(element='', value='', minlen=0, maxlen=0, errorBlockElement, isEmail){
-        if(isEmail){
+    function checkInputValidity(element = '', value = '', minlen = 0, maxlen = 0, errorBlockElement, isEmail) {
+        if (isEmail) {
             var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             let isValid = re.test(value)
-            if(!isValid){
+            if (!isValid) {
                 let err = 'Email is not valid'
                 pushError(err, errorBlockElement)
-                if(errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
-                    errorBlockElement.style.display = 'block' 
-            }else{
+                if (errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
+                    errorBlockElement.style.display = 'block'
+            } else {
                 let err = 'Email is not valid'
                 removeError(err, errorBlockElement)
 
-                if(errorBlockElement.style.display == 'block' && errorList.length < 1)
+                if (errorBlockElement.style.display == 'block' && errorList.length < 1)
                     errorBlockElement.style.display = 'none'
             }
 
-            const check_email_response = await fetch('/user/check-email/'+value, {
-                method: 'GET', 
-                headers : {
+            fetch('/user/check-email/' + value, {
+                method: 'GET',
+                headers: {
                     "X-CSRF-TOKEN": csrfToken
-                } 
-            })
-            
-            isEmailExist = await check_email_response.json()
-            
-            if(isEmailExist){
-                let err = 'Email already in use'
+                }
+            }).then(res => res.json())
+                .then(response => {
+                    if (response) {
+                        let err = 'Email already in use'
+                        pushError(err, errorBlockElement)
+                        if (errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
+                            errorBlockElement.style.display = 'block'
+                    } else {
+                        let err = 'Email already in use'
+                        removeError(err, errorBlockElement)
+
+                        if (errorBlockElement.style.display == 'block' && errorList.length < 1)
+                            errorBlockElement.style.display = 'none'
+                    }
+                })
+                .catch(error => console.error('Error:', error))
+
+        } else {
+            if (value.length < minlen) {
+                let err = element + ' cannot be less than ' + minlen
                 pushError(err, errorBlockElement)
-                if(errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
-                    errorBlockElement.style.display = 'block' 
-            }else{
-                let err = 'Email already in use'
+                if (errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
+                    errorBlockElement.style.display = 'block'
+            } else {
+                let err = element + ' cannot be less than ' + minlen
                 removeError(err, errorBlockElement)
 
-                if(errorBlockElement.style.display == 'block' && errorList.length < 1)
+                if (errorBlockElement.style.display == 'block' && errorList.length < 1)
                     errorBlockElement.style.display = 'none'
             }
-        }else{
-             if(value.length < minlen){
-                let err = element+' cannot be less than '+minlen
+
+            if (value.length > maxlen) {
+                let err = element + ' cannot be more than ' + maxlen
                 pushError(err, errorBlockElement)
-                if(errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
+                if (errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
                     errorBlockElement.style.display = 'block'
-            }else{
-                let err = element+' cannot be less than '+minlen
+            } else {
+                let err = element + ' cannot be more than ' + maxlen
                 removeError(err, errorBlockElement)
 
-                if(errorBlockElement.style.display == 'block' && errorList.length < 1)
-                    errorBlockElement.style.display = 'none' 
-            }
-            
-            if(value.length > maxlen){
-                let err = element+' cannot be more than '+maxlen
-                pushError(err, errorBlockElement)
-                if(errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
-                    errorBlockElement.style.display = 'block'
-            }else{
-                let err = element+' cannot be more than '+maxlen
-                removeError(err, errorBlockElement)
-
-                if(errorBlockElement.style.display == 'block' && errorList.length < 1)
-                    errorBlockElement.style.display = 'none' 
+                if (errorBlockElement.style.display == 'block' && errorList.length < 1)
+                    errorBlockElement.style.display = 'none'
             }
 
         }
-               
+
     }
 
-    function pushError(errMsg='', errBlock){
+    function pushError(errMsg = '', errBlock) {
         let errtxt = document.createElement('p')
         errtxt.textContent = errMsg
-        if(!errorList.includes(errMsg)){
+        if (!errorList.includes(errMsg)) {
             errorList.push(errMsg)
         }
         //check err block child does not contain the content
-        if(errBlock != null){
+        if (errBlock != null) {
             let isContainErrorMsg = false
             Array.from(errBlock.children).forEach(element => {
                 isContainErrorMsg = element.textContent == errMsg
             })
-            
+
             !isContainErrorMsg && errBlock.append(errtxt)
         }
     }
 
-    function removeError(errMsg='', errBlock){
-        if(errorList.includes(errMsg)){
+    function removeError(errMsg = '', errBlock) {
+        if (errorList.includes(errMsg)) {
             let errIdx = errorList.indexOf(errMsg)
             errorList.splice(errIdx, 1)
         }
-        if(errBlock != null){
+        if (errBlock != null) {
             let isContainErrorMsg = true
             Array.from(errBlock.children).forEach(element => {
                 isContainErrorMsg = element.textContent == errMsg
@@ -181,12 +190,12 @@
         }
     }
 
-    function checkError(){
-        if(submitBtn){
-            if(errorList.length > 0){
+    function checkError() {
+        if (submitBtn) {
+            if (errorList.length > 0) {
                 submitBtn.disabled = true
-            }else{
-                if(submitBtn.disabled)
+            } else {
+                if (submitBtn.disabled)
                     submitBtn.disabled = false
             }
         }
@@ -194,7 +203,7 @@
 
     let intervalId = setInterval(checkError, 1000);
 
-    if(!submitBtn)
+    if (!submitBtn)
         clearInterval(intervalId)
 
     let dropArea = document.getElementById('grids')
@@ -207,20 +216,20 @@
 
         let initializerBtn = document.getElementById('gpwd')
 
-        initializerBtn.addEventListener('click', function(e){
+        initializerBtn.addEventListener('click', function (e) {
             e.preventDefault()
             let txt = initializerBtn.textContent
 
-            if(txt == 'Initiate Graphical Password'){
+            if (txt == 'Initiate Graphical Password') {
                 dropArea.style.setProperty('display', 'block')
                 initializerBtn.textContent = 'Save Pattern'
             }
 
-            if(txt == 'Save Pattern'){
+            if (txt == 'Save Pattern') {
                 let typedPassword = document.getElementById('password').value
-                if(typedPassword == ''){
+                if (typedPassword == '') {
                     alert("Kindly fill out your text based password")
-                }else{
+                } else {
                     let err = 'Graphical password must be initialized'
                     let errorBlockElement = null
                     removeError(err, errorBlockElement)
@@ -230,7 +239,7 @@
                     dropArea.style.setProperty('display', 'none')
                     //console.log(combinedPassword)
                 }
-                
+
             }
         })
 
@@ -238,20 +247,20 @@
             $("#grids").html(" ")
         })
 
-        // preventing default  behaviours and stopping the events from bubbling up
-        ;
+            // preventing default  behaviours and stopping the events from bubbling up
+            ;
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             dropArea.addEventListener(eventName, preventDefaults, false)
         })
 
-        // adding highlight class on dragenter and dropover
-        ;
+            // adding highlight class on dragenter and dropover
+            ;
         ['dragenter', 'dragover'].forEach(eventName => {
             dropArea.addEventListener(eventName, highlight, false)
         })
 
-        // removing highlight class on dragenter and dropover
-        ;
+            // removing highlight class on dragenter and dropover
+            ;
         ['dragleave', 'drop'].forEach(eventName => {
             dropArea.addEventListener(eventName, unhighlight, false)
         })
@@ -262,7 +271,7 @@
     dropArea.addEventListener('drop', handleDrop, false)
 
     // getting clicked points
-     document.addEventListener('click', function (e) {
+    document.addEventListener('click', function (e) {
         if (e.target.classList.contains('grid')) {
             let btnId = e.target.getAttribute('id')
 
@@ -325,8 +334,8 @@
     }
 
     function loadFile(file) {
-        
-        if(file.type == 'image/jpeg' || file.type == 'image/png'){
+
+        if (file.type == 'image/jpeg' || file.type == 'image/png') {
             dropArea.textContent = ''
             dropArea.textContent = 'Loading your image...'
             let reader = new FileReader()
@@ -337,7 +346,7 @@
                 dropArea.style.height = 'auto'
                 dropArea.style.padding = '0'
             }
-        }else{
+        } else {
             dropArea.textContent = ''
             dropArea.textContent = 'File type is not supported; Sorry -_^'
         }

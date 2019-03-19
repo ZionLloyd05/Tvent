@@ -59,7 +59,7 @@
 
 {{!-- <script src="/javascripts/myevent.handler.js"></script> --}}
 <script>
-
+    'use strict'
     let ticketStore = []
     let upcomingTicketStore = []
     let ongoingTicketStore = []
@@ -72,24 +72,22 @@
     window.addEventListener('load', prepareTicketContainer)
     document.addEventListener('click', printTicket)
 
-    async function prepareTicketContainer(){
+    function prepareTicketContainer(){
         let upcoming_ticket_count = document.getElementById('upcoming_ticket_count')
         let past_ticket_count = document.getElementById('past_ticket_count')
         let ongoing_ticket_count = document.getElementById('ongoing_ticket_count')
         
         let csrfToken = document.getElementById('_csrf').value
 
-        const get_tickets = await fetch('/tickets/u', {
+        fetch('/tickets/u', {
             method: 'GET', 
             headers : {
                 "X-CSRF-TOKEN": csrfToken
             }
-        })
-
-        ticketStore = await get_tickets.json()
-        //console.log(ticketStore.length)
-        if(ticketStore.length > 0){
-            ticketStore.forEach(ticket => {
+        }).then(res => res.json())
+            .then(response => {
+                if(response.length > 0){
+                response.forEach(ticket => {
                 console.log(ticket)
                 let start_date = ticket.event.start
                 let end_date = ticket.event.end
@@ -122,6 +120,12 @@
             text.style.setProperty('margin-top', '50px')
             ticketList.append(text)
         }
+            })
+        .catch(error => console.error('Error:', error))
+
+        //ticketStore = await get_tickets.json()
+        //console.log(ticketStore.length)
+        
     }
 
     document.addEventListener('click', function(e){

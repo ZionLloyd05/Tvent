@@ -1,7 +1,7 @@
+'use strict'
 let eventStore = []
 let publicEventStore = []
 let privateEventStore = []
-
 let search = document.getElementById('search')
 let evList = document.getElementById('evList')
 let csrfToken = document.getElementById('_csrf').value
@@ -17,38 +17,42 @@ document.addEventListener('click', showEventPreview)
 
 let eventId = ''
 
-async function prepareEventListContainer() {
+function prepareEventListContainer() {
     let event_count = document.getElementById('event_count')
     let public_count = document.getElementById('public_count')
     let private_count = document.getElementById('private_count')
 
 
-    const get_events = await fetch('/events/u', {
-        method: 'GET',
-        headers: {
-            "X-CSRF-TOKEN": csrfToken
-        }
-    })
+    fetch('/events/u', {
+            method: 'GET',
+            headers: {
+                "X-CSRF-TOKEN": csrfToken
+            }
+        }).then(res => res.json())
+        .then(response => {
+            eventStore = response
+            publicEventStore = response.filter(obj => {
+                return obj.status === 'public'
+            })
+            privateEventStore = response.filter(obj => {
+                return obj.status === 'private'
+            })
 
-    eventStore = await get_events.json()
-    publicEventStore = eventStore.filter(obj => {
-        return obj.status === 'public'
-    })
-    privateEventStore = eventStore.filter(obj => {
-        return obj.status === 'private'
-    })
-
-    //insert event counts
-    event_count.textContent = eventStore.length
-    public_count.textContent = publicEventStore.length
-    private_count.textContent = privateEventStore.length
+            //insert event counts
+            event_count.textContent = response.length
+            public_count.textContent = publicEventStore.length
+            private_count.textContent = privateEventStore.length
 
 
-    let evList = document.getElementById('evList')
-    while (evList.firstChild)
-        evList.removeChild(evList.firstChild)
+            let evList = document.getElementById('evList')
+            while (evList.firstChild)
+                evList.removeChild(evList.firstChild)
 
-    buildEvCards(eventStore)
+            buildEvCards(response)
+        })
+        .catch(error => console.error('Error:', error))
+
+
 
 
     document.addEventListener('click', function (e) {
@@ -123,7 +127,7 @@ function performSeach(e) {
     })
 }
 
-async function showEventPreview(e) {
+function showEventPreview(e) {
 
 
     if (e.target.classList.contains('event')) {
@@ -158,7 +162,7 @@ async function showEventPreview(e) {
         //loadingSpan.append(icon)
         evTitle.append(loadingSpan)
 
-        let evCard = e.target
+        //let evCard = e.target
         evCardId = e.target.getAttribute('ev-id')
         let rbtnVal = document.querySelector('input[name="radio"]:checked').value;
 
@@ -180,21 +184,32 @@ async function showEventPreview(e) {
         eventId = evCardId
 
         //get event's allocation && event's tag
-        const get_allocations = await fetch('/allocations/' + evCardId, {
-            method: 'GET'
-        })
+        fetch('/allocations/' + evCardId, {
+                method: 'GET'
+            }).then(res => res.json())
+            .then(response => {
+                buildAllocation(response)
+            })
+            .catch(error => console.error('Error:', error))
 
-        evAllocationPayLoad = await get_allocations.json()
+        //======evAllocationPayLoad = await get_allocations.json()
         //console.log(evAllocationPayLoad)
 
-        const get_tags = await fetch('/tags/' + evCardId, {
-            method: 'GET'
-        })
+        fetch('/tags/' + evCardId, {
+                method: 'GET'
+            }).then(res => res.json())
+            .then(response => {
+                buildTagMetaData(response)
+            })
+            .catch(error => console.error('Error:', error))
 
-        evTagPayLoad = await get_tags.json()
+        //======evTagPayLoad = await get_tags.json()
         //console.log(evTagPayLoad)
-
-        buildEventView(eventPayLoad, evAllocationPayLoad, evTagPayLoad)
+        // Promise.all([get_allocations, get_tags])
+        //     .then(response => {
+        //         console.log(response)
+        //     })
+        buildEventView(eventPayLoad)
 
         if (loader)
             loader.style.display = 'none'
@@ -206,7 +221,128 @@ async function showEventPreview(e) {
 
 }
 
-function buildEventView(eventPayload, allocationPayload, tagPayload) {
+function buildAllocation(allocationPayload) {
+    //spaen allocation
+    let tblAllocation = document.getElementById('allocationBody')
+    //meta data
+    while (tblAllocation.firstChild) {
+        tblAllocation.removeChild(tblAllocation.firstChild)
+    }
+
+    allocationPayload.forEach(allocation => {
+        let tblRow = document.createElement('tr')
+
+        let day = document.createElement('th')
+        let division = document.createElement('td')
+        let registered = document.createElement('td')
+        let capacity = document.createElement('td')
+
+        day.textContent = allocation.day
+        day.setAttribute('scope', 'col')
+        division.textContent = allocation.division
+        registered.textContent = allocation.fill
+        capacity.textContent = (allocation.capacity + allocation.extra)
+
+        tblRow.append(day)
+        tblRow.append(division)
+        tblRow.append(registered)
+        tblRow.append(capacity)
+
+        tblAllocation.append(tblRow)
+    })
+
+    //edit allocation table
+    let editTable = document.getElementById('editTbl')
+    let editAllocation = document.getElementById('editAllocationBody')
+    while (editAllocation.firstChild) {
+        editAllocation.removeChild(editAllocation.firstChild)
+    }
+
+    editTable.style.setProperty('display', 'none')
+
+    allocationPayload.forEach(allocation => {
+        let tblRow = document.createElement('tr')
+        tblRow.setAttribute('id', allocation._id)
+
+        let day = document.createElement('th')
+        let division = document.createElement('td')
+        let registered = document.createElement('td')
+        let capacity = document.createElement('td')
+        let action = document.createElement('td')
+        action.style.setProperty('width', '20%')
+
+        day.textContent = allocation.day
+        day.setAttribute('scope', 'col')
+
+        let divisionInp = document.createElement('input')
+        divisionInp.className = 'form-control'
+        divisionInp.setAttribute('value', allocation.division)
+
+        division.append(divisionInp)
+
+        registered.textContent = allocation.fill
+
+        let capacityInp = document.createElement('input')
+        capacityInp.className = 'form-control'
+        capacityInp.style.setProperty('width', '50%')
+        capacityInp.setAttribute('value', (allocation.capacity + allocation.extra))
+
+        capacity.append(capacityInp)
+
+        let editBtn = document.createElement('button')
+        editBtn.className = 'btn btn-tbl btn-icn btn-primary'
+        editBtn.setAttribute('op', 'save')
+        editBtn.setAttribute('_id', allocation._id)
+
+        let iedit = document.createElement('i')
+        iedit.className = 'fa fa-save'
+        iedit.setAttribute('_id', allocation._id)
+        iedit.setAttribute('op', 'save')
+        editBtn.append(iedit)
+
+        let deleteBtn = document.createElement('button')
+        deleteBtn.className = 'btn btn-tbl btn-danger btn-icn'
+        deleteBtn.setAttribute('_id', allocation._id)
+        deleteBtn.setAttribute('op', 'delete')
+
+        let idelete = document.createElement('i')
+        idelete.className = 'fa fa-trash'
+        idelete.setAttribute('op', 'delete')
+        idelete.setAttribute('_id', allocation._id)
+        deleteBtn.append(idelete)
+
+        action.append(editBtn)
+        action.append(deleteBtn)
+
+        tblRow.append(day)
+        tblRow.append(division)
+        tblRow.append(registered)
+        tblRow.append(capacity)
+        tblRow.append(action)
+
+        editAllocation.append(tblRow)
+    })
+
+}
+
+function buildTagMetaData(tagPayload) {
+
+    //spawn tags
+    tagPayload.forEach(tag => {
+        let aTag = document.createElement('a')
+        aTag.className = 'badge badge-light tag__live'
+        aTag.textContent = tag.title
+        aTag.setAttribute('id', 'tag__live')
+        evMetadata.append(aTag)
+    })
+
+    tagPayload.forEach(tag => {
+        addEditTag(tag)
+    })
+}
+
+function buildEventView(eventPayload) {
+    console.log(eventPayload)
     let evTitle = document.getElementById('evTitle')
     let evPoster = document.getElementById('evPoster')
     let evMetadata = document.getElementById('evMetadata')
@@ -342,119 +478,6 @@ function buildEventView(eventPayload, allocationPayload, tagPayload) {
     evMetadata.append(inpDesc)
     evMetadata.append(inpTag)
 
-    //spawn tags
-    tagPayload.forEach(tag => {
-        let aTag = document.createElement('a')
-        aTag.className = 'badge badge-light tag__live'
-        aTag.textContent = tag.title
-        aTag.setAttribute('id', 'tag__live')
-        evMetadata.append(aTag)
-    })
-
-    tagPayload.forEach(tag => {
-        addEditTag(tag)
-    })
-
-    //edit allocation table
-    let editTable = document.getElementById('editTbl')
-    let editAllocation = document.getElementById('editAllocationBody')
-    while (editAllocation.firstChild) {
-        editAllocation.removeChild(editAllocation.firstChild)
-    }
-
-    editTable.style.setProperty('display', 'none')
-
-    allocationPayload.forEach(allocation => {
-        let tblRow = document.createElement('tr')
-        tblRow.setAttribute('id', allocation._id)
-
-        let day = document.createElement('th')
-        let division = document.createElement('td')
-        let registered = document.createElement('td')
-        let capacity = document.createElement('td')
-        let action = document.createElement('td')
-        action.style.setProperty('width', '20%')
-
-        day.textContent = allocation.day
-        day.setAttribute('scope', 'col')
-
-        let divisionInp = document.createElement('input')
-        divisionInp.className = 'form-control'
-        divisionInp.setAttribute('value', allocation.division)
-
-        division.append(divisionInp)
-
-        registered.textContent = allocation.fill
-
-        let capacityInp = document.createElement('input')
-        capacityInp.className = 'form-control'
-        capacityInp.style.setProperty('width', '50%')
-        capacityInp.setAttribute('value', (allocation.capacity + allocation.extra))
-
-        capacity.append(capacityInp)
-
-        let editBtn = document.createElement('button')
-        editBtn.className = 'btn btn-tbl btn-icn btn-primary'
-        editBtn.setAttribute('op', 'save')
-        editBtn.setAttribute('_id', allocation._id)
-
-        let iedit = document.createElement('i')
-        iedit.className = 'fa fa-save'
-        iedit.setAttribute('_id', allocation._id)
-        iedit.setAttribute('op', 'save')
-        editBtn.append(iedit)
-
-        let deleteBtn = document.createElement('button')
-        deleteBtn.className = 'btn btn-tbl btn-danger btn-icn'
-        deleteBtn.setAttribute('_id', allocation._id)
-        deleteBtn.setAttribute('op', 'delete')
-
-        let idelete = document.createElement('i')
-        idelete.className = 'fa fa-trash'
-        idelete.setAttribute('op', 'delete')
-        idelete.setAttribute('_id', allocation._id)
-        deleteBtn.append(idelete)
-
-        action.append(editBtn)
-        action.append(deleteBtn)
-
-        tblRow.append(day)
-        tblRow.append(division)
-        tblRow.append(registered)
-        tblRow.append(capacity)
-        tblRow.append(action)
-
-        editAllocation.append(tblRow)
-    })
-
-    //spaen allocation
-    let tblAllocation = document.getElementById('allocationBody')
-    //meta data
-    while (tblAllocation.firstChild) {
-        tblAllocation.removeChild(tblAllocation.firstChild)
-    }
-
-    allocationPayload.forEach(allocation => {
-        let tblRow = document.createElement('tr')
-
-        let day = document.createElement('th')
-        let division = document.createElement('td')
-        let registered = document.createElement('td')
-        let capacity = document.createElement('td')
-
-        day.textContent = allocation.day
-        day.setAttribute('scope', 'col')
-        division.textContent = allocation.division
-        registered.textContent = allocation.fill
-        capacity.textContent = (allocation.capacity + allocation.extra)
-
-        tblRow.append(day)
-        tblRow.append(division)
-        tblRow.append(registered)
-        tblRow.append(capacity)
-
-        tblAllocation.append(tblRow)
-    })
 }
 
 btnPreview.addEventListener('click', function (e) {
@@ -561,25 +584,27 @@ function removeTag(e) {
                 buttons: true,
                 dangerMode: true,
             })
-            .then(async (willDelete) => {
+            .then((willDelete) => {
                 if (willDelete) {
                     //run deletion logic here
 
-                    const delete_tag_response = await fetch('/tags/' + tagId, {
-                        method: 'DELETE',
-                        headers: {
-                            "X-CSRF-TOKEN": csrfToken
-                        }
-                    })
+                    fetch('/tags/' + tagId, {
+                            method: 'DELETE',
+                            headers: {
+                                "X-CSRF-TOKEN": csrfToken
+                            }
+                        }).then(res => res.json())
+                        .then(response => {
+                            if (response.status == true) {
+                                evMetadata.removeChild(this)
+                                swal('Tag deleted successfully.', '', 'success')
+                            } else {
+                                swal('Somthing went wrong!', '', 'warning')
+                            }
 
-                    const response = await delete_tag_response.json()
+                        })
+                        .catch(error => console.error('Error:', error))
 
-                    if (response.status == true) {
-                        evMetadata.removeChild(this)
-                        swal('Tag deleted successfully.', '', 'success')
-                    } else {
-                        swal('Somthing went wrong!', '', 'warning')
-                    }
 
                 } else {
                     swal("Deletion process cancelled");
@@ -591,7 +616,7 @@ function removeTag(e) {
 }
 
 // =======================BTN DELETE==================================
-btnDelete.addEventListener('click', async function (e) {
+btnDelete.addEventListener('click', function (e) {
     let event_id = btnDelete.getAttribute('data-id')
     let loader = document.createElement('div')
     loader.className = 'loader-btn'
@@ -608,18 +633,19 @@ btnDelete.addEventListener('click', async function (e) {
             if (willDelete) {
                 //run deletion logic here
 
-                const delete_event_response = await fetch('/events/delete/' + event_id, {
-                    method: 'POST',
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": csrfToken
-                    }
-                })
-
-                let result = await delete_event_response.json()
-                if (result) {
-                    window.location.reload()
-                }
+                fetch('/events/delete/' + event_id, {
+                        method: 'POST',
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": csrfToken
+                        }
+                    }).then(res => res.json())
+                    .then(response => {
+                        if (response) {
+                            window.location.reload()
+                        }
+                    })
+                    .catch(error => console.error('Error:', error))
 
             } else {
                 swal('Deletion cancelled')
@@ -632,7 +658,7 @@ btnDelete.addEventListener('click', async function (e) {
 // =======================LIVE / EDIT TOGGLER =========================
 let editAllocationBody = document.getElementById('editAllocationBody')
 
-document.addEventListener('click', async function (e) {
+document.addEventListener('click', function (e) {
     let el = e.target.classList
     if (el.contains('btn-tbl') || el.contains('fa-save') || el.contains('fa-trash')) {
         let btn = e.target
@@ -658,19 +684,21 @@ document.addEventListener('click', async function (e) {
                 }
 
                 //saving event
-                const update_allocation_response = await fetch('/allocations/update', {
-                    method: 'Post',
-                    body: JSON.stringify(payLoad),
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": csrfToken
-                    }
-                })
+                fetch('/allocations/update', {
+                        method: 'Post',
+                        body: JSON.stringify(payLoad),
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": csrfToken
+                        }
+                    }).then(res => res.json())
+                    .then(response => {
+                        if (response.status == true) {
+                            swal('Allocation Saved', 'success')
+                        }
+                    })
+                    .catch(error => console.error('Error:', error))
 
-                const response = await update_allocation_response.json()
-                if (response.status == true) {
-                    swal('Allocation Saved', 'success')
-                }
             }
         } else if (operation == 'delete') {
             swal({
@@ -679,25 +707,25 @@ document.addEventListener('click', async function (e) {
                     buttons: true,
                     dangerMode: true,
                 })
-                .then(async (willDelete) => {
+                .then((willDelete) => {
                     if (willDelete) {
                         //run deletion logic here
 
-                        const delete_allocation_response = await fetch('/allocations/' + allocationId, {
-                            method: 'DELETE',
-                            headers: {
-                                "X-CSRF-TOKEN": csrfToken
-                            }
-                        })
-
-                        const response = await delete_allocation_response.json()
-
-                        if (response.status == true) {
-                            editAllocationBody.removeChild(parent)
-                            swal('Allocation deleted successfully.', '', 'success')
-                        } else {
-                            swal('Somthing went wrong!', '', 'warning')
-                        }
+                        fetch('/allocations/' + allocationId, {
+                                method: 'DELETE',
+                                headers: {
+                                    "X-CSRF-TOKEN": csrfToken
+                                }
+                            }).then(res => res.json())
+                            .then(response => {
+                                if (response.status == true) {
+                                    editAllocationBody.removeChild(parent)
+                                    swal('Allocation deleted successfully.', '', 'success')
+                                } else {
+                                    swal('Somthing went wrong!', '', 'warning')
+                                }
+                            })
+                            .catch(error => console.error('Error:', error))
 
                     } else {
                         swal("Deletion process cancelled");
@@ -707,7 +735,7 @@ document.addEventListener('click', async function (e) {
     }
 })
 
-btnEdit.addEventListener('click', async function () {
+btnEdit.addEventListener('click', function () {
 
     let id = btnEdit.getAttribute('data-id')
 
@@ -730,21 +758,23 @@ btnEdit.addEventListener('click', async function () {
             let form = document.getElementById('eventEditForm')
             let formData = new FormData(form)
 
-            const response = await fetch('/events/update', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    "X-CSRF-TOKEN": csrfToken
-                }
-            })
+            fetch('/events/update', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        "X-CSRF-TOKEN": csrfToken
+                    }
+                }).then(res => res.json())
+                .then(response => {
+                    if (response.status == 'Done') {
+                        swal('Event updated', '', 'success')
+                            .then(() => {
+                                window.location.reload()
+                            })
+                    }
+                })
+                .catch(error => console.error('Error:', error))
 
-            let update_response = await response.json()
-            if (update_response.status == 'Done') {
-                swal('Event updated', '', 'success')
-                    .then(() => {
-                        window.location.reload()
-                    })
-            }
             toggleRenderer("Live");
             btnEdit.textContent = 'Edit'
         } else {

@@ -1,11 +1,11 @@
-
 </script>
 {{!-- <script src="/javascripts/index.js"></script> --}}
 <main role="main">
     {{# each event}}
-      <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron ev-jumbo" style="background-image:url('/uploads/{{this.posterUrl}}'); border-radius:0;margin-bottom:0" id="overlay">
-        
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron ev-jumbo"
+        style="background-image:url('/uploads/{{this.posterUrl}}'); border-radius:0;margin-bottom:0" id="overlay">
+
     </div>
     <div class="container ev-container" style="margin-bottom:60px">
         <div class="row">
@@ -13,7 +13,8 @@
                 <p class="display-4" style="font-size:2.7rem" id="title">{{this.title}}</p>
             </div>
             <div class="col-4">
-                <button class="btn btn-lg" ev-ref="{{this.reference}}" ev-id="{{this._id}}" ev-status="{{this.status}}" ev-cat="{{this.category}}" id="regBtn" style="width:100%">Register for Event</button>
+                <button class="btn btn-lg" ev-ref="{{this.reference}}" ev-id="{{this._id}}" ev-status="{{this.status}}"
+                    ev-cat="{{this.category}}" id="regBtn" style="width:100%">Register for Event</button>
             </div>
             <hr style="padding-bottom: 20px;width: 90%;">
             <div class="row ev-desc" style="width: 90%;margin: 0 auto;">
@@ -22,25 +23,26 @@
                     <p style="text-align:justify">{{this.description}}</p>
                 </div>
                 <div class=" mb-3 col-2">
-                    
+
                 </div>
                 <div class="col-4 mb-3">
                     <h3 class="display-4">Date & Time</h3>
-                    <p style="font-size:15px">{{formatDate this.start}}, {{this.starttime}} - {{formatDate this.end}}, {{this.endtime}}</p>
+                    <p style="font-size:15px">{{formatDate this.start}}, {{this.starttime}} - {{formatDate this.end}},
+                        {{this.endtime}}</p>
                 </div>
                 <div class="col-5 mb-3">
                     <h3 class="display-4">Location</h3>
                     <p style="text-align:justify">{{this.location}}</p>
                 </div>
                 <div class="col-3 mb-3">
-                    
+
                 </div>
                 <div class="col-4 mb-3" id="tagBody">
                     <h3 class="display-4">Tags</h3>
                     <div class="" id="loader_tag" style="text-align: center; padding-top: 10px;">
-                       <div class="loader"></div>
+                        <div class="loader"></div>
                     </div>
-                </div>  
+                </div>
                 <div class="col-12 mt-3" style="margin:0 auto;">
                     <h3 class="display-4">Allocation</h3>
                     <table class="table" style="font-size:13px">
@@ -59,7 +61,7 @@
                         </tbody>
                     </table>
                 </div>
-            </div>            
+            </div>
             <hr style="padding-bottom: 20px;width: 90%;">
             <div class="col-12 text-center">
                 <h2 class="display-4">Event Organizer</h2>
@@ -69,82 +71,94 @@
     </div>
 
     <!-- Ticket Modal -->
-    <div class="modal fade" id="ticketModal"  data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="ticketModalLabel" aria-hidden="true">
+    <div class="modal fade" id="ticketModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+        aria-labelledby="ticketModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="ticketModalLabel">Setting up your ticket</h5>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-9" id="conv-form" style="display:none;margin:0 auto;">
-                        <select id="faculty" class="custom-select custom-select-sm mb-3">
-                            <option selected>Select Faculty</option>
-                        </select>
-                        
-                        <div class="input-group input-group-sm mb-3">
-                            <input type="number" id="gno" placeholder="Enter number of gaurdian" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
-                            <div class="invalid-feedback" id="invalid-feedback" style="width: 100%;"></div>
-                        </div>
-                        <div id="gdiv">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ticketModalLabel">Setting up your ticket</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-9" id="conv-form" style="display:none;margin:0 auto;">
+                            <select id="faculty" class="custom-select custom-select-sm mb-3">
+                                <option selected>Select Faculty</option>
+                            </select>
 
+                            <div class="input-group input-group-sm mb-3">
+                                <input type="number" id="gno" placeholder="Enter number of gaurdian"
+                                    class="form-control" aria-label="Sizing example input"
+                                    aria-describedby="inputGroup-sizing-sm">
+                                <div class="invalid-feedback" id="invalid-feedback" style="width: 100%;"></div>
+                            </div>
+                            <div id="gdiv">
+
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-12" style="display:none;" id="others">
-                        <p style="font-size:2.0rem" class="display-4">See you at {{this.title}}</p>
+                        <div class="col-12" style="display:none;" id="others">
+                            <p style="font-size:2.0rem" class="display-4">See you at {{this.title}}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm" data-dismiss="modal" id="modClose1"  style="width:50%;">Close</button>
-                <button class="btn btn-sm" id="tickBtn" disabled style="width:50%; margin:0 auto">Get My Ticket</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm" data-dismiss="modal" id="modClose1"
+                        style="width:50%;">Close</button>
+                    <button class="btn btn-sm" id="tickBtn" disabled style="width:50%; margin:0 auto">Get My
+                        Ticket</button>
+                </div>
             </div>
         </div>
     </div>
-    
+
     {{/each}}
-    
+
     <input type="hidden" name="_csrf" id="_csrf" value="{{ csrfToken }}">
     {{#if login}}
-        <input type="hidden" id="isLoggedIn" value='true'>
+    <input type="hidden" id="isLoggedIn" value='true'>
     {{else}}
-        <input type="hidden" id="isLoggedIn" value='false'>
+    <input type="hidden" id="isLoggedIn" value='false'>
     {{/if}}
 
-       <!-- Ticket Modal -->
-    <div class="modal fade" id="accountModal"  data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="accountModalLabel" aria-hidden="true">
+    <!-- Ticket Modal -->
+    <div class="modal fade" id="accountModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+        aria-labelledby="accountModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="accountModalLabel">Quick Account Set Up</h5>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-9" id="acc-form" style="margin:0 auto;">
-                       <div class="input-group input-group-sm mb-3">
-                            <input type="email" id="email" placeholder="Enter your email" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" value="">
-                            <div class="invalid-feedback" id="invalid-feedback" style="width: 100%;"></div>
-                        </div>
-                        <div class="input-group input-group-sm mb-3">
-                            <input type="password" id="password" placeholder="Enter your password" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" value="">
-                            <div class="invalid-feedback" id="invalid-feedback" style="width: 100%;"></div>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="accountModalLabel">Quick Account Set Up</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-9" id="acc-form" style="margin:0 auto;">
+                            <div class="input-group input-group-sm mb-3">
+                                <input type="email" id="email" placeholder="Enter your email" class="form-control"
+                                    aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" value="">
+                                <div class="invalid-feedback" id="invalid-feedback" style="width: 100%;"></div>
+                            </div>
+                            <div class="input-group input-group-sm mb-3">
+                                <input type="password" id="password" placeholder="Enter your password"
+                                    class="form-control" aria-label="Sizing example input"
+                                    aria-describedby="inputGroup-sizing-sm" value="">
+                                <div class="invalid-feedback" id="invalid-feedback" style="width: 100%;"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm" data-dismiss="modal" id="modClose2"  style="width:50%;">Close</button>
-                <button class="btn btn-sm" id="accBtn" disabled style="width:50%; margin:0 auto">Set Up Account</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm" data-dismiss="modal" id="modClose2"
+                        style="width:50%;">Close</button>
+                    <button class="btn btn-sm" id="accBtn" disabled style="width:50%; margin:0 auto">Set Up
+                        Account</button>
+                </div>
             </div>
         </div>
     </div>
 </main>
 
 <script>
+    'use strict'
     //======================================================================
-    //  VARIABLE DECLARATIONS
+    //  letIABLE DECLARATIONS
     //======================================================================
     let button = document.getElementById('regBtn')
     let evId = button.getAttribute('ev-id')
@@ -168,7 +182,7 @@
     let modCloseBtn2 = document.getElementById('modClose2')
     let isModalShow = false
     let intervalId
-    
+
     let tagBody = document.getElementById('tagBody')
     let allocationBody = document.getElementById('allocationBody')
     let csrfToken = document.getElementById('_csrf').value
@@ -195,7 +209,7 @@
     //======================================================================
     //  FUNCTION DEFINITION
     //======================================================================
-    async function setUpUserAccount(){
+    async function setUpUserAccount() {
         let loader = document.createElement('img')
         loader.style.setProperty('width', '6%')
         loader.setAttribute('src', '/images/spinner.gif')
@@ -212,78 +226,89 @@
             'password': password
         }
 
-        const save_user_response = await fetch('/user/quickregister', {
+        fetch('/user/quickregister', {
             method: 'POST',
             body: JSON.stringify(userPayLoad),
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRF-TOKEN": csrfToken
             }
-        })
-
-        const user_response = await save_user_response.json()
-        
-        if(user_response.status == 'User Created'){
-            swal('Yaay!', "We've got you set up", "success")
-            window.location.replace('/user/signin')
-        }else{
-            swal('Oops!', "Something went wrong", "error")
-        }
+        }).then(res => res.json())
+            .then(response => {
+                if (response.status == 'User Created') {
+                    swal('Yaay!', "We've got you set up", "success")
+                    window.location.replace('/user/signin')
+                } else {
+                    swal('Oops!', "Something went wrong", "error")
+                }
+            })
+            .catch(error => console.error('Error:', error))
 
         accBtn.removeChild(accBtn.firstChild)
         accBtn.textContent = 'Set Up Account'
         accBtn.removeAttribute('disabled')
     }
 
-    function loadModal(){
+    function loadModal() {
         intervalId = setInterval(checkError, 500)
-        if(isLoggedIn === 'true'){
+        if (isLoggedIn === 'true') {
             $('#ticketModal').modal('show')
-        }else{
+        } else {
             $('#accountModal').modal('show')
         }
     }
 
-    async function scaffoldPage(){
-        if(category == 'convocation'){
+    function scaffoldPage() {
+        if (category == 'convocation') {
             convFormDiv.style.setProperty('display', 'block')
-        }else{
+        } else {
             otherDiv.style.setProperty('display', 'block')
             tregBtn.removeAttribute('disabled')
         }
 
-        if (evStatus == 'private'){
+        if (evStatus == 'private') {
             button.setAttribute('disabled', true)
             button.style.setProperty('cursor', 'not-allowed')
         }
-        const get_allocations = await fetch('/allocations/'+evId, {
+        fetch('/allocations/' + evId, {
             method: 'GET'
-        })
+        }).then(res => res.json())
+            .then(response => {
+                buildPayload(response)
+            })
+            .catch(error => console.error('Error:', error))
 
-        evAllocationPayLoad = await get_allocations.json()
-       
-        const get_tags = await fetch('/tags/'+evId, {
+        //evAllocationPayLoad = await get_allocations.json()
+
+        fetch('/tags/' + evId, {
             method: 'GET'
-        })
+        }).then(res => res.json())
+            .then(response => {
+                buildTags(response)
+            })
+            .catch(error => console.error('Error:', error))
 
-        evTagPayLoad = await get_tags.json()
+        //evTagPayLoad = await get_tags.json()
 
-        buildPayloads(evAllocationPayLoad, evTagPayLoad)
     }
 
-    function buildPayloads(allocationPayLoad, tagPayLoad){
-        
+    function buildTags(tagPayload) {
+
         loaderTag.style.setProperty('display', 'none')
-        tagPayLoad.forEach(tag => {
+        tagPayload.forEach(tag => {
             let aTag = document.createElement('a')
             aTag.className = 'badge badge-light'
             aTag.textContent = tag.title
             tagBody.append(aTag)
         })
 
+    }
+
+    function buildPayload(allocationPayLoad) {
+
         loaderAllocation.style.setProperty('display', 'none')
         allocationPayLoad.forEach(allocation => {
-            if (category == 'convocation'){
+            if (category == 'convocation') {
                 //faculty scaffolding
                 let option = document.createElement('option')
                 option.setAttribute('value', allocation.division)
@@ -293,68 +318,68 @@
             }
             //table scaffolding
             let tblRow = document.createElement('tr')
-            
-                let day = document.createElement('th')
-                let division = document.createElement('td')
-                let registered = document.createElement('td')
-                let capacity = document.createElement('td')
 
-                day.textContent = allocation.day
-                day.setAttribute('scope', 'col')
-                division.textContent = allocation.division
-                registered.textContent = allocation.fill
-                capacity.textContent = (allocation.capacity+allocation.extra)
+            let day = document.createElement('th')
+            let division = document.createElement('td')
+            let registered = document.createElement('td')
+            let capacity = document.createElement('td')
 
-                tblRow.append(day)
-                tblRow.append(division)
-                tblRow.append(registered)
-                tblRow.append(capacity)
-        
+            day.textContent = allocation.day
+            day.setAttribute('scope', 'col')
+            division.textContent = allocation.division
+            registered.textContent = allocation.fill
+            capacity.textContent = (allocation.capacity + allocation.extra)
+
+            tblRow.append(day)
+            tblRow.append(division)
+            tblRow.append(registered)
+            tblRow.append(capacity)
+
             allocationBody.append(tblRow)
-    })
+        })
     }
 
-    function buildForm(e){
+    function buildForm(e) {
         statFeedback.style.setProperty('display', 'none')
-        
-        while(gdiv.firstChild)
+
+        while (gdiv.firstChild)
             gdiv.removeChild(gdiv.firstChild)
 
         let no = e.target.value
-        if (no < 0){
+        if (no < 0) {
             statFeedback.textContent = 'Gaurdian cannot be less than 0'
             statFeedback.style.setProperty('display', 'block')
         }
-        if (no > 2){
+        if (no > 2) {
             statFeedback.textContent = 'Gaurdian cannot be more than 2'
             statFeedback.style.setProperty('display', 'block')
         }
-        if (no > 0 && no < 3){
-                       
-            for(let x = 0; x < no; x++){
+        if (no > 0 && no < 3) {
+
+            for (let x = 0; x < no; x++) {
                 let div = document.createElement('div')
                 div.className = 'input-group input-group-sm mb-3'
-                    let input = document.createElement('input')
-                    input.setAttribute('type', 'text')
-                    input.setAttribute('placeholder', 'Enter guardian fullname')
-                    input.setAttribute('id', 'g'+(x+1))
-                    input.setAttribute('name', 'gaurdianbox')
-                    input.className = 'form-control'
+                let input = document.createElement('input')
+                input.setAttribute('type', 'text')
+                input.setAttribute('placeholder', 'Enter guardian fullname')
+                input.setAttribute('id', 'g' + (x + 1))
+                input.setAttribute('name', 'gaurdianbox')
+                input.className = 'form-control'
 
-                    let invalidDiv = document.createElement('div')
-                    invalidDiv.className = 'invalid-feedback'
+                let invalidDiv = document.createElement('div')
+                invalidDiv.className = 'invalid-feedback'
                 div.append(input)
                 div.append(invalidDiv)
-                
+
                 gdiv.append(div)
             }
 
             tregBtn.removeAttribute('disabled')
         }
     }
-    
+
     //<img src="/images/spinner.gif" alt="" style="width:6%;display:none;" id="tbtnloader">
-    async function createTicket(){
+    function createTicket() {
         let loader = document.createElement('img')
         loader.style.setProperty('width', '6%')
         loader.setAttribute('src', '/images/spinner.gif')
@@ -363,50 +388,51 @@
         let payload = {}
 
         //==========> Category Payload <================================
-        if (category == 'convocation'){
+        if (category == 'convocation') {
             let faculty = document.getElementById('faculty').value
-            
+
             //validate select
-            if(faculty != 'Select Faculty'){
+            if (faculty != 'Select Faculty') {
                 tregBtn.textContent = ''
                 tregBtn.append(loader)
                 tregBtn.setAttribute('disabled', true)
-                
+
                 let gaurdians = document.getElementsByName('gaurdianbox')
                 let extra = ''
                 Array.from(gaurdians).forEach(input => {
-                    extra += input.value+','
+                    extra += input.value + ','
                 })
-                
+
                 payload = {
                     'event': evId,
                     'category': category,
                     'faculty': faculty,
                     'extra': extra
-                }    
+                }
 
-                const save_ticket_response = await fetch('/tickets/', {
+                fetch('/tickets/', {
                     method: 'POST',
                     body: JSON.stringify(payload),
                     headers: {
                         "Content-Type": "application/json",
                         "X-CSRF-TOKEN": csrfToken
                     }
-                })
-
-                const ticket_response = await save_ticket_response.json()
-                if(ticket_response.status == 'Ticket Saved')
-                    window.location.replace('/tickets/'+evTitle+'/'+evRef)
-                else
-                    swal("Oops!", ticket_response.status, "error")
+                }).then(res => res.json())
+                    .then(response => {
+                        if (response.status == 'Ticket Saved')
+                            window.location.replace('/tickets/' + evTitle + '/' + evRef)
+                        else
+                            swal("Oops!", response.status, "error")
+                    })
+                    .catch(error => console.error('Error:', error))
 
                 tregBtn.removeChild(tregBtn.firstChild)
                 tregBtn.textContent = 'Get My Ticket'
                 tregBtn.removeAttribute('disabled')
-            }else{
+            } else {
                 swal("Oops", "Faculty cannot be empty", "error")
             }
-        }else{
+        } else {
             tregBtn.textContent = ''
             tregBtn.append(loader)
             tregBtn.setAttribute('disabled', true)
@@ -416,42 +442,43 @@
                 "category": category
             }
 
-            const save_ticket_response = await fetch('/tickets/', {
+            fetch('/tickets/', {
                 method: 'POST',
                 body: JSON.stringify(payload),
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRF-TOKEN": csrfToken
                 }
-            })
-
-            const ticket_response = await save_ticket_response.json()
-            if(ticket_response.status == 'Ticket Saved')
-                window.location.replace('/tickets/'+evTitle+'/'+evRef)
-            else
-                swal("Oops!", ticket_response.status, "error")
+            }).then(res => res.json())
+                    .then(response => {
+                        if (response.status == 'Ticket Saved')
+                            window.location.replace('/tickets/' + evTitle + '/' + evRef)
+                        else
+                            swal("Oops!", response.status, "error")
+                    })
+                    .catch(error => console.error('Error:', error))
 
             tregBtn.removeChild(tregBtn.firstChild)
             tregBtn.textContent = 'Get My Ticket'
             tregBtn.removeAttribute('disabled')
         }
-       
+
     }
     //======================================================================
 
-//================================================================================================
-//      INPUTS VALIDATION
-//================================================================================================
+    //================================================================================================
+    //      INPUTS VALIDATION
+    //================================================================================================
     let errorList = []
     let startValidating = false
-    
-    function validateInput(e){
-        if(e.target.classList.contains('form-control')){
+
+    function validateInput(e) {
+        if (e.target.classList.contains('form-control')) {
             startValidating = true
             let input = e.target
             let errBlock = input.parentElement.children[1]
-            inputId = input.getAttribute('id')
-            switch (inputId){
+            let inputId = input.getAttribute('id')
+            switch (inputId) {
                 case ('g1'):
                     checkInputValidity('Gaurdian 1 fullname', input.value, 5, 30, errBlock)
                     break
@@ -470,79 +497,81 @@
         }
     }
 
-    async function checkInputValidity(element='', value='', minlen=0, maxlen=0, errorBlockElement, isEmail){
-       
-        if(isEmail){
-            var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    function checkInputValidity(element = '', value = '', minlen = 0, maxlen = 0, errorBlockElement, isEmail) {
+
+        if (isEmail) {
+            let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             let isValid = re.test(value)
-            if(!isValid){
+            if (!isValid) {
                 let err = 'Email is not valid'
                 pushError(err, errorBlockElement)
-                if(errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
-                    errorBlockElement.style.display = 'block' 
-            }else{
+                if (errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
+                    errorBlockElement.style.display = 'block'
+            } else {
                 let err = 'Email is not valid'
                 removeError(err, errorBlockElement)
 
-                if(errorBlockElement.style.display == 'block' && errorList.length < 1)
+                if (errorBlockElement.style.display == 'block' && errorList.length < 1)
                     errorBlockElement.style.display = 'none'
             }
-
-            const check_email_response = await fetch('/user/check-email/'+value, {
-                method: 'GET', 
-                headers : {
+           
+            fetch('/user/check-email/' + value, {
+                method: 'GET',
+                headers: {
                     "X-CSRF-TOKEN": csrfToken
-                } 
-            })
-            
-            isEmailExist = await check_email_response.json()
-            
-            if(isEmailExist){
+                }
+            }).then(res => res.json())
+            .then(response => {
+                  if (response) {
                 let err = 'Email already in use'
                 pushError(err, errorBlockElement)
-                if(errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
-                    errorBlockElement.style.display = 'block' 
-            }else{
+                if (errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
+                    errorBlockElement.style.display = 'block'
+            } else {
                 let err = 'Email already in use'
                 removeError(err, errorBlockElement)
 
-                if(errorBlockElement.style.display == 'block' && errorList.length < 1)
+                if (errorBlockElement.style.display == 'block' && errorList.length < 1)
                     errorBlockElement.style.display = 'none'
             }
+            })
+            .catch(error => console.error('Error:', error))
+
+          
         }
-        else{    
-            if(value.length < minlen){
-                let err = element+' cannot be less than '+minlen
+        else {
+            if (value.length < minlen) {
+                let err = element + ' cannot be less than ' + minlen
                 pushError(err, errorBlockElement)
-                if(errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
+                if (errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
                     errorBlockElement.style.display = 'block'
-            }else{
-                let err = element+' cannot be less than '+minlen
+            } else {
+                let err = element + ' cannot be less than ' + minlen
                 removeError(err, errorBlockElement)
 
-                if(errorBlockElement.style.display == 'block' && errorList.length < 1)
-                    errorBlockElement.style.display = 'none' 
+                if (errorBlockElement.style.display == 'block' && errorList.length < 1)
+                    errorBlockElement.style.display = 'none'
             }
-            
-            if(value.length > maxlen){
-                let err = element+' cannot be more than '+maxlen
+
+            if (value.length > maxlen) {
+                let err = element + ' cannot be more than ' + maxlen
                 pushError(err, errorBlockElement)
-                if(errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
+                if (errorBlockElement.style.display == 'none' || errorBlockElement.style.display == '')
                     errorBlockElement.style.display = 'block'
-            }else{
-                let err = element+' cannot be more than '+maxlen
+            } else {
+                let err = element + ' cannot be more than ' + maxlen
                 removeError(err, errorBlockElement)
 
-                if(errorBlockElement.style.display == 'block' && errorList.length < 1)
-                    errorBlockElement.style.display = 'none' 
+                if (errorBlockElement.style.display == 'block' && errorList.length < 1)
+                    errorBlockElement.style.display = 'none'
             }
         }
     }
 
-    function pushError(errMsg='', errBlock){
+    function pushError(errMsg = '', errBlock) {
         let errtxt = document.createElement('p')
         errtxt.textContent = errMsg
-        if(!errorList.includes(errMsg)){
+        if (!errorList.includes(errMsg)) {
             errorList.push(errMsg)
         }
         //check err block child does not contain the content
@@ -550,12 +579,12 @@
         Array.from(errBlock.children).forEach(element => {
             isContainErrorMsg = element.textContent == errMsg
         })
-        
+
         !isContainErrorMsg && errBlock.append(errtxt)
     }
 
-    function removeError(errMsg='', errBlock){
-        if(errorList.includes(errMsg)){
+    function removeError(errMsg = '', errBlock) {
+        if (errorList.includes(errMsg)) {
             let errIdx = errorList.indexOf(errMsg)
             errorList.splice(errIdx, 1)
         }
@@ -566,28 +595,28 @@
         })
     }
 
-    function checkError(){
+    function checkError() {
         console.log('ckecking')
-        if(startValidating && tregBtn ){
-            if(errorList.length > 0){
+        if (startValidating && tregBtn) {
+            if (errorList.length > 0) {
                 tregBtn.disabled = true
-            }else{
-                if(tregBtn.disabled)
+            } else {
+                if (tregBtn.disabled)
                     tregBtn.disabled = false
             }
         }
 
-        if(startValidating && accBtn){
-            if(errorList.length > 0){
+        if (startValidating && accBtn) {
+            if (errorList.length > 0) {
                 accBtn.disabled = true
-            }else{
-                if(accBtn.disabled)
+            } else {
+                if (accBtn.disabled)
                     accBtn.disabled = false
             }
         }
     }
 
-    function clearGabbage(){
+    function clearGabbage() {
         clearInterval(intervalId)
     }
 
