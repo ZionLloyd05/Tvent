@@ -1,3 +1,4 @@
+
 // $(document).ready(function () {
 
 //     let errorList = []
@@ -1255,7 +1256,7 @@ $(document).ready(function () {
                             let startdate_month = date_result.groups.month
                             var monthErrorMsg = "Incorrect month, kindly follow this pattern YYYY-MM-DD"
 
-                            if ((startdate_month > 12 || startdate_month < 00)) {
+                            if ((startdate_month > 12 || startdate_month < 0)) {
                                 errorBlock.append('<p>Incorrect month, kindly follow this pattern YYYY-MM-DD</p>')
                                 if (!errorList.includes(monthErrorMsg)) {
                                     errorList.push(monthErrorMsg)
@@ -1353,7 +1354,7 @@ $(document).ready(function () {
 
     //variable declarations
     let eventTitle = document.getElementById('event')
-    let publishBtn = document.getElementById('btnPublish')
+    var publishBtn = document.getElementById('btnPublish')
     let tagInput = document.getElementById('tag')
     let tagList = document.getElementById('taglist')
 
@@ -1380,155 +1381,187 @@ $(document).ready(function () {
 
 
     }
-    async function createEvent() {
+
+    function createEvent() {
 
         document.getElementById('evorganizer').value = document.getElementById('organizer').value
+        let evTitle = $('#event').val()
+        let evLoc = $('#loc').val()
+        let evDesc = $('.description').val()
+        let startdate = $('#startdate').val()
+        let enddate = $('#enddate').val()
 
-        if (errorList.length == 0) {
+        //pushing error meesage for empty input
+        let errorMsg = "Either of event title, location, description, organizer or dates cannot be empty"
+        if (evTitle == "" || evLoc == "" || evDesc == "" || startdate == "" || enddate == "") {
+            if (!errorList.includes(errorMsg)) {
+                errorList.push(errorMsg)
+            }
+        } else {
+            if (errorList.includes(errorMsg)) {
+                let errIdx = errorList.indexOf(errorMsg)
+                errorList.splice(errIdx, 1)
+            }
+        }
+
+        console.log(errorList.length)
+        if (errorList.length === 0) {
 
             //get csrftoken
             let csrfToken = document.getElementById('_csrf').value
 
             clearInterval(intervalId)
 
-            publishBtn.textContent = ''
+            let publish = document.getElementById('btnPublish')
+            publish.textContent = ''
             let spin = document.createElement('i')
             spin.className = 'fas fa-spinner fa-spin'
 
-            let txt = document.createTextNode(' Publishing your event...')
-            publishBtn.append(spin)
-            publishBtn.append(txt)
-            publishBtn.disabled = true
+            publish.append(spin)
+            publish.append(document.createTextNode(' Publishing your event...'))
+            publish.disabled = true
+            console.log(publish)
+            console.log('here')
 
             let eventForm = document.getElementById('eventForm')
-            formData = new FormData(eventForm)
-            try {
+            let formData = new FormData(eventForm)
 
-                //saving event
-                const response_event = await fetch('/events/create', {
+            // saving event
+            fetch('/events/create', {
                     method: 'Post',
                     body: formData,
                     headers: {
                         "X-CSRF-TOKEN": csrfToken
                     }
-                })
-                const newEvent = await response_event.json()
-                console.log(newEvent)
+                }).then(res => res.json())
+                .then(response => {
+                    let newEvent = response
+                    if (newEvent.error || newEvent.message) {
+                        newEvent.message = "Event poster too large"
+                        let err = newEvent.error || newEvent.message
+                        toastr.options.timeOut = 0
+                        toastr.options.extendedTimeOut = 0
+                        toastr.options.positionClass = "toast-bottom-right"
+                        toastr.info(err)
+                    } else {
 
-                if (newEvent.error || newEvent.message) {
-                    newEvent.message = "Event poster too large"
-                    let err = newEvent.error || newEvent.message
-                    toastr.options.timeOut = 0
-                    toastr.options.extendedTimeOut = 0
-                    toastr.options.positionClass = "toast-bottom-right"
-                    toastr.info(err)
-                } else {
+                        let allocation = []
+                        let containerNum = 0
+                        Object.keys(eventDay).map(key => {
 
-                    allocation = []
-                    let containerNum = 0
-                    Object.keys(eventDay).map(key => {
+                            for (let x = 0; x < eventDay[key]; x++) {
+                                fac_input_id = "fac-name-" + inputContainerNums[containerNum]
+                                std_capacity_id = "std-capacity-" + inputContainerNums[containerNum]
+                                vis_capacity_id = "vis-capacity-" + inputContainerNums[containerNum]
 
-                        for (let x = 0; x < eventDay[key]; x++) {
-                            fac_input_id = "fac-name-" + inputContainerNums[containerNum]
-                            std_capacity_id = "std-capacity-" + inputContainerNums[containerNum]
-                            vis_capacity_id = "vis-capacity-" + inputContainerNums[containerNum]
-
-                            individual_allocation = []
-                            individual_allocation.push(document.getElementById(fac_input_id).getAttribute('day-what'))
-                            individual_allocation.push(document.getElementById(fac_input_id).value)
-                            individual_allocation.push(document.getElementById(std_capacity_id).value)
-                            individual_allocation.push(document.getElementById(vis_capacity_id).value)
-                            allocation.push(individual_allocation)
-                            containerNum = containerNum + 1
-                        }
-                    })
-                    // console.log(allocation)
-
-                    let obj = {}
-                    obj[0] = newEvent._id
-                    allocation.forEach((block, x) => {
-                        let sobj = {}
-                        block.forEach((item, y) => {
-                            sobj[y] = item
+                                individual_allocation = []
+                                individual_allocation.push(document.getElementById(fac_input_id).getAttribute('day-what'))
+                                individual_allocation.push(document.getElementById(fac_input_id).value)
+                                individual_allocation.push(document.getElementById(std_capacity_id).value)
+                                individual_allocation.push(document.getElementById(vis_capacity_id).value)
+                                allocation.push(individual_allocation)
+                                containerNum = containerNum + 1
+                            }
                         })
-                        obj[x + 1] = sobj
-                    })
-                    // console.log(obj)
+                        // console.log(allocation)
 
-                    //save allocation
-                    const save_allocation_response = await fetch('/allocations/', {
-                        method: 'POST',
-                        body: JSON.stringify(obj),
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": csrfToken
-                        }
-                    })
-                    const allocation_response = await save_allocation_response.json()
-                    //console.log(allocation_response)
-                    //console.log(allocation_response.status)
-
-                    toastr.options.timeOut = 1000
-                    // toastr.options.extendedTimeOut = 0
-                    toastr.options.positionClass = "toast-bottom-right"
-                    toastr.info(allocation_response.status)
-
-                    tags = []
-                    tags.push(newEvent._id)
-                    var badges = document.getElementsByClassName('badge')
-                    if (badges.length > 0) {
-                        Array.from(badges).forEach(badge => {
-                            tags.push(badge.firstChild.textContent)
+                        let obj = {}
+                        obj[0] = newEvent._id
+                        allocation.forEach((block, x) => {
+                            let sobj = {}
+                            block.forEach((item, y) => {
+                                sobj[y] = item
+                            })
+                            obj[x + 1] = sobj
                         })
+                        // console.log(obj)
+
+                        //save allocation
+                        fetch('/allocations/', {
+                                method: 'POST',
+                                body: JSON.stringify(obj),
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRF-TOKEN": csrfToken
+                                }
+                            }).then(res => res.json())
+                            .then(response => {
+                                toastr.options.timeOut = 1000
+                                toastr.options.positionClass = "toast-bottom-right"
+                                toastr.info(response.status)
+                            })
+                            .catch(error => console.error('Error:', error))
+
+                        //const allocation_response = await save_allocation_response.json()
+                        //console.log(allocation_response)
+                        //console.log(allocation_response.status)
+
+
+
+                        tags = []
+                        tags.push(newEvent._id)
+                        var badges = document.getElementsByClassName('badge')
+                        if (badges.length > 0) {
+                            Array.from(badges).forEach(badge => {
+                                tags.push(badge.firstChild.textContent)
+                            })
+                        }
+
+                        // tags = ["5c3ef4a01a3cce0b20bc2c45" ,"convocation", "ceremony", "graduation"]
+                        let tagObjs = {}
+
+                        tags.forEach((tag, idx) => {
+                            tagObjs[idx] = tag
+                        })
+
+                        //save tag
+                        fetch('/tags/', {
+                                method: 'POST',
+                                body: JSON.stringify(tagObjs),
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRF-TOKEN": csrfToken
+                                }
+                            }).then(res => res.json())
+                            .then(response => {
+                                toastr.options.timeOut = 1000
+                                // toastr.options.extendedTimeOut = 0
+                                toastr.options.positionClass = "toast-bottom-right"
+                                toastr.info(response.status)
+
+
+                                swal("All Done", "Event saved successfully!", "success")
+                                    .then(val => {
+                                        window.location.reload()
+                                    })
+                            })
+                            .catch(error => console.error('Error:', error))
+
+                        //const tag_response = await save_tag_response.json()
+                        // console.log(tag_response)
+                        // console.log(tag_response.status)
+
+
                     }
+                })
+                .catch(error => console.error('Error:', error))
+            // const newEvent = await response_event.json()
+            // console.log(newEvent)
 
-                    // tags = ["5c3ef4a01a3cce0b20bc2c45" ,"convocation", "ceremony", "graduation"]
-                    let tagObjs = {}
+            publish.textContent = ''
+            let upload = document.createElement('i')
+            upload.className = 'fas fa-upload'
 
-                    tags.forEach((tag, idx) => {
-                        tagObjs[idx] = tag
-                    })
+            let txt = document.createTextNode(' Publish Event')
+            publish.append(upload)
+            publish.append(txt)
+            publish.disabled = false
 
-                    //save tag
-                    const save_tag_response = await fetch('/tags/', {
-                        method: 'POST',
-                        body: JSON.stringify(tagObjs),
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": csrfToken
-                        }
-                    })
-                    const tag_response = await save_tag_response.json()
-                    // console.log(tag_response)
-                    // console.log(tag_response.status)
-
-                    toastr.options.timeOut = 1000
-                    // toastr.options.extendedTimeOut = 0
-                    toastr.options.positionClass = "toast-bottom-right"
-                    toastr.info(tag_response.status)
-
-
-                    swal("All Done", "Event saved successfully!", "success")
-                        .then(val => {
-                            window.location.reload()
-                        })
-                }
-
-            } catch (error) {
-                console.log(error)
-                swal("Oops", "Something isn't right!", "error")
-            }
-
+        } else {
+            swal('Event Cannot be created', 'Kindly fill the form completely', 'error')
         }
 
-        publishBtn.textContent = ''
-        let upload = document.createElement('i')
-        upload.className = 'fas fa-upload'
 
-        let txt = document.createTextNode(' Publish Event')
-        publishBtn.append(upload)
-        publishBtn.append(txt)
-        publishBtn.disabled = false
     }
 
     function addTag(e) {
